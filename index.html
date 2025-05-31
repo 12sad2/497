@@ -1,181 +1,123 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>موقع 497</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 40px auto;
-      text-align: center;
-    }
-    h1.main-title {
-      font-size: 48px;
-      font-weight: bold;
-      color: #2c3e50;
-      margin-bottom: 30px;
-    }
-    .hidden {
-      display: none;
-    }
-    input, textarea, button {
-      font-size: 18px;
-      margin: 10px 0;
-      padding: 8px;
-      width: 90%;
-      box-sizing: border-box;
-    }
-    button {
-      cursor: pointer;
-      border: none;
-      color: white;
-      font-weight: bold;
-    }
-    #startBtn {
-      background-color: green;
-    }
-    #stopBtn {
-      background-color: red;
-    }
-    .error {
-      color: red;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>موقع 497</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:400px;margin:40px auto;text-align:center}
+h1.main-title{font-size:48px;font-weight:bold;color:#2c3e50;margin-bottom:30px}
+.hidden{display:none}
+input,textarea,button{font-size:18px;margin:10px 0;padding:8px;width:90%;box-sizing:border-box}
+button{cursor:pointer;border:none;color:#fff;font-weight:bold}
+#startBtn{background-color:green}
+#stopBtn{background-color:red}
+.error{color:red;font-weight:bold}
+</style>
 </head>
 <body>
-
-  <!-- العنوان الكبير -->
-  <h1 class="main-title">أوتو 497</h1>
-
-  <!-- الصفحة 1: رمز سري -->
-  <div id="page1">
-    <h2>قم بكتابة الرمز السري</h2>
-    <input type="text" id="passwordInput" placeholder="أدخل الرمز السري" />
-    <div id="passwordError" class="error"></div>
-    <button id="nextBtn" disabled>التالي</button>
-  </div>
-
-  <!-- الصفحة 2: توكن ديسكورد -->
-  <div id="page2" class="hidden">
-    <h2>قم بكتابة توكن حسابك ديسكورد</h2>
-    <input type="text" id="tokenInput" placeholder="أدخل التوكن" />
-    <div id="tokenError" class="error"></div>
-    <button onclick="checkToken()">متابعة</button>
-  </div>
-
-  <!-- الصفحة 3: إدخال روم + رسالة + أزرار -->
-  <div id="page3" class="hidden">
-    <h2>قم بكتابة ايدي الروم</h2>
-    <input type="text" id="channelIdInput" placeholder="أدخل ID الروم" />
-    <h2>قم بكتابة الكلام</h2>
-    <textarea id="messageInput" placeholder="أدخل الرسالة"></textarea>
-    <br />
-    <button id="startBtn" onclick="startSending()">تشغيل</button>
-    <button id="stopBtn" onclick="stopSending()">إيقاف</button>
-    <div id="sendStatus"></div>
-  </div>
-
+<h1 class="main-title">أوتو 497</h1>
+<div id="page1">
+<h2>قم بكتابة الرمز السري</h2>
+<input type="text" id="passwordInput" placeholder="أدخل الرمز السري"/>
+<div id="passwordError" class="error"></div>
+<button id="nextBtn" disabled>التالي</button>
+</div>
+<div id="page2" class="hidden">
+<h2>قم بكتابة توكن حسابك ديسكورد</h2>
+<input type="text" id="tokenInput" placeholder="أدخل التوكن"/>
+<div id="tokenError" class="error"></div>
+<button onclick="checkToken()">متابعة</button>
+</div>
+<div id="page3" class="hidden">
+<h2>قم بكتابة ايدي الروم</h2>
+<input type="text" id="channelIdInput" placeholder="أدخل ID الروم"/>
+<h2>قم بكتابة الكلام</h2>
+<textarea id="messageInput" placeholder="أدخل الرسالة"></textarea><br/>
+<button id="startBtn" onclick="startSending()">تشغيل</button>
+<button id="stopBtn" onclick="stopSending()">إيقاف</button>
+<div id="sendStatus"></div>
+</div>
 <script>
-  const passwordInput = document.getElementById('passwordInput');
-  const nextBtn = document.getElementById('nextBtn');
-  const passwordError = document.getElementById('passwordError');
-
-  // تفعيل زر التالي فقط إذا كان النص "497"
-  passwordInput.addEventListener('input', () => {
-    if (passwordInput.value.trim() === '497') {
-      nextBtn.disabled = false;
-      passwordError.textContent = '';
-    } else {
-      nextBtn.disabled = true;
-      if(passwordInput.value.trim() !== '') {
-        passwordError.textContent = 'الرمز السري غير صحيح';
-      } else {
-        passwordError.textContent = '';
-      }
-    }
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if(passwordInput.value.trim() === '497') {
-      showPage(2);
-    } else {
-      passwordError.textContent = 'رمز سري خاطئ';
-    }
-  });
-
-  function checkToken() {
-    const token = document.getElementById('tokenInput').value.trim();
-    if (token.length === 0) {
-      document.getElementById('tokenError').textContent = 'الرجاء إدخال التوكن';
-      return;
-    }
-    document.getElementById('tokenError').textContent = '';
-    showPage(3);
+(function(){
+const pI=document.getElementById("passwordInput"),
+      nB=document.getElementById("nextBtn"),
+      pE=document.getElementById("passwordError"),
+      sP=atob("NDk3");
+pI.addEventListener("input",()=>{
+  if(pI.value.trim()===sP){
+    nB.disabled=false;
+    pE.textContent="";
+  } else {
+    nB.disabled=true;
+    pE.textContent=pI.value.trim()!==""?"الرمز السري غير صحيح":"";
   }
-
-  function showPage(num) {
-    document.getElementById('page1').classList.add('hidden');
-    document.getElementById('page2').classList.add('hidden');
-    document.getElementById('page3').classList.add('hidden');
-    document.getElementById('sendStatus').textContent = '';
-    if (num === 1) document.getElementById('page1').classList.remove('hidden');
-    if (num === 2) document.getElementById('page2').classList.remove('hidden');
-    if (num === 3) document.getElementById('page3').classList.remove('hidden');
+});
+nB.addEventListener("click",()=>{
+  if(pI.value.trim()===sP){
+    showPage(2);
+  } else {
+    pE.textContent="رمز سري خاطئ";
   }
-
-  async function sendMessage() {
-    const channelId = document.getElementById('channelIdInput').value.trim();
-    const messageText = document.getElementById('messageInput').value.trim();
-    if (!channelId || !messageText) {
-      document.getElementById('sendStatus').textContent = 'الرجاء إدخال معرف الروم والرسالة.';
-      return;
-    }
-    document.getElementById('sendStatus').textContent = 'جاري الإرسال...';
-
-    // مثال: ارسال رسالة ويب هوك (غير مفعل، تحتاج تعديل ليناسب)
-    const webhookUrl = `https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN`;
-
-    try {
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: messageText }),
-      });
-      if (response.ok) {
-        document.getElementById('sendStatus').textContent = 'تم إرسال الرسالة بنجاح!';
-      } else {
-        document.getElementById('sendStatus').textContent = 'فشل في إرسال الرسالة.';
-      }
-    } catch (error) {
-      document.getElementById('sendStatus').textContent = 'حدث خطأ أثناء الإرسال.';
-    }
+});
+})();
+function checkToken(){
+  const t=document.getElementById("tokenInput").value.trim();
+  if(t.length===0){
+    document.getElementById("tokenError").textContent="الرجاء إدخال التوكن";
+    return;
   }
-
-  let intervalId = null;
-
-  function startSending() {
-    if (intervalId !== null) return;
-    const chId = document.getElementById('channelIdInput').value.trim();
-    const msg = document.getElementById('messageInput').value.trim();
-    if (!chId || !msg) {
-      document.getElementById('sendStatus').textContent = 'الرجاء إدخال معرف الروم والرسالة.';
-      return;
-    }
-    document.getElementById('sendStatus').textContent = 'تم تشغيل الإرسال التلقائي.';
-    intervalId = setInterval(sendMessage, 300);
+  document.getElementById("tokenError").textContent="";
+  showPage(3);
+}
+function showPage(n){
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.add("hidden");
+  document.getElementById("page3").classList.add("hidden");
+  document.getElementById("sendStatus").textContent="";
+  if(n===1) document.getElementById("page1").classList.remove("hidden");
+  if(n===2) document.getElementById("page2").classList.remove("hidden");
+  if(n===3) document.getElementById("page3").classList.remove("hidden");
+}
+async function sendMessage(){
+  const chId=document.getElementById("channelIdInput").value.trim(),
+        msg=document.getElementById("messageInput").value.trim();
+  if(!chId||!msg){
+    document.getElementById("sendStatus").textContent="الرجاء إدخال معرف الروم والرسالة.";
+    return;
   }
-
-  function stopSending() {
-    if (intervalId !== null) {
-      clearInterval(intervalId);
-      intervalId = null;
-      document.getElementById('sendStatus').textContent = 'تم إيقاف الإرسال.';
-    }
+  document.getElementById("sendStatus").textContent="جاري الإرسال...";
+  const webhookUrl="https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN";
+  try{
+    const r=await fetch(webhookUrl,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({content:msg})
+    });
+    document.getElementById("sendStatus").textContent=r.ok?"تم إرسال الرسالة بنجاح!":"فشل في إرسال الرسالة.";
+  }catch(e){
+    document.getElementById("sendStatus").textContent="حدث خطأ أثناء الإرسال.";
   }
-
-  showPage(1);
+}
+let intervalId=null;
+function startSending(){
+  if(intervalId!==null) return;
+  const chId=document.getElementById("channelIdInput").value.trim(),
+        msg=document.getElementById("messageInput").value.trim();
+  if(!chId||!msg){
+    document.getElementById("sendStatus").textContent="الرجاء إدخال معرف الروم والرسالة.";
+    return;
+  }
+  document.getElementById("sendStatus").textContent="تم تشغيل الإرسال التلقائي.";
+  intervalId=setInterval(sendMessage,300);
+}
+function stopSending(){
+  if(intervalId!==null){
+    clearInterval(intervalId);
+    intervalId=null;
+    document.getElementById("sendStatus").textContent="تم إيقاف الإرسال.";
+  }
+}
+showPage(1);
 </script>
 </body>
 </html>
