@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<title>موقع 497</title>
+<title>أوتو 497</title>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -17,121 +16,208 @@ h1.main-title {
   color: #2c3e50;
   margin-bottom: 30px;
 }
-.hidden {
-  display: none;
-}
 input, textarea, button {
   font-size: 18px;
   margin: 10px 0;
   padding: 8px;
   width: 90%;
   box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  direction: ltr; /* للتوكنات بالانجليزي */
 }
 button {
   cursor: pointer;
   border: none;
   color: #fff;
   font-weight: bold;
-  background-color: red;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
-.error {
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* زر التالي أخضر */
+#nextBtn {
+  background-color: #28a745;
+}
+/* زر الإرسال أخضر */
+#startBtn {
+  background-color: #28a745;
+}
+/* زر الإيقاف أحمر */
+#stopBtn {
+  background-color: #dc3545;
+}
+#error {
   color: red;
   font-weight: bold;
+}
+#status {
+  margin-top: 10px;
+  font-weight: bold;
+  min-height: 24px;
+}
+.hidden {
+  display: none;
 }
 </style>
 </head>
 <body>
+
 <h1 class="main-title">أوتو 497</h1>
+
+<!-- الصفحة 1: الرمز السري -->
 <div id="page1">
   <h2>قم بكتابة الرمز السري</h2>
   <input type="text" id="passwordInput" placeholder="أدخل الرمز السري" autocomplete="off" />
-  <div id="passwordError" class="error"></div>
+  <div id="error" class="error"></div>
   <button id="nextBtn" disabled>التالي</button>
 </div>
+
+<!-- الصفحة 2: إرسال الرسائل -->
 <div id="page2" class="hidden">
-  <h2>قم بكتابة توكن حسابك ديسكورد</h2>
-  <input type="text" id="tokenInput" placeholder="أدخل التوكن" autocomplete="off" />
-  <div id="tokenError" class="error"></div>
-  <button onclick="checkToken()">متابعة</button>
-</div>
-<div id="page3" class="hidden">
-  <h2>قم بكتابة ايدي الروم</h2>
+  <h2>إرسال رسائل</h2>
+  <textarea id="tokensInput" placeholder="أدخل حتى 5 توكنات مفصولة بفواصل أو أسطر جديدة" rows="3"></textarea>
   <input type="text" id="channelIdInput" placeholder="أدخل ID الروم" autocomplete="off" />
-  <h2>قم بكتابة الكلام</h2>
-  <textarea id="messageInput" placeholder="أدخل الرسالة"></textarea><br />
-  <button onclick="startSending()">تشغيل</button>
-  <button onclick="stopSending()">إيقاف</button>
-  <div id="sendStatus"></div>
+  <textarea id="messageInput" placeholder="أدخل الرسالة هنا..." rows="4"></textarea>
+  <button id="startBtn">تشغيل الإرسال التلقائي</button>
+  <button id="stopBtn" disabled>إيقاف الإرسال</button>
+  <div id="status"></div>
 </div>
+
 <script>
-(function(){
-  const pI = document.getElementById("passwordInput"),
-        nB = document.getElementById("nextBtn"),
-        pE = document.getElementById("passwordError"),
-        sP = atob("NDk3");
-  pI.addEventListener("input", () => {
-    if (pI.value.trim() === sP) {
-      nB.disabled = false;
-      pE.textContent = "";
-    } else {
-      nB.disabled = true;
-      pE.textContent = pI.value.trim() !== "" ? "الرمز السري غير صحيح" : "";
-    }
-  });
-  nB.addEventListener("click", () => {
-    if (pI.value.trim() === sP) {
-      showPage(2);
-    } else {
-      pE.textContent = "رمز سري خاطئ";
-    }
-  });
-})();
-function checkToken() {
-  const t = document.getElementById("tokenInput").value.trim();
-  if (t.length === 0) {
-    document.getElementById("tokenError").textContent = "الرجاء إدخال التوكن";
-    return;
-  }
-  document.getElementById("tokenError").textContent = "";
-  showPage(3);
-}
-function showPage(n) {
-  document.getElementById("page1").classList.add("hidden");
-  document.getElementById("page2").classList.add("hidden");
-  document.getElementById("page3").classList.add("hidden");
-  document.getElementById("sendStatus").textContent = "";
-  if (n === 1) document.getElementById("page1").classList.remove("hidden");
-  if (n === 2) document.getElementById("page2").classList.remove("hidden");
-  if (n === 3) document.getElementById("page3").classList.remove("hidden");
-}
-async function sendMessage() {
-  const msg = document.getElementById("messageInput").value.trim();
-  const webhookUrl = "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN";
-  await fetch(webhookUrl, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({content: msg})
-  });
-}
+// رمز سري مشفر Base64 لـ "497"
+const encodedPassword = "NDk3";
+
+const passwordInput = document.getElementById("passwordInput");
+const nextBtn = document.getElementById("nextBtn");
+const errorDiv = document.getElementById("error");
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+
+const tokensInput = document.getElementById("tokensInput");
+const channelIdInput = document.getElementById("channelIdInput");
+const messageInput = document.getElementById("messageInput");
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const statusDiv = document.getElementById("status");
+
 let intervalId = null;
-function startSending() {
-  if (intervalId !== null) return;
-  const msg = document.getElementById("messageInput").value.trim();
-  if (!msg) {
-    document.getElementById("sendStatus").textContent = "الرجاء إدخال الرسالة.";
+let tokens = [];
+let currentTokenIndex = 0;
+
+// تحقق الرمز السري مع فك التشفير
+passwordInput.addEventListener("input", () => {
+  const decoded = atob(encodedPassword);
+  if (passwordInput.value.trim() === decoded) {
+    nextBtn.disabled = false;
+    errorDiv.textContent = "";
+  } else {
+    nextBtn.disabled = true;
+    if(passwordInput.value.trim() !== "")
+      errorDiv.textContent = "الرمز السري غير صحيح";
+    else
+      errorDiv.textContent = "";
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  const decoded = atob(encodedPassword);
+  if (passwordInput.value.trim() === decoded) {
+    page1.classList.add("hidden");
+    page2.classList.remove("hidden");
+    errorDiv.textContent = "";
+  } else {
+    errorDiv.textContent = "الرمز السري غير صحيح";
+  }
+});
+
+// ارسال رسالة واحدة باستخدام التوكن الحالي بالتناوب
+async function sendMessage() {
+  if(tokens.length === 0) {
+    statusDiv.textContent = "يرجى إدخال التوكنات.";
+    stopAutoSend();
+    return false;
+  }
+
+  const token = tokens[currentTokenIndex];
+  currentTokenIndex = (currentTokenIndex + 1) % tokens.length;
+
+  const channelId = channelIdInput.value.trim();
+  const message = messageInput.value.trim();
+
+  if (!channelId || !message) {
+    statusDiv.textContent = "يرجى ملء جميع الحقول.";
+    stopAutoSend();
+    return false;
+  }
+
+  try {
+    const response = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+      method: "POST",
+      headers: {
+        "Authorization": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ content: message })
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      statusDiv.textContent = `فشل الإرسال: ${data.message || response.statusText}`;
+      stopAutoSend();
+      return false;
+    }
+    return true;
+
+  } catch (err) {
+    statusDiv.textContent = "حدث خطأ في الإرسال.";
+    stopAutoSend();
+    return false;
+  }
+}
+
+function startAutoSend() {
+  if (intervalId) return;
+
+  // جلب التوكنات، تقطيعها حسب الفواصل أو الأسطر، وأخذ أول 5 فقط
+  tokens = tokensInput.value.split(/[\n,]+/).map(t => t.trim()).filter(t => t !== "").slice(0,5);
+
+  if(tokens.length === 0) {
+    statusDiv.textContent = "الرجاء إدخال توكن واحد على الأقل.";
     return;
   }
-  document.getElementById("sendStatus").textContent = "تم تشغيل الإرسال التلقائي.";
-  intervalId = setInterval(sendMessage, 300);
-}
-function stopSending() {
-  if (intervalId !== null) {
-    clearInterval(intervalId);
-    intervalId = null;
-    document.getElementById("sendStatus").textContent = "تم إيقاف الإرسال.";
+  if(channelIdInput.value.trim() === "" || messageInput.value.trim() === "") {
+    statusDiv.textContent = "يرجى ملء ID الروم والرسالة.";
+    return;
   }
+
+  statusDiv.textContent = "جاري الإرسال التلقائي...";
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+
+  currentTokenIndex = 0;
+  intervalId = setInterval(() => {
+    sendMessage().then(success => {
+      if (!success) stopAutoSend();
+    });
+  }, 200);
 }
-showPage(1);
+
+function stopAutoSend() {
+  if (!intervalId) return;
+  clearInterval(intervalId);
+  intervalId = null;
+  statusDiv.textContent = "تم إيقاف الإرسال.";
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+}
+
+startBtn.addEventListener("click", startAutoSend);
+stopBtn.addEventListener("click", stopAutoSend);
 </script>
+
 </body>
 </html>
