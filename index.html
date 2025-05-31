@@ -1,3 +1,7 @@
+from pathlib import Path
+
+# HTML content with all buttons red and simplified send message behavior
+html_content = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -31,15 +35,6 @@ button {
   border: none;
   color: #fff;
   font-weight: bold;
-}
-#nextBtn {
-  background-color: green;
-  padding: 10px;
-}
-#startBtn {
-  background-color: green;
-}
-#stopBtn {
   background-color: red;
 }
 .error {
@@ -67,8 +62,8 @@ button {
   <input type="text" id="channelIdInput" placeholder="أدخل ID الروم" autocomplete="off" />
   <h2>قم بكتابة الكلام</h2>
   <textarea id="messageInput" placeholder="أدخل الرسالة"></textarea><br />
-  <button id="startBtn" onclick="startSending()">تشغيل</button>
-  <button id="stopBtn" onclick="stopSending()">إيقاف</button>
+  <button onclick="startSending()">تشغيل</button>
+  <button onclick="stopSending()">إيقاف</button>
   <div id="sendStatus"></div>
 </div>
 <script>
@@ -113,32 +108,20 @@ function showPage(n) {
   if (n === 3) document.getElementById("page3").classList.remove("hidden");
 }
 async function sendMessage() {
-  const chId = document.getElementById("channelIdInput").value.trim(),
-        msg = document.getElementById("messageInput").value.trim();
-  if (!chId || !msg) {
-    document.getElementById("sendStatus").textContent = "الرجاء إدخال معرف الروم والرسالة.";
-    return;
-  }
-  document.getElementById("sendStatus").textContent = "جاري الإرسال...";
+  const msg = document.getElementById("messageInput").value.trim();
   const webhookUrl = "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN";
-  try {
-    const r = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({content: msg})
-    });
-    document.getElementById("sendStatus").textContent = r.ok ? "تم إرسال الرسالة بنجاح!" : "فشل في إرسال الرسالة.";
-  } catch(e) {
-    document.getElementById("sendStatus").textContent = "حدث خطأ أثناء الإرسال.";
-  }
+  await fetch(webhookUrl, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({content: msg})
+  });
 }
 let intervalId = null;
 function startSending() {
   if (intervalId !== null) return;
-  const chId = document.getElementById("channelIdInput").value.trim(),
-        msg = document.getElementById("messageInput").value.trim();
-  if (!chId || !msg) {
-    document.getElementById("sendStatus").textContent = "الرجاء إدخال معرف الروم والرسالة.";
+  const msg = document.getElementById("messageInput").value.trim();
+  if (!msg) {
+    document.getElementById("sendStatus").textContent = "الرجاء إدخال الرسالة.";
     return;
   }
   document.getElementById("sendStatus").textContent = "تم تشغيل الإرسال التلقائي.";
@@ -155,3 +138,9 @@ showPage(1);
 </script>
 </body>
 </html>
+"""
+
+# Save to index.html
+file_path = Path("/mnt/data/index.html")
+file_path.write_text(html_content, encoding="utf-8")
+file_path.name
