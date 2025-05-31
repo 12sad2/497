@@ -4,117 +4,151 @@
 <meta charset="UTF-8" />
 <title>موقع 497</title>
 <style>
-body{font-family:Arial,sans-serif;max-width:400px;margin:40px auto;text-align:center}
-h1.main-title{font-size:48px;font-weight:bold;color:#2c3e50;margin-bottom:30px}
-.hidden{display:none}
-input,textarea,button{font-size:18px;margin:10px 0;padding:8px;width:90%;box-sizing:border-box}
-button{cursor:pointer;border:none;color:#fff;font-weight:bold}
-#startBtn{background-color:green}
-#stopBtn{background-color:red}
-.error{color:red;font-weight:bold}
+body {
+  font-family: Arial, sans-serif;
+  max-width: 400px;
+  margin: 40px auto;
+  text-align: center;
+}
+h1.main-title {
+  font-size: 48px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+.hidden {
+  display: none;
+}
+input, textarea, button {
+  font-size: 18px;
+  margin: 10px 0;
+  padding: 8px;
+  width: 90%;
+  box-sizing: border-box;
+}
+button {
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+}
+#nextBtn {
+  background-color: green;
+  padding: 10px;
+}
+#startBtn {
+  background-color: green;
+}
+#stopBtn {
+  background-color: red;
+}
+.error {
+  color: red;
+  font-weight: bold;
+}
 </style>
 </head>
 <body>
 <h1 class="main-title">أوتو 497</h1>
 <div id="page1">
-<h2>قم بكتابة الرمز السري</h2>
-<input type="text" id="passwordInput" placeholder="أدخل الرمز السري"/>
-<div id="passwordError" class="error"></div>
-<button id="nextBtn" disabled>التالي</button>
+  <h2>قم بكتابة الرمز السري</h2>
+  <input type="text" id="passwordInput" placeholder="أدخل الرمز السري" autocomplete="off" />
+  <div id="passwordError" class="error"></div>
+  <button id="nextBtn" disabled>التالي</button>
 </div>
 <div id="page2" class="hidden">
-<h2>قم بكتابة توكن حسابك ديسكورد</h2>
-<input type="text" id="tokenInput" placeholder="أدخل التوكن"/>
-<div id="tokenError" class="error"></div>
-<button onclick="checkToken()">متابعة</button>
+  <h2>قم بكتابة توكن حسابك ديسكورد</h2>
+  <input type="text" id="tokenInput" placeholder="أدخل التوكن" autocomplete="off" />
+  <div id="tokenError" class="error"></div>
+  <button onclick="checkToken()">متابعة</button>
 </div>
 <div id="page3" class="hidden">
-<h2>قم بكتابة ايدي الروم</h2>
-<input type="text" id="channelIdInput" placeholder="أدخل ID الروم"/>
-<h2>قم بكتابة الكلام</h2>
-<textarea id="messageInput" placeholder="أدخل الرسالة"></textarea><br/>
-<button id="startBtn" onclick="startSending()">تشغيل</button>
-<button id="stopBtn" onclick="stopSending()">إيقاف</button>
-<div id="sendStatus"></div>
+  <h2>قم بكتابة ايدي الروم</h2>
+  <input type="text" id="channelIdInput" placeholder="أدخل ID الروم" autocomplete="off" />
+  <h2>قم بكتابة الكلام</h2>
+  <textarea id="messageInput" placeholder="أدخل الرسالة"></textarea><br />
+  <button id="startBtn" onclick="startSending()">تشغيل</button>
+  <button id="stopBtn" onclick="stopSending()">إيقاف</button>
+  <div id="sendStatus"></div>
 </div>
 <script>
 (function(){
-const pI=document.getElementById("passwordInput"),
-      nB=document.getElementById("nextBtn"),
-      pE=document.getElementById("passwordError"),
-      sP=atob("NDk3");
-pI.addEventListener("input",()=>{
-  if(pI.value.trim()===sP){
-    nB.disabled=false;
-    pE.textContent="";
-  } else {
-    nB.disabled=true;
-    pE.textContent=pI.value.trim()!==""?"الرمز السري غير صحيح":"";
-  }
-});
-nB.addEventListener("click",()=>{
-  if(pI.value.trim()===sP){
-    showPage(2);
-  } else {
-    pE.textContent="رمز سري خاطئ";
-  }
-});
+  const pI = document.getElementById("passwordInput"),
+        nB = document.getElementById("nextBtn"),
+        pE = document.getElementById("passwordError"),
+        sP = atob("NDk3");
+  pI.addEventListener("input", () => {
+    if (pI.value.trim() === sP) {
+      nB.disabled = false;
+      pE.textContent = "";
+    } else {
+      nB.disabled = true;
+      pE.textContent = pI.value.trim() !== "" ? "الرمز السري غير صحيح" : "";
+    }
+  });
+  nB.addEventListener("click", () => {
+    if (pI.value.trim() === sP) {
+      showPage(2);
+    } else {
+      pE.textContent = "رمز سري خاطئ";
+    }
+  });
 })();
-function checkToken(){
-  const t=document.getElementById("tokenInput").value.trim();
-  if(t.length===0){
-    document.getElementById("tokenError").textContent="الرجاء إدخال التوكن";
+function checkToken() {
+  const t = document.getElementById("tokenInput").value.trim();
+  if (t.length === 0) {
+    document.getElementById("tokenError").textContent = "الرجاء إدخال التوكن";
     return;
   }
-  document.getElementById("tokenError").textContent="";
+  document.getElementById("tokenError").textContent = "";
   showPage(3);
 }
-function showPage(n){
+function showPage(n) {
   document.getElementById("page1").classList.add("hidden");
   document.getElementById("page2").classList.add("hidden");
   document.getElementById("page3").classList.add("hidden");
-  document.getElementById("sendStatus").textContent="";
-  if(n===1) document.getElementById("page1").classList.remove("hidden");
-  if(n===2) document.getElementById("page2").classList.remove("hidden");
-  if(n===3) document.getElementById("page3").classList.remove("hidden");
+  document.getElementById("sendStatus").textContent = "";
+  if (n === 1) document.getElementById("page1").classList.remove("hidden");
+  if (n === 2) document.getElementById("page2").classList.remove("hidden");
+  if (n === 3) document.getElementById("page3").classList.remove("hidden");
 }
-async function sendMessage(){
-  const chId=document.getElementById("channelIdInput").value.trim(),
-        msg=document.getElementById("messageInput").value.trim();
-  if(!chId||!msg){
-    document.getElementById("sendStatus").textContent="الرجاء إدخال معرف الروم والرسالة.";
+async function sendMessage() {
+  const chId = document.getElementById("channelIdInput").value.trim(),
+        msg = document.getElementById("messageInput").value.trim();
+  if (!chId || !msg) {
+    document.getElementById("sendStatus").textContent = "الرجاء إدخال معرف الروم والرسالة.";
     return;
   }
-  document.getElementById("sendStatus").textContent="جاري الإرسال...";
-  const webhookUrl="https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN";
-  try{
-    const r=await fetch(webhookUrl,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({content:msg})
+  document.getElementById("sendStatus").textContent = "جاري الإرسال...";
+  const webhookUrl = "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN";
+  try {
+    const r = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({content: msg})
     });
-    document.getElementById("sendStatus").textContent=r.ok?"تم إرسال الرسالة بنجاح!":"فشل في إرسال الرسالة.";
-  }catch(e){
-    document.getElementById("sendStatus").textContent="حدث خطأ أثناء الإرسال.";
+    document.getElementById("sendStatus").textContent = r.ok ? "تم إرسال الرسالة بنجاح!" : "فشل في إرسال الرسالة.";
+  } catch(e) {
+    document.getElementById("sendStatus").textContent = "حدث خطأ أثناء الإرسال.";
   }
 }
-let intervalId=null;
-function startSending(){
-  if(intervalId!==null) return;
-  const chId=document.getElementById("channelIdInput").value.trim(),
-        msg=document.getElementById("messageInput").value.trim();
-  if(!chId||!msg){
-    document.getElementById("sendStatus").textContent="الرجاء إدخال معرف الروم والرسالة.";
+let intervalId = null;
+function startSending() {
+  if (intervalId !== null) return;
+  const chId = document.getElementById("channelIdInput").value.trim(),
+        msg = document.getElementById("messageInput").value.trim();
+  if (!chId || !msg) {
+    document.getElementById("sendStatus").textContent = "الرجاء إدخال معرف الروم والرسالة.";
     return;
   }
-  document.getElementById("sendStatus").textContent="تم تشغيل الإرسال التلقائي.";
-  intervalId=setInterval(sendMessage,300);
+  document.getElementById("sendStatus").textContent = "تم تشغيل الإرسال التلقائي.";
+  intervalId = setInterval(sendMessage, 300);
 }
-function stopSending(){
-  if(intervalId!==null){
+function stopSending() {
+  if (intervalId !== null) {
     clearInterval(intervalId);
-    intervalId=null;
-    document.getElementById("sendStatus").textContent="تم إيقاف الإرسال.";
+    intervalId = null;
+    document.getElementById("sendStatus").textContent = "تم إيقاف الإرسال.";
   }
 }
 showPage(1);
