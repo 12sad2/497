@@ -3,300 +3,161 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>تحكم بوت ProBot</title>
+<title>تحكم بوت - ProBot</title>
 <style>
   body {
     background-color: #000;
     color: #fff;
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     padding: 20px;
-    direction: rtl;
+    text-align: center;
   }
   button {
     cursor: pointer;
     border: none;
-    border-radius: 6px;
-    padding: 10px 15px;
+    border-radius: 8px;
+    padding: 10px 20px;
     font-size: 16px;
   }
-  #bot-control-btn {
-    background-color: #27ae60;
+  #login-section button {
+    background: linear-gradient(90deg, #e74c3c, #3498db);
     color: white;
-    margin-bottom: 20px;
-  }
-  .hidden {
-    display: none;
   }
   #guilds-list li {
-    background: #222;
-    margin: 8px 0;
+    list-style: none;
+    margin: 10px 0;
     padding: 10px;
+    background: #222;
     border-radius: 6px;
     cursor: pointer;
   }
   #guilds-list li.selected {
-    background: #3498db;
+    background: #27ae60;
+    color: #000;
   }
-  #control-page h1 {
-    font-size: 2em;
-    color: #e74c3c;
-    margin-bottom: 10px;
+  #guild-control-btn {
+    margin-top: 20px;
+    background-color: #27ae60;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
   }
-  #control-page img {
-    vertical-align: middle;
+  #control-page, #replies-page, #guilds-section {
+    margin-top: 20px;
+  }
+  #server-name {
+    font-size: 32px;
+    color: #27ae60;
+  }
+  #server-icon, #user-avatar {
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    margin-left: 10px;
+    margin: 10px;
   }
   #auto-replies-btn {
-    background-color: #000;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 20px;
-    border: 2px solid white;
-    border-radius: 6px;
+    background-color: #fff;
+    color: #000;
+    padding: 10px 25px;
+    border-radius: 8px;
+    margin-top: 15px;
   }
-  #replies-page select, #replies-page input[type=text] {
-    width: 100%;
+  #replies-page select, #replies-page input {
+    width: 90%;
     padding: 10px;
     margin: 10px 0;
     border-radius: 6px;
-    border: 1px solid #555;
-    background-color: #111;
-    color: white;
+    border: none;
+    font-size: 16px;
   }
-  #replies-page button.save-btn {
-    background-color: #2980b9;
+  #replies-page .save-btn {
+    background-color: #3498db;
     color: white;
     margin-right: 10px;
   }
-  #replies-page button.cancel-btn {
-    background-color: white;
+  #replies-page .cancel-btn {
+    background-color: #fff;
     color: black;
   }
-  #guilds-list {
-    max-width: 500px;
-    margin: auto;
+  #replies-list {
+    max-height: 300px;
+    overflow-y: auto;
     text-align: right;
+    margin-top: 20px;
+  }
+  .reply-item {
+    background: #222;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+  .reply-item button {
+    margin-left: 10px;
+    background: #3498db;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  .hidden {
+    display: none;
   }
 </style>
 </head>
 <body>
 
-<button id="bot-control-btn">تحكم بوت ✅</button>
-
 <div id="login-section">
-  <h2>تسجيل الدخول عبر ديسكورد</h2>
+  <h1>مرحباً بك في ProBot</h1>
   <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F&response_type=token&scope=identify%20guilds">
-    <button>تسجيل دخول</button>
+    <button>تسجيل الدخول عبر ديسكورد</button>
   </a>
 </div>
 
 <div id="guilds-section" class="hidden">
-  <h2>اختر سيرفرك</h2>
+  <h2>اختر السيرفر للتحكم فيه</h2>
   <ul id="guilds-list"></ul>
-  <button id="guild-control-btn" class="hidden">تحكم</button>
+  <button id="guild-control-btn" class="hidden">تحكم في السيرفر</button>
 </div>
 
 <div id="control-page" class="hidden">
   <h1 id="server-name"></h1>
-  <div>
-    <img id="server-icon" alt="Server Icon" />
-    <img id="user-avatar" alt="User Avatar" />
-  </div>
+  <img id="server-icon" alt="صورة السيرفر" />
+  <img id="user-avatar" alt="صورة المستخدم" />
+  <br />
   <button id="auto-replies-btn">ردود تلقائية</button>
-  <button id="back-to-guilds">رجوع</button>
+  <button id="back-to-guilds">رجوع للسيرفرات</button>
 </div>
 
 <div id="replies-page" class="hidden">
-  <h2>إعداد ردود تلقائية</h2>
-  <label>النص (المفتاح):</label>
-  <input type="text" id="reply-key" placeholder="أدخل النص هنا..." />
-  
-  <label>الرد:</label>
-  <select id="reply-value">
-    <option value="رد افتراضي 1">رد افتراضي 1</option>
-    <option value="رد افتراضي 2">رد افتراضي 2</option>
-    <option value="رد افتراضي 3">رد افتراضي 3</option>
-  </select>
-
-  <div style="margin-top: 15px;">
-    <button class="save-btn">حفظ</button>
-    <button class="cancel-btn">إلغاء</button>
-  </div>
-  <button id="back-to-control">رجوع</button>
+  <h2>إدارة الردود التلقائية</h2>
+  <input id="reply-key" placeholder="النص" />
+  <input id="reply-value" placeholder="الرد" />
+  <br />
+  <button class="save-btn">حفظ</button>
+  <button class="cancel-btn">إلغاء</button>
+  <button id="back-to-control">رجوع لتحكم السيرفر</button>
+  <div id="replies-list"></div>
 </div>
 
+<button id="bot-control-btn" style="margin-top: 30px; background-color: #27ae60; color: white; padding: 12px 25px; border-radius: 8px;">تحكم بوت ✅</button>
+
+<script src="botControl.js"></script>
 <script>
-  const clientId = "1360270113001177118";
-  const redirectUri = "https://tubular-parfait-58a9e4.netlify.app/";
-
-  let token = null;
-  let user = null;
-  let guilds = [];
-  let selectedGuild = null;
-
-  // تخزين الردود التلقائية محلياً (بدون باك إند) - مفتاح: رد
-  const autoReplies = {};
-
-  // عناصر
-  const loginSection = document.getElementById("login-section");
-  const guildsSection = document.getElementById("guilds-section");
-  const guildsList = document.getElementById("guilds-list");
-  const guildControlBtn = document.getElementById("guild-control-btn");
-  const controlPage = document.getElementById("control-page");
-  const serverNameH1 = document.getElementById("server-name");
-  const serverIconImg = document.getElementById("server-icon");
-  const userAvatarImg = document.getElementById("user-avatar");
-  const autoRepliesBtn = document.getElementById("auto-replies-btn");
-  const backToGuildsBtn = document.getElementById("back-to-guilds");
-  const repliesPage = document.getElementById("replies-page");
-  const replyKeyInput = document.getElementById("reply-key");
-  const replyValueSelect = document.getElementById("reply-value");
-  const saveReplyBtn = repliesPage.querySelector(".save-btn");
-  const cancelReplyBtn = repliesPage.querySelector(".cancel-btn");
-  const backToControlBtn = document.getElementById("back-to-control");
-  const botControlBtn = document.getElementById("bot-control-btn");
-
-  function showElement(el) { el.classList.remove("hidden"); }
-  function hideElement(el) { el.classList.add("hidden"); }
-
-  botControlBtn.onclick = () => {
-    if (!token) {
-      alert("يرجى تسجيل الدخول أولاً.");
-      return;
-    }
-    showGuildsPage();
-  };
-
-  function showGuildsPage() {
-    hideElement(loginSection);
-    hideElement(controlPage);
-    hideElement(repliesPage);
-    showElement(guildsSection);
-    guildControlBtn.classList.add("hidden");
-  }
-
-  async function fetchDiscordData(token) {
-    try {
-      let userRes = await fetch("https://discord.com/api/users/@me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      user = await userRes.json();
-
-      let guildsRes = await fetch("https://discord.com/api/users/@me/guilds", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      guilds = await guildsRes.json();
-
-      // فلتر السيرفرات التي لديك فيها صلاحية أدمين (0x8)
-      guilds = guilds.filter((g) => (g.permissions & 0x8) === 0x8);
-
-      if (guilds.length === 0) {
-        alert("لا يوجد لديك سيرفرات بصلاحية إدارة.");
-        return;
-      }
-
-      loginSection.style.display = "none";
-      showGuildsPage();
-
-      renderGuilds();
-    } catch (err) {
-      alert("فشل في جلب البيانات: " + err.message);
-    }
-  }
-
-  function renderGuilds() {
-    guildsList.innerHTML = "";
-    selectedGuild = null;
-    guildControlBtn.classList.add("hidden");
-
-    guilds.forEach((guild) => {
-      let li = document.createElement("li");
-      li.textContent = guild.name;
-      li.onclick = () => {
-        document.querySelectorAll("#guilds-list li").forEach((el) =>
-          el.classList.remove("selected")
-        );
-        li.classList.add("selected");
-        selectedGuild = guild;
-        guildControlBtn.classList.remove("hidden");
-      };
-      guildsList.appendChild(li);
-    });
-  }
-
-  guildControlBtn.onclick = () => {
-    if (!selectedGuild) return;
-    showControlPage();
-  };
-
-  function showControlPage() {
-    hideElement(guildsSection);
-    hideElement(repliesPage);
-    showElement(controlPage);
-
-    serverNameH1.textContent = selectedGuild.name;
-    serverNameH1.style.color = "#27ae60"; // أخضر
-
-    serverIconImg.src = `https://cdn.discordapp.com/icons/${selectedGuild.id}/${selectedGuild.icon}.png`;
-    userAvatarImg.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-
-    hideElement(autoRepliesBtn);
-    showElement(autoRepliesBtn);
-  }
-
-  autoRepliesBtn.onclick = () => {
-    hideElement(controlPage);
-    showElement(repliesPage);
-    replyKeyInput.value = "";
-    replyValueSelect.value = replyValueSelect.options[0].value;
-  };
-
-  backToGuildsBtn.onclick = () => {
-    showGuildsPage();
-  };
-
-  backToControlBtn.onclick = () => {
-    showControlPage();
-  };
-
-  saveReplyBtn.onclick = () => {
-    const key = replyKeyInput.value.trim();
-    const val = replyValueSelect.value;
-
-    if (!key) {
-      alert("الرجاء إدخال نص المفتاح.");
-      return;
-    }
-
-    if (!selectedGuild) {
-      alert("لم يتم اختيار سيرفر.");
-      return;
-    }
-
-    if (!autoReplies[selectedGuild.id]) {
-      autoReplies[selectedGuild.id] = {};
-    }
-
-    autoReplies[selectedGuild.id][key] = val;
-
-    alert(`تم حفظ الرد التلقائي للسيرفر ${selectedGuild.name}: "${key}" => "${val}"`);
-    showControlPage();
-  };
-
-  cancelReplyBtn.onclick = () => {
-    showControlPage();
-  };
-
-  // استخراج التوكن من الرابط
-  const hash = window.location.hash;
+  const hash = window.location.hash
   if (hash && hash.includes("access_token")) {
-    const params = new URLSearchParams(hash.substring(1));
-    token = params.get("access_token");
-    fetchDiscordData(token);
+    const params = new URLSearchParams(hash.substring(1))
+    const tokenFromUrl = params.get("access_token")
+    if (tokenFromUrl) {
+      localStorage.setItem("discord_token", tokenFromUrl)
+      window.location.hash = ""
+      location.reload()
+    }
+  }
+  const storedToken = localStorage.getItem("discord_token")
+  if (storedToken) {
+    token = storedToken
+    fetchDiscordData(token)
   }
 </script>
+
 </body>
 </html>
