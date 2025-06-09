@@ -8,30 +8,62 @@
     body {
       font-family: sans-serif;
       text-align: center;
-      background-color: #000; /* خلفية سوداء */
-      color: #fff; /* نص أبيض */
+      background-color: #000;
+      color: #fff;
       padding: 30px;
       direction: rtl;
     }
-    button {
+    #login-section button {
       margin-top: 20px;
-      padding: 10px 15px;
-      font-size: 16px;
+      padding: 10px 20px;
+      font-size: 18px;
       border-radius: 8px;
       border: none;
-      background-color: #2ecc71;
-      color: white;
       cursor: pointer;
+      color: white;
+      background: linear-gradient(90deg, #e74c3c, #3498db);
+      transition: background 0.3s ease;
     }
-    select {
+    #login-section button:hover {
+      background: linear-gradient(90deg, #c0392b, #2980b9);
+    }
+    #guilds-list {
+      margin-top: 30px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: right;
+    }
+    #guilds-list ul {
+      list-style: none;
+      padding: 0;
+    }
+    #guilds-list li {
+      background: #222;
+      margin-bottom: 10px;
+      padding: 12px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    #guilds-list li.selected {
+      border-color: #3498db;
+      background: #34495e;
+    }
+    #invite-btn {
       margin-top: 20px;
-      padding: 10px 15px;
-      font-size: 16px;
+      padding: 12px 25px;
+      font-size: 18px;
       border-radius: 8px;
       border: none;
-    }
-    .hidden {
+      cursor: pointer;
+      background-color: #3498db;
+      color: white;
       display: none;
+    }
+    #invite-btn:hover {
+      background-color: #2980b9;
     }
   </style>
 </head>
@@ -44,62 +76,61 @@
   </div>
 
   <div id="app-section" class="hidden">
-    <img id="bot-avatar" src="https://cdn.discordapp.com/avatars/1360270113001177118/60508c6d47fe0270eb9a5d8783cb0538.webp?size=1024" alt="Bot" style="border-radius: 50%; width: 100px; height: 100px;" />
-    <img id="user-avatar" src="" alt="User" style="border-radius: 50%; width: 100px; height: 100px;" />
-    <h2 id="username"></h2>
-    <select id="guilds-select"></select>
+    <h2>اختر سيرفرك</h2>
+    <div id="guilds-list">
+      <ul id="guilds-ul"></ul>
+    </div>
+    <button id="invite-btn">إدخال البوت</button>
   </div>
 
   <script>
-    // صفحة أخرى (مثلاً صفحة داخل نفس الموقع)
-    const registeredPage = "registered.html";
+    const clientId = "1360270113001177118";
+    const redirectUri = "https://tubular-parfait-58a9e4.netlify.app/";
+    let selectedGuildId = null;
 
     async function fetchDiscordData(token) {
-      const [userRes, guildsRes] = await Promise.all([
-        fetch('https://discord.com/api/users/@me', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        fetch('https://discord.com/api/users/@me/guilds', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-      ]);
-
-      if (!userRes.ok) {
-        alert('فشل في جلب بيانات المستخدم.');
+      const guildsRes = await fetch('https://discord.com/api/users/@me/guilds', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!guildsRes.ok) {
+        alert('فشل في جلب بيانات السيرفرات.');
         return;
       }
-      const user = await userRes.json();
-
-      // تحقق "هل المستخدم مسجل" - هنا مثال بسيط:
-      // افترض إننا نعتبر المستخدم مسجل إذا كان الـ user.id مخزن في localStorage
-      const registeredUsers = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
-      if (registeredUsers.includes(user.id)) {
-        // إذا مسجل، نوجهه للصفحة الثانية
-        window.location.href = registeredPage;
-        return;
-      }
-
-      // غير مسجل، نظهر المعلومات
       const guilds = await guildsRes.json();
+
+      const adminGuilds = guilds.filter(guild => (guild.permissions & 0x8) === 0x8);
+
+      if (adminGuilds.length === 0) {
+        alert("لا يوجد لديك سيرفرات بصلاحية إدارة.");
+        return;
+      }
 
       document.getElementById("login-section").classList.add("hidden");
       document.getElementById("app-section").classList.remove("hidden");
 
-      document.getElementById("user-avatar").src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=1024`;
-      document.getElementById("username").textContent = user.username + "#" + user.discriminator;
+      const ul = document.getElementById("guilds-ul");
+      ul.innerHTML = "";
 
-      const select = document.getElementById("guilds-select");
-      guilds.forEach(guild => {
-        if ((guild.permissions & 0x8) === 0x8) { // صلاحية الأدمن
-          const option = document.createElement("option");
-          option.value = guild.id;
-          option.textContent = guild.name;
-          select.appendChild(option);
-        }
+      adminGuilds.forEach(guild => {
+        const li = document.createElement("li");
+        li.textContent = guild.name;
+        li.dataset.guildId = guild.id;
+        li.addEventListener("click", () => {
+          document.querySelectorAll("#guilds-ul li").forEach(el => el.classList.remove("selected"));
+          li.classList.add("selected");
+          selectedGuildId = guild.id;
+          document.getElementById("invite-btn").style.display = "inline-block";
+        });
+        ul.appendChild(li);
       });
     }
 
-    // استخراج التوكن من الرابط بعد تسجيل الدخول
+    document.getElementById("invite-btn").addEventListener("click", () => {
+      if (!selectedGuildId) return;
+      const inviteUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=8&scope=bot%20applications.commands&guild_id=${selectedGuildId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+      window.open(inviteUrl, "_blank");
+    });
+
     const hash = window.location.hash;
     if (hash && hash.includes("access_token")) {
       const params = new URLSearchParams(hash.substring(1));
