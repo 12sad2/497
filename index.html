@@ -1,142 +1,302 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تسجيل الدخول - ProBot</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      background-color: #000;
-      color: #fff;
-      padding: 30px;
-      direction: rtl;
-    }
-    #login-section button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 18px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      color: white;
-      background: linear-gradient(90deg, #e74c3c, #3498db);
-      transition: background 0.3s ease;
-    }
-    #login-section button:hover {
-      background: linear-gradient(90deg, #c0392b, #2980b9);
-    }
-    #guilds-list {
-      margin-top: 30px;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: right;
-    }
-    #guilds-list ul {
-      list-style: none;
-      padding: 0;
-    }
-    #guilds-list li {
-      background: #222;
-      margin-bottom: 10px;
-      padding: 12px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: border-color 0.3s ease;
-    }
-    #guilds-list li.selected {
-      border-color: #3498db;
-      background: #34495e;
-    }
-    #invite-btn {
-      margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 18px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      background-color: #3498db;
-      color: white;
-      display: none;
-    }
-    #invite-btn:hover {
-      background-color: #2980b9;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>تحكم بوت ProBot</title>
+<style>
+  body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    direction: rtl;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 16px;
+  }
+  #bot-control-btn {
+    background-color: #27ae60;
+    color: white;
+    margin-bottom: 20px;
+  }
+  .hidden {
+    display: none;
+  }
+  #guilds-list li {
+    background: #222;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #guilds-list li.selected {
+    background: #3498db;
+  }
+  #control-page h1 {
+    font-size: 2em;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+  #control-page img {
+    vertical-align: middle;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    margin-left: 10px;
+  }
+  #auto-replies-btn {
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: 2px solid white;
+    border-radius: 6px;
+  }
+  #replies-page select, #replies-page input[type=text] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background-color: #111;
+    color: white;
+  }
+  #replies-page button.save-btn {
+    background-color: #2980b9;
+    color: white;
+    margin-right: 10px;
+  }
+  #replies-page button.cancel-btn {
+    background-color: white;
+    color: black;
+  }
+  #guilds-list {
+    max-width: 500px;
+    margin: auto;
+    text-align: right;
+  }
+</style>
 </head>
 <body>
-  <div id="login-section">
-    <h1>مرحباً بك في ProBot</h1>
-    <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F&response_type=token&scope=identify%20guilds">
-      <button>تسجيل الدخول عبر ديسكورد</button>
-    </a>
+
+<button id="bot-control-btn">تحكم بوت ✅</button>
+
+<div id="login-section">
+  <h2>تسجيل الدخول عبر ديسكورد</h2>
+  <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F&response_type=token&scope=identify%20guilds">
+    <button>تسجيل دخول</button>
+  </a>
+</div>
+
+<div id="guilds-section" class="hidden">
+  <h2>اختر سيرفرك</h2>
+  <ul id="guilds-list"></ul>
+  <button id="guild-control-btn" class="hidden">تحكم</button>
+</div>
+
+<div id="control-page" class="hidden">
+  <h1 id="server-name"></h1>
+  <div>
+    <img id="server-icon" alt="Server Icon" />
+    <img id="user-avatar" alt="User Avatar" />
   </div>
+  <button id="auto-replies-btn">ردود تلقائية</button>
+  <button id="back-to-guilds">رجوع</button>
+</div>
 
-  <div id="app-section" class="hidden">
-    <h2>اختر سيرفرك</h2>
-    <div id="guilds-list">
-      <ul id="guilds-ul"></ul>
-    </div>
-    <button id="invite-btn">إدخال البوت</button>
+<div id="replies-page" class="hidden">
+  <h2>إعداد ردود تلقائية</h2>
+  <label>النص (المفتاح):</label>
+  <input type="text" id="reply-key" placeholder="أدخل النص هنا..." />
+  
+  <label>الرد:</label>
+  <select id="reply-value">
+    <option value="رد افتراضي 1">رد افتراضي 1</option>
+    <option value="رد افتراضي 2">رد افتراضي 2</option>
+    <option value="رد افتراضي 3">رد افتراضي 3</option>
+  </select>
+
+  <div style="margin-top: 15px;">
+    <button class="save-btn">حفظ</button>
+    <button class="cancel-btn">إلغاء</button>
   </div>
+  <button id="back-to-control">رجوع</button>
+</div>
 
-  <script>
-    const clientId = "1360270113001177118";
-    const redirectUri = "https://tubular-parfait-58a9e4.netlify.app/";
-    let selectedGuildId = null;
+<script>
+  const clientId = "1360270113001177118";
+  const redirectUri = "https://tubular-parfait-58a9e4.netlify.app/";
 
-    async function fetchDiscordData(token) {
-      const guildsRes = await fetch('https://discord.com/api/users/@me/guilds', {
-        headers: { Authorization: `Bearer ${token}` }
+  let token = null;
+  let user = null;
+  let guilds = [];
+  let selectedGuild = null;
+
+  // تخزين الردود التلقائية محلياً (بدون باك إند) - مفتاح: رد
+  const autoReplies = {};
+
+  // عناصر
+  const loginSection = document.getElementById("login-section");
+  const guildsSection = document.getElementById("guilds-section");
+  const guildsList = document.getElementById("guilds-list");
+  const guildControlBtn = document.getElementById("guild-control-btn");
+  const controlPage = document.getElementById("control-page");
+  const serverNameH1 = document.getElementById("server-name");
+  const serverIconImg = document.getElementById("server-icon");
+  const userAvatarImg = document.getElementById("user-avatar");
+  const autoRepliesBtn = document.getElementById("auto-replies-btn");
+  const backToGuildsBtn = document.getElementById("back-to-guilds");
+  const repliesPage = document.getElementById("replies-page");
+  const replyKeyInput = document.getElementById("reply-key");
+  const replyValueSelect = document.getElementById("reply-value");
+  const saveReplyBtn = repliesPage.querySelector(".save-btn");
+  const cancelReplyBtn = repliesPage.querySelector(".cancel-btn");
+  const backToControlBtn = document.getElementById("back-to-control");
+  const botControlBtn = document.getElementById("bot-control-btn");
+
+  function showElement(el) { el.classList.remove("hidden"); }
+  function hideElement(el) { el.classList.add("hidden"); }
+
+  botControlBtn.onclick = () => {
+    if (!token) {
+      alert("يرجى تسجيل الدخول أولاً.");
+      return;
+    }
+    showGuildsPage();
+  };
+
+  function showGuildsPage() {
+    hideElement(loginSection);
+    hideElement(controlPage);
+    hideElement(repliesPage);
+    showElement(guildsSection);
+    guildControlBtn.classList.add("hidden");
+  }
+
+  async function fetchDiscordData(token) {
+    try {
+      let userRes = await fetch("https://discord.com/api/users/@me", {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!guildsRes.ok) {
-        alert('فشل في جلب بيانات السيرفرات.');
-        return;
-      }
-      const guilds = await guildsRes.json();
+      user = await userRes.json();
 
-      const adminGuilds = guilds.filter(guild => (guild.permissions & 0x8) === 0x8);
+      let guildsRes = await fetch("https://discord.com/api/users/@me/guilds", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      guilds = await guildsRes.json();
 
-      if (adminGuilds.length === 0) {
+      // فلتر السيرفرات التي لديك فيها صلاحية أدمين (0x8)
+      guilds = guilds.filter((g) => (g.permissions & 0x8) === 0x8);
+
+      if (guilds.length === 0) {
         alert("لا يوجد لديك سيرفرات بصلاحية إدارة.");
         return;
       }
 
-      document.getElementById("login-section").classList.add("hidden");
-      document.getElementById("app-section").classList.remove("hidden");
+      loginSection.style.display = "none";
+      showGuildsPage();
 
-      const ul = document.getElementById("guilds-ul");
-      ul.innerHTML = "";
-
-      adminGuilds.forEach(guild => {
-        const li = document.createElement("li");
-        li.textContent = guild.name;
-        li.dataset.guildId = guild.id;
-        li.addEventListener("click", () => {
-          document.querySelectorAll("#guilds-ul li").forEach(el => el.classList.remove("selected"));
-          li.classList.add("selected");
-          selectedGuildId = guild.id;
-          document.getElementById("invite-btn").style.display = "inline-block";
-        });
-        ul.appendChild(li);
-      });
+      renderGuilds();
+    } catch (err) {
+      alert("فشل في جلب البيانات: " + err.message);
     }
+  }
 
-    document.getElementById("invite-btn").addEventListener("click", () => {
-      if (!selectedGuildId) return;
-      const inviteUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=8&scope=bot%20applications.commands&guild_id=${selectedGuildId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
-      window.open(inviteUrl, "_blank");
+  function renderGuilds() {
+    guildsList.innerHTML = "";
+    selectedGuild = null;
+    guildControlBtn.classList.add("hidden");
+
+    guilds.forEach((guild) => {
+      let li = document.createElement("li");
+      li.textContent = guild.name;
+      li.onclick = () => {
+        document.querySelectorAll("#guilds-list li").forEach((el) =>
+          el.classList.remove("selected")
+        );
+        li.classList.add("selected");
+        selectedGuild = guild;
+        guildControlBtn.classList.remove("hidden");
+      };
+      guildsList.appendChild(li);
     });
+  }
 
-    const hash = window.location.hash;
-    if (hash && hash.includes("access_token")) {
-      const params = new URLSearchParams(hash.substring(1));
-      const token = params.get("access_token");
-      fetchDiscordData(token);
+  guildControlBtn.onclick = () => {
+    if (!selectedGuild) return;
+    showControlPage();
+  };
+
+  function showControlPage() {
+    hideElement(guildsSection);
+    hideElement(repliesPage);
+    showElement(controlPage);
+
+    serverNameH1.textContent = selectedGuild.name;
+    serverNameH1.style.color = "#27ae60"; // أخضر
+
+    serverIconImg.src = `https://cdn.discordapp.com/icons/${selectedGuild.id}/${selectedGuild.icon}.png`;
+    userAvatarImg.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+
+    hideElement(autoRepliesBtn);
+    showElement(autoRepliesBtn);
+  }
+
+  autoRepliesBtn.onclick = () => {
+    hideElement(controlPage);
+    showElement(repliesPage);
+    replyKeyInput.value = "";
+    replyValueSelect.value = replyValueSelect.options[0].value;
+  };
+
+  backToGuildsBtn.onclick = () => {
+    showGuildsPage();
+  };
+
+  backToControlBtn.onclick = () => {
+    showControlPage();
+  };
+
+  saveReplyBtn.onclick = () => {
+    const key = replyKeyInput.value.trim();
+    const val = replyValueSelect.value;
+
+    if (!key) {
+      alert("الرجاء إدخال نص المفتاح.");
+      return;
     }
-  </script>
+
+    if (!selectedGuild) {
+      alert("لم يتم اختيار سيرفر.");
+      return;
+    }
+
+    if (!autoReplies[selectedGuild.id]) {
+      autoReplies[selectedGuild.id] = {};
+    }
+
+    autoReplies[selectedGuild.id][key] = val;
+
+    alert(`تم حفظ الرد التلقائي للسيرفر ${selectedGuild.name}: "${key}" => "${val}"`);
+    showControlPage();
+  };
+
+  cancelReplyBtn.onclick = () => {
+    showControlPage();
+  };
+
+  // استخراج التوكن من الرابط
+  const hash = window.location.hash;
+  if (hash && hash.includes("access_token")) {
+    const params = new URLSearchParams(hash.substring(1));
+    token = params.get("access_token");
+    fetchDiscordData(token);
+  }
+</script>
 </body>
 </html>
