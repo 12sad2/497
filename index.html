@@ -1,163 +1,108 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>تحكم بوت - ProBot</title>
-<style>
-  body {
-    background-color: #000;
-    color: #fff;
-    font-family: sans-serif;
-    padding: 20px;
-    text-align: center;
-  }
-  button {
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-  }
-  #login-section button {
-    background: linear-gradient(90deg, #e74c3c, #3498db);
-    color: white;
-  }
-  #guilds-list li {
-    list-style: none;
-    margin: 10px 0;
-    padding: 10px;
-    background: #222;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  #guilds-list li.selected {
-    background: #27ae60;
-    color: #000;
-  }
-  #guild-control-btn {
-    margin-top: 20px;
-    background-color: #27ae60;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
-  }
-  #control-page, #replies-page, #guilds-section {
-    margin-top: 20px;
-  }
-  #server-name {
-    font-size: 32px;
-    color: #27ae60;
-  }
-  #server-icon, #user-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 10px;
-  }
-  #auto-replies-btn {
-    background-color: #fff;
-    color: #000;
-    padding: 10px 25px;
-    border-radius: 8px;
-    margin-top: 15px;
-  }
-  #replies-page select, #replies-page input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-  }
-  #replies-page .save-btn {
-    background-color: #3498db;
-    color: white;
-    margin-right: 10px;
-  }
-  #replies-page .cancel-btn {
-    background-color: #fff;
-    color: black;
-  }
-  #replies-list {
-    max-height: 300px;
-    overflow-y: auto;
-    text-align: right;
-    margin-top: 20px;
-  }
-  .reply-item {
-    background: #222;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-  }
-  .reply-item button {
-    margin-left: 10px;
-    background: #3498db;
-    color: #fff;
-    padding: 5px 10px;
-    font-size: 14px;
-  }
-  .hidden {
-    display: none;
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>لوحة تحكم البوت</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+
+    button, select {
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    .green {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .white {
+      background-color: white;
+      color: black;
+    }
+
+    img {
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+    }
+
+    .guild {
+      background-color: #111;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<div id="login-section">
-  <h1>مرحباً بك في ProBot</h1>
-  <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F&response_type=token&scope=identify%20guilds">
-    <button>تسجيل الدخول عبر ديسكورد</button>
-  </a>
-</div>
+  <h1>لوحة تحكم البوت</h1>
 
-<div id="guilds-section" class="hidden">
-  <h2>اختر السيرفر للتحكم فيه</h2>
-  <ul id="guilds-list"></ul>
-  <button id="guild-control-btn" class="hidden">تحكم في السيرفر</button>
-</div>
+  <div id="login-section">
+    <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F&response_type=token&scope=identify%20guilds">
+      <button class="green">تسجيل الدخول عبر ديسكورد</button>
+    </a>
+  </div>
 
-<div id="control-page" class="hidden">
-  <h1 id="server-name"></h1>
-  <img id="server-icon" alt="صورة السيرفر" />
-  <img id="user-avatar" alt="صورة المستخدم" />
-  <br />
-  <button id="auto-replies-btn">ردود تلقائية</button>
-  <button id="back-to-guilds">رجوع للسيرفرات</button>
-</div>
+  <div id="user-section" style="display: none;">
+    <img id="user-avatar" src="" alt="User">
+    <h2 id="user-name"></h2>
 
-<div id="replies-page" class="hidden">
-  <h2>إدارة الردود التلقائية</h2>
-  <input id="reply-key" placeholder="النص" />
-  <input id="reply-value" placeholder="الرد" />
-  <br />
-  <button class="save-btn">حفظ</button>
-  <button class="cancel-btn">إلغاء</button>
-  <button id="back-to-control">رجوع لتحكم السيرفر</button>
-  <div id="replies-list"></div>
-</div>
+    <div id="guilds-list"></div>
+  </div>
 
-<button id="bot-control-btn" style="margin-top: 30px; background-color: #27ae60; color: white; padding: 12px 25px; border-radius: 8px;">تحكم بوت ✅</button>
+  <script>
+    async function fetchData(token) {
+      const userRes = await fetch("https://discord.com/api/users/@me", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const guildsRes = await fetch("https://discord.com/api/users/@me/guilds", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-<script src="botControl.js"></script>
-<script>
-  const hash = window.location.hash
-  if (hash && hash.includes("access_token")) {
-    const params = new URLSearchParams(hash.substring(1))
-    const tokenFromUrl = params.get("access_token")
-    if (tokenFromUrl) {
-      localStorage.setItem("discord_token", tokenFromUrl)
-      window.location.hash = ""
-      location.reload()
+      const user = await userRes.json();
+      const guilds = await guildsRes.json();
+
+      document.getElementById("login-section").style.display = "none";
+      document.getElementById("user-section").style.display = "block";
+
+      document.getElementById("user-avatar").src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+      document.getElementById("user-name").textContent = `${user.username}#${user.discriminator}`;
+
+      const guildsList = document.getElementById("guilds-list");
+      guilds.forEach(guild => {
+        if ((guild.permissions & 0x8) === 0x8) {
+          const div = document.createElement("div");
+          div.className = "guild";
+          div.innerHTML = `
+            <h3>${guild.name}</h3>
+            <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&scope=bot&permissions=8&guild_id=${guild.id}&response_type=code&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F">
+              <button class="white">إدخال البوت</button>
+            </a>
+          `;
+          guildsList.appendChild(div);
+        }
+      });
     }
-  }
-  const storedToken = localStorage.getItem("discord_token")
-  if (storedToken) {
-    token = storedToken
-    fetchDiscordData(token)
-  }
-</script>
+
+    const hash = window.location.hash;
+    if (hash.includes("access_token")) {
+      const token = new URLSearchParams(hash.substring(1)).get("access_token");
+      fetchData(token);
+    }
+  </script>
 
 </body>
 </html>
