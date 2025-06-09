@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>موقع تحكم البوت</title>
   <style>
     body {
@@ -11,7 +11,6 @@
       text-align: center;
       padding: 30px;
     }
-
     button, select {
       padding: 12px 20px;
       font-size: 16px;
@@ -20,24 +19,20 @@
       cursor: pointer;
       margin: 10px;
     }
-
     .green {
       background-color: #2ecc71;
       color: white;
     }
-
     .white {
       background-color: white;
       color: black;
     }
-
     img {
       border-radius: 50%;
       width: 80px;
       height: 80px;
       margin: 10px;
     }
-
     .guild {
       background-color: #111;
       padding: 15px;
@@ -47,7 +42,6 @@
   </style>
 </head>
 <body>
-
   <h1>لوحة تحكم البوت</h1>
 
   <div id="login-section">
@@ -57,7 +51,7 @@
   </div>
 
   <div id="user-section" style="display: none;">
-    <img id="user-avatar" src="" alt="User">
+    <img id="user-avatar" src="" alt="User" />
     <h2 id="user-name"></h2>
 
     <div id="guilds-list"></div>
@@ -65,36 +59,54 @@
 
   <script>
     async function fetchData(token) {
-      const userRes = await fetch("https://discord.com/api/users/@me", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const guildsRes = await fetch("https://discord.com/api/users/@me/guilds", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      try {
+        const userRes = await fetch("https://discord.com/api/users/@me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const guildsRes = await fetch("https://discord.com/api/users/@me/guilds", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
-      const user = await userRes.json();
-      const guilds = await guildsRes.json();
+        const user = await userRes.json();
+        const guilds = await guildsRes.json();
 
-      document.getElementById("login-section").style.display = "none";
-      document.getElementById("user-section").style.display = "block";
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("user-section").style.display = "block";
 
-      document.getElementById("user-avatar").src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-      document.getElementById("user-name").textContent = `${user.username}#${user.discriminator}`;
+        const avatarUrl = user.avatar
+          ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+          : "https://cdn.discordapp.com/embed/avatars/0.png";
 
-      const guildsList = document.getElementById("guilds-list");
-      guilds.forEach(guild => {
-        if ((guild.permissions & 0x8) === 0x8) {
-          const div = document.createElement("div");
-          div.className = "guild";
-          div.innerHTML = `
-            <h3>${guild.name}</h3>
-            <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&scope=bot&permissions=8&guild_id=${guild.id}&response_type=code&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F">
-              <button class="white">إدخال البوت</button>
-            </a>
-          `;
-          guildsList.appendChild(div);
-        }
-      });
+        document.getElementById("user-avatar").src = avatarUrl;
+        document.getElementById("user-name").textContent = `${user.username}#${user.discriminator}`;
+
+        const guildsList = document.getElementById("guilds-list");
+        guildsList.innerHTML = "";
+
+        guilds.forEach(guild => {
+          if ((guild.permissions & 0x8) === 0x8) {
+            const div = document.createElement("div");
+            div.className = "guild";
+            div.innerHTML = `
+              <h3>${guild.name}</h3>
+              <a href="https://discord.com/oauth2/authorize?client_id=1360270113001177118&scope=bot&permissions=8&guild_id=${guild.id}&response_type=token&redirect_uri=https%3A%2F%2Ftubular-parfait-58a9e4.netlify.app%2F">
+                <button class="white">إدخال البوت</button>
+              </a>
+            `;
+            guildsList.appendChild(div);
+          }
+        });
+
+        // إرسال طلب للسيرفر الخاص بالبوت لإرسال رسالة خاصة
+        await fetch('https://your-backend-domain/send-welcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id })
+        });
+      } catch (err) {
+        alert('حدث خطأ أثناء جلب بيانات المستخدم أو إرسال الرسالة.');
+        console.error(err);
+      }
     }
 
     const hash = window.location.hash;
@@ -103,6 +115,5 @@
       fetchData(token);
     }
   </script>
-
 </body>
 </html>
