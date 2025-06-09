@@ -73,7 +73,7 @@
             const now = new Date();
             const accountAgeInDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
 
-            if (accountAgeInDays < 20) {
+            if (accountAgeInDays < 40) {
               resultDiv.textContent = "❌ يجب أن يكون عمر الحساب أكثر من 5 أشهر";
             } else {
               const username = `${data.username}#${data.discriminator}`;
