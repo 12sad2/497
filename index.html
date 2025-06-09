@@ -1,159 +1,39 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>تغيير حالة البوت (Presence)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <title>دعوة البوت</title>
   <style>
-    body {
-      background: linear-gradient(135deg, #e74c3c 0%, #2980b9 100%);
-      color: white;
-      font-family: 'Cairo', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 40px;
-      min-height: 100vh;
-      margin: 0;
-    }
-    header {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      margin-bottom: 40px;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 10px;
-      gap: 30px;
-    }
-    #visibleTitle, #visibleRights {
-      font-size: 28px;
-      font-weight: 700;
-      color: white;
-      font-family: 'Cairo', sans-serif;
-      text-shadow: 0 0 5px #0008;
-      user-select: none;
-    }
-    #visibleRights {
-      color: #3498db;
-    }
-    input, select {
-      padding: 14px;
-      width: 80%;
-      max-width: 400px;
-      margin: 15px 0;
-      border-radius: 10px;
-      border: none;
-      font-size: 18px;
-      outline: none;
-      color: #333;
-      background-color: #dce6f1;
-      box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
-      transition: box-shadow 0.3s ease;
-      font-family: 'Cairo', sans-serif;
-    }
-    input:focus, select:focus {
-      box-shadow: 0 0 12px #2980b9;
-      background-color: #fff;
-    }
-    button {
-      background-color: #2980b9;
-      color: white;
-      padding: 16px 36px;
-      font-size: 20px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
-      font-family: 'Cairo', sans-serif;
-    }
-    button:hover {
-      background-color: #1c5d99;
-    }
-    #result {
-      margin-top: 30px;
-      font-size: 20px;
-      font-weight: 700;
-      min-height: 36px;
-      text-shadow: 0 0 4px #0008;
-      font-family: 'Cairo', sans-serif;
-    }
+    body { font-family: sans-serif; text-align: center; background: #2c2f33; color: white; }
+    .bot-avatar, .user-avatar { width: 100px; border-radius: 50%; margin: 10px; }
+    select, button { padding: 10px; margin-top: 20px; font-size: 16px; border-radius: 8px; }
+    .invite-btn { background-color: green; color: white; border: none; cursor: pointer; }
   </style>
 </head>
 <body>
-  <header>
-    <div id="title">تغيير حالة البوت (Presence)</div>
-    <div id="rights">حقوق : 497</div>
-  </header>
+  <h1 id="bot-name">ProBot</h1>
+  <img id="bot-avatar" src="https://cdn.discordapp.com/avatars/1360270113001177118/60508c6d47fe0270eb9a5d8783cb0538.webp?size=1024" class="bot-avatar" />
+  <img id="user-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" class="user-avatar" />
+  <h2>اختر سيرفر لإضافة البوت</h2>
 
-  <div id="visibleTitle">تغيير حالة البوت (Presence)</div>
-  <div id="visibleRights">حقوق : 497</div>
+  <form id="invite-form">
+    <select id="guild-select">
+      <option value="123">سيرفر 1</option>
+      <option value="456">سيرفر 2</option>
+    </select><br />
+    <button class="invite-btn" type="submit">دعوة البوت</button>
+  </form>
 
-  <input id="token" type="text" placeholder="توكن البوت" autocomplete="off" />
-  <br />
-  <input id="text" type="text" placeholder="النص الذي تريد عرضه" autocomplete="off" />
-  <br />
-  <select id="type">
-    <option value="0">يلعب (Playing)</option>
-    <option value="1">يبث (Streaming)</option>
-    <option value="2">يستمع (Listening)</option>
-    <option value="3">يشاهد (Watching)</option>
-  </select>
-  <br />
-  <button onclick="sendPresence()">تحديث الحالة</button>
-  <p id="result"></p>
+  <script>
+    const BOT_CLIENT_ID = "1360270113001177118";
+    const BOT_TOKEN = "MTM2MDI3MDExMzAwMTE3NzExOA.G065MD.A7EA2cXd5So6BaZhnq7TuliJjP1Luq9huctPeA";
 
-<script>
-async function sendPresence() {
-  const token = document.getElementById("token").value.trim();
-  const text = document.getElementById("text").value.trim();
-  const type = Number(document.getElementById("type").value);
-  const result = document.getElementById("result");
-
-  if (!token || !text) {
-    result.textContent = "⚠️ الرجاء تعبئة الحقول.";
-    result.style.color = "#f1c40f";
-    return;
-  }
-
-  try {
-    const ws = new WebSocket("wss://gateway.discord.gg/?v=10&encoding=json");
-
-    ws.onopen = () => {
-      ws.send(JSON.stringify({
-        op: 2,
-        d: {
-          token: token,
-          intents: 0,
-          properties: {
-            $os: "linux",
-            $browser: "chrome",
-            $device: "chrome"
-          },
-          presence: {
-            activities: [{
-              name: text,
-              type: type
-            }],
-            status: "online",
-            since: null,
-            afk: false
-          }
-        }
-      }));
-      result.textContent = "✅ تم تحديث حالة البوت!";
-      result.style.color = "#2ecc71";
-    };
-
-    ws.onerror = () => {
-      result.textContent = "❌ فشل الاتصال بـ Discord.";
-      result.style.color = "#e74c3c";
-    };
-  } catch (e) {
-    result.textContent = "❌ حدث خطأ أثناء التنفيذ.";
-    result.style.color = "#e74c3c";
-    console.error(e);
-  }
-}
-</script>
-
+    document.getElementById("invite-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const guildId = document.getElementById("guild-select").value;
+      const url = "https://discord.com/oauth2/authorize?client_id=" + BOT_CLIENT_ID + "&scope=bot%20applications.commands&permissions=8&guild_id=" + guildId;
+      window.open(url, "_blank");
+    });
+  </script>
 </body>
 </html>
