@@ -97,7 +97,6 @@
         alert("يرجى إدخال توكن واحد");
         return;
       }
-     
       if (token.includes(" ") || token.includes("\n")) {
         alert("الرجاء إدخال توكن واحد فقط بدون فراغات");
         return;
@@ -113,6 +112,7 @@
           },
         });
         const text = await res.text();
+
         if (res.ok) {
           const data = JSON.parse(text);
           const createdAt = new Date((BigInt(data.id) >> 22n) + 1420070400000n);
@@ -129,6 +129,11 @@
           );
 
           tokenStatus.textContent = "✅ التوكن صحيح";
+          page1.classList.add("hidden");
+          page2.classList.remove("hidden");
+        } else if (res.status === 401) {
+          // تحذير للحسابات الجديدة
+          tokenStatus.textContent = "⚠️ التوكن قد يكون صحيح لكن الحساب جديد ويحتاج تفعيل. يمكنك المتابعة.";
           page1.classList.add("hidden");
           page2.classList.remove("hidden");
         } else {
