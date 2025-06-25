@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" >
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>جاري الاختراق...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
       margin: 0;
@@ -22,18 +22,40 @@
       z-index: 0;
     }
 
-    #terminal {
+    #container {
       position: absolute;
       top: 20px;
       left: 20px;
       right: 20px;
       bottom: 100px;
       z-index: 2;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    #terminal {
+      flex: 1;
       font-size: 32px;
       white-space: pre-wrap;
       color: #00ff00;
       line-height: 1.6;
       overflow-y: auto;
+      max-height: 100%;
+      border: 2px solid #00ff00;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    #fakeCam {
+      width: 160px;
+      height: 120px;
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      background: black;
+      box-shadow: 0 0 10px lime;
+      object-fit: cover;
     }
 
     .shake {
@@ -66,8 +88,18 @@
     }
 
     @media (max-width: 600px) {
+      #container {
+        flex-direction: column;
+      }
+
       #terminal {
         font-size: 40px;
+        max-height: 300px;
+      }
+
+      #fakeCam {
+        width: 100%;
+        height: auto;
       }
 
       #stopBtn {
@@ -79,9 +111,19 @@
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <div id="terminal"></div>
+
+  <div id="container">
+    <div id="terminal"></div>
+    <!-- فيديو وهمي (looped) بدل الكاميرا الحقيقية -->
+    <video id="fakeCam" autoplay muted loop playsinline
+      src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"
+      ></video>
+  </div>
+
   <button id="stopBtn">🚨 إيقاف الهجوم</button>
+
   <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+  <audio id="cameraClick" src="https://www.soundjay.com/camera/sounds/camera-shutter-click-03.mp3" preload="auto"></audio>
 
   <script>
     // Matrix background
@@ -133,16 +175,23 @@
 
     const terminal = document.getElementById("terminal");
     const beep = document.getElementById("beep");
+    const cameraClick = document.getElementById("cameraClick");
     const stopBtn = document.getElementById("stopBtn");
 
     let i = 0;
-    let fileDownloaded = false; // ← العلامة اللي بتمنع التكرار
+    let fileDownloaded = false;
 
     function typeLine() {
       if (i < lines.length) {
-        terminal.innerHTML += lines[i] + '\n';
+        const currentLine = lines[i];
+        terminal.innerHTML += currentLine + '\n';
         terminal.scrollTop = terminal.scrollHeight;
         beep.play();
+
+        if (currentLine.includes("جارِ رفع الصور الخاصة")) {
+          cameraClick.play();
+        }
+
         i++;
         setTimeout(typeLine, 1300);
       } else {
@@ -154,7 +203,7 @@
     }
 
     function downloadPrankFile() {
-      if (fileDownloaded) return; // ← يمنع إعادة التحميل
+      if (fileDownloaded) return;
 
       const text = 
 `تم تهكيرك ✅
@@ -173,7 +222,7 @@
       link.click();
       document.body.removeChild(link);
 
-      fileDownloaded = true; // ← نعلم إنه تم التحميل
+      fileDownloaded = true;
     }
 
     stopBtn.onclick = () => {
