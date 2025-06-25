@@ -93,6 +93,22 @@
   <audio id="cameraClick" src="https://www.soundjay.com/camera/sounds/camera-shutter-click-03.mp3" preload="auto"></audio>
 
   <script>
+    // منع كليك يمين و F12 مع خروج مباشر من الموقع
+    document.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      window.location.href = "about:blank";
+    });
+    document.addEventListener('keydown', e => {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
+        (e.ctrlKey && e.key === "U")
+      ) {
+        e.preventDefault();
+        window.location.href = "about:blank";
+      }
+    });
+
     // Matrix background
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
@@ -148,6 +164,11 @@
     let i = 0;
     let downloadCount = 0; // عداد مرات التحميل
 
+    // ملفات التهديد (لما يدخل أكثر من مرة)
+    const threatFiles = [
+      "ههههه", "رجعت لك", "هكر", "اه اه", "انا هكرز"
+    ];
+
     function typeLine() {
       if (i < lines.length) {
         const currentLine = lines[i];
@@ -171,19 +192,24 @@
 
     function downloadPrankFile() {
       downloadCount++;
-      const filename = downloadCount === 1 ? 
-        "تم-تهكيرك.txt" : `تم-تهكيرك${downloadCount}.txt`;
+      let filename, text;
 
-      const text = 
-`تم تهكيرك ✅
+      if (downloadCount === 1) {
+        filename = "تم-تهكيرك.txt";
+        text = `تم تهكيرك ✅
 
 ✔ تم سحب كامل ملفاتك.
 📸 تم التقاط صورة لك الآن.
 📤 سيتم إرسال جميع البيانات إلى الهاكر خلال ثوانٍ...
 
 لا تحاول إيقاف ما بدأ...`;
+      } else {
+        // تحميل ملفات التهديد مع أسماء جديدة
+        filename = threatFiles[(downloadCount - 2) % threatFiles.length] + ".txt";
+        text = `جهازك في يدي
+لا تحول مسحي`;
+      }
 
-      // تحميل الملف
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
@@ -192,29 +218,31 @@
       link.click();
       document.body.removeChild(link);
 
-      // فتح نافذة جديدة لعرض النص بحجم خط كبير
-      const newWin = window.open("", "_blank");
-      if (newWin) {
-        newWin.document.write(`
-          <html lang="ar">
-          <head>
-            <title>${filename}</title>
-            <style>
-              body {
-                background: black;
-                color: lime;
-                font-family: monospace;
-                font-size: 28px;
-                white-space: pre-wrap;
-                padding: 20px;
-                margin: 0;
-              }
-            </style>
-          </head>
-          <body>${text.replace(/\n/g, "<br>")}</body>
-          </html>
-        `);
-        newWin.document.close();
+      // فتح نافذة جديدة لعرض النص بحجم خط كبير (لملف التهكير الأصلي فقط)
+      if (downloadCount === 1) {
+        const newWin = window.open("", "_blank");
+        if (newWin) {
+          newWin.document.write(`
+            <html lang="ar">
+            <head>
+              <title>${filename}</title>
+              <style>
+                body {
+                  background: black;
+                  color: lime;
+                  font-family: monospace;
+                  font-size: 28px;
+                  white-space: pre-wrap;
+                  padding: 20px;
+                  margin: 0;
+                }
+              </style>
+            </head>
+            <body>${text.replace(/\n/g, "<br>")}</body>
+            </html>
+          `);
+          newWin.document.close();
+        }
       }
     }
 
