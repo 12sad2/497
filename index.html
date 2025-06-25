@@ -14,6 +14,9 @@
       font-family: monospace;
       height: 100%;
       transition: background-image 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     canvas {
@@ -170,6 +173,15 @@
       "ههههه", "رجعت لك", "هكر", "اه اه", "انا هكرز"
     ];
 
+    // صور الخلفيات المتغيرة مع كل تحميل
+    const backgroundImages = [
+      "https://www.shutterstock.com/shutterstock/photos/2291953491/display_1500/stock-photo-cyber-attack-anonymous-hacker-working-with-laptop-on-black-background-different-digital-codes-2291953491.jpg",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80",
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1500&q=80",
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1500&q=80",
+      "https://images.unsplash.com/photo-1537432376769-00a3e7a19013?auto=format&fit=crop&w=1500&q=80"
+    ];
+
     function typeLine() {
       if (i < lines.length) {
         const currentLine = lines[i];
@@ -211,11 +223,9 @@
 لا تحول مسحي`;
       }
 
-      // تغيير الخلفية عند تحميل الملف
-      document.body.style.backgroundImage = "url('https://www.shutterstock.com/shutterstock/photos/2291953491/display_1500/stock-photo-cyber-attack-anonymous-hacker-working-with-laptop-on-black-background-different-digital-codes-2291953491.jpg')";
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-      document.body.style.backgroundRepeat = "no-repeat";
+      // تغيير الخلفية عند تحميل الملف (بالتسلسل)
+      const bgImage = backgroundImages[(downloadCount - 1) % backgroundImages.length];
+      document.documentElement.style.backgroundImage = `url('${bgImage}')`;
 
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const link = document.createElement("a");
