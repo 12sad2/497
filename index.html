@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>جاري الاختراق...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
       margin: 0;
@@ -27,9 +28,10 @@
       left: 20px;
       right: 20px;
       z-index: 2;
-      font-size: 24px; /* ← تكبير الخط */
+      font-size: 32px;
       white-space: pre-wrap;
       color: #00ff00;
+      line-height: 1.6;
     }
 
     .shake {
@@ -51,12 +53,25 @@
       transform: translateX(-50%);
       background: red;
       color: white;
-      padding: 15px 30px;
-      font-size: 20px;
+      padding: 20px 40px;
+      font-size: 28px;
+      font-weight: bold;
       border: none;
       cursor: pointer;
       z-index: 3;
       display: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      #terminal {
+        font-size: 40px;
+      }
+
+      #stopBtn {
+        font-size: 32px;
+        padding: 25px 50px;
+      }
     }
   </style>
 </head>
@@ -67,7 +82,7 @@
   <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
   <script>
-    // Matrix Effect
+    // Matrix effect
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
@@ -124,7 +139,7 @@
         terminal.innerHTML += lines[i] + '\n';
         beep.play();
         i++;
-        setTimeout(typeLine, 1500);
+        setTimeout(typeLine, 1300);
       } else {
         document.body.classList.add('shake');
         stopBtn.style.display = "block";
@@ -133,10 +148,16 @@
     }
 
     function downloadPrankFile() {
-      const blob = new Blob(
-        ["تم اختراقك يا نمر 😂\nكل هذا مجرد مقلب! جهازك بخير 💻\n"],
-        { type: "text/plain;charset=utf-8" }
-      );
+      const text = 
+`تم تهكيرك ✅
+
+✔ تم سحب كامل ملفاتك.
+📸 تم التقاط صورة لك الآن.
+📤 سيتم إرسال جميع البيانات إلى الهاكر خلال ثوانٍ...
+
+لا تحاول إيقاف ما بدأ...`;
+
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
       link.download = "تم-تهكيرك.txt";
