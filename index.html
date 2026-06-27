@@ -1,70 +1,1192 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>صاحب الموقع تائب</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مونيون دايس</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #060d1a;
+      --bg-mid: #0a1628;
+      --card: #0f1f3a;
+      --card-light: #162a4a;
+      --card-border: #1c3560;
+      --accent: #ffab00;
+      --accent-hot: #ff6d00;
+      --accent-glow: rgba(255, 171, 0, 0.2);
+      --fg: #eaf0f8;
+      --muted: #5e84ad;
+      --dice-red: #ff3d3d;
+      --dice-orange: #ff8c00;
+      --dice-gold: #ffd000;
+      --dice-green: #00e676;
+      --dice-blue: #2979ff;
+      --dice-purple: #d500f9;
+    }
 
-<style>
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-    background:
-        linear-gradient(rgba(200,0,0,0.75), rgba(200,0,0,0.75)),
-        url("bg.jpg.jfif") no-repeat center center fixed;
-    background-size: cover;
+    body {
+      font-family: 'Tajawal', 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-}
+    canvas#bgCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-.text {
-    color: white;
-    font-size: 60px;
-    font-weight: bold;
-    text-shadow: 0 0 20px black;
-    margin-bottom: 30px;
-}
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+      animation: orbDrift 20s ease-in-out infinite alternate;
+    }
 
-button {
-    background: darkred;
-    color: white;
-    border: none;
-    padding: 15px 40px;
-    font-size: 22px;
-    cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 0 0 15px black;
-}
+    .ambient-orb:nth-child(1) {
+      width: 500px; height: 500px;
+      background: var(--accent);
+      top: -10%; right: -5%;
+      animation-delay: 0s;
+    }
 
-button:hover {
-    background: red;
-}
-</style>
+    .ambient-orb:nth-child(2) {
+      width: 400px; height: 400px;
+      background: var(--dice-blue);
+      bottom: -10%; left: -5%;
+      animation-delay: -7s;
+    }
+
+    .ambient-orb:nth-child(3) {
+      width: 300px; height: 300px;
+      background: var(--dice-purple);
+      top: 40%; left: 50%;
+      animation-delay: -13s;
+      opacity: 0.06;
+    }
+
+    @keyframes orbDrift {
+      0% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.1); }
+      66% { transform: translate(-30px, 20px) scale(0.9); }
+      100% { transform: translate(20px, -10px) scale(1.05); }
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 680px;
+      background: linear-gradient(160deg, var(--card-light) 0%, var(--card) 40%, var(--bg-mid) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 44px 36px 36px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02),
+        0 30px 80px -10px rgba(0,0,0,0.7),
+        0 0 160px -40px var(--accent-glow),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,171,0,0.4), transparent);
+    }
+
+    .wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.003) 2px,
+        rgba(255,255,255,0.003) 4px
+      );
+      pointer-events: none;
+      border-radius: 28px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .title-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hot));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #1a1a2e;
+      box-shadow: 0 4px 20px rgba(255,171,0,0.3);
+      animation: iconPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(255,171,0,0.3); }
+      50% { box-shadow: 0 4px 30px rgba(255,171,0,0.5), 0 0 40px rgba(255,171,0,0.15); }
+    }
+
+    .title {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(30px, 7vw, 48px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent) 0%, #ffe082 50%, var(--accent-hot) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+      line-height: 1.2;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .dropdown-container {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper i {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    select {
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 11px 38px 11px 40px;
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      background: var(--bg-mid);
+      color: var(--fg);
+      cursor: pointer;
+      width: 190px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235e84ad' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: left 14px center;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      direction: rtl;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    select:hover { border-color: var(--muted); }
+
+    .dice-stage {
+      position: relative;
+      width: 100%;
+      min-height: 130px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 10px;
+      z-index: 2;
+    }
+
+    .dice-stage::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 20px;
+      background: radial-gradient(ellipse at center, rgba(255,171,0,0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .color-block {
+      width: 82px;
+      height: 82px;
+      border-radius: 18px;
+      border: 3px solid rgba(255,255,255,0.08);
+      position: relative;
+      background-color: var(--card-light);
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 -2px 4px rgba(0,0,0,0.2);
+      transition: background-color 0.5s ease, box-shadow 0.5s ease;
+      animation: idleFloat 4s ease-in-out infinite;
+      cursor: default;
+      transform-style: preserve-3d;
+      perspective: 500px;
+    }
+
+    .color-block:nth-child(2) { animation-delay: -0.8s; }
+    .color-block:nth-child(3) { animation-delay: -1.6s; }
+    .color-block:nth-child(4) { animation-delay: -2.4s; }
+    .color-block:nth-child(5) { animation-delay: -3.2s; }
+    .color-block:nth-child(6) { animation-delay: -4s; }
+
+    @keyframes idleFloat {
+      0%, 100% { transform: translateY(0) rotateX(0); }
+      50% { transform: translateY(-6px) rotateX(3deg); }
+    }
+
+    .color-block.rolling {
+      animation: shakeDice 0.08s infinite linear;
+    }
+
+    @keyframes shakeDice {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      15% { transform: translate(-5px, 4px) rotate(-5deg) scale(1.05); }
+      30% { transform: translate(5px, -3px) rotate(4deg) scale(0.95); }
+      45% { transform: translate(-4px, -4px) rotate(-3deg) scale(1.03); }
+      60% { transform: translate(4px, 3px) rotate(5deg) scale(0.97); }
+      75% { transform: translate(-3px, -2px) rotate(-4deg) scale(1.02); }
+      100% { transform: translate(3px, 2px) rotate(2deg) scale(0.98); }
+    }
+
+    .color-block.landed {
+      animation: landBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes landBounce {
+      0% { transform: scale(0.7) rotate(-8deg); opacity: 0.7; }
+      50% { transform: scale(1.15) rotate(3deg); }
+      75% { transform: scale(0.95) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .color-block:hover:not(.rolling) {
+      transform: translateY(-6px) scale(1.08);
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle at 30% 30%, #ffffff, rgba(255,255,255,0.4));
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px rgba(255,255,255,0.2);
+      transition: box-shadow 0.5s, transform 0.5s;
+    }
+
+    .color-block.landed .dot {
+      box-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.2);
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .color-block .glow-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 24px;
+      opacity: 0;
+      transition: opacity 0.6s;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .color-block.landed .glow-ring {
+      opacity: 1;
+    }
+
+    .result-text {
+      margin-top: 8px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      min-height: 36px;
+      opacity: 0;
+      transform: translateY(10px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      direction: rtl;
+      position: relative;
+      z-index: 2;
+      letter-spacing: 0.5px;
+    }
+
+    .result-text.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .result-text .r-color {
+      display: inline-block;
+      padding: 2px 12px;
+      border-radius: 8px;
+      margin: 0 2px;
+      font-size: 18px;
+    }
+
+    .roll-btn {
+      position: relative;
+      font-family: 'Cairo', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 72px;
+      cursor: pointer;
+      margin-top: 12px;
+      color: #0a0a0a;
+      background: linear-gradient(135deg, #ffca28 0%, #ff9100 50%, #ff6d00 100%);
+      background-size: 200% auto;
+      box-shadow:
+        0 6px 24px rgba(255,109,0,0.35),
+        0 2px 4px rgba(0,0,0,0.3),
+        inset 0 2px 0 rgba(255,255,255,0.25),
+        inset 0 -2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background-position 0.3s;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .roll-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+    }
+
+    .roll-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 10%;
+      right: 10%;
+      height: 8px;
+      background: rgba(255,109,0,0.4);
+      border-radius: 50%;
+      filter: blur(8px);
+      transition: opacity 0.2s;
+    }
+
+    .roll-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow:
+        0 12px 36px rgba(255,109,0,0.45),
+        0 4px 8px rgba(0,0,0,0.3),
+        inset 0 2px 0 rgba(255,255,255,0.25);
+      background-position: right center;
+    }
+
+    .roll-btn:hover::before { left: 120%; }
+
+    .roll-btn:active {
+      transform: translateY(1px) scale(0.97);
+      box-shadow:
+        0 3px 12px rgba(255,109,0,0.3),
+        0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    .roll-btn:active::after { opacity: 0; }
+
+    .roll-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .color-container {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 24px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .color-info {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 2.4;
+    }
+
+    .color-tag {
+      display: inline-block;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin: 0 1px;
+    }
+
+    .sound-toggle {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--bg-mid);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
+      z-index: 3;
+    }
+
+    .sound-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .filters {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 680px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 16px 20px;
+      background: linear-gradient(160deg, var(--card-light), var(--card));
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    .filter-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: var(--bg-mid);
+      border: 2px solid var(--card-border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .filter-label:hover {
+      border-color: var(--muted);
+      transform: translateY(-2px);
+    }
+
+    .filter-label.active {
+      border-color: currentColor;
+      box-shadow: 0 0 16px currentColor, inset 0 0 12px rgba(255,255,255,0.03);
+    }
+
+    .filter-label.excluded {
+      opacity: 0.25;
+      transform: scale(0.95);
+      filter: grayscale(1);
+    }
+
+    .filter-label input { display: none; }
+
+    .filter-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 2px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .filter-label.active .filter-check { background: currentColor; }
+
+    .filter-check i {
+      font-size: 9px;
+      color: var(--bg);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .filter-label.active .filter-check i { opacity: 1; }
+
+    .history-section {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 680px;
+      margin-top: 20px;
+      padding: 22px;
+      background: linear-gradient(160deg, var(--card-light), var(--card));
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .history-title {
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      direction: rtl;
+    }
+
+    .history-clear {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--bg-mid);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .history-clear:hover {
+      border-color: var(--dice-red);
+      color: var(--dice-red);
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-left: 4px;
+    }
+
+    .history-list::-webkit-scrollbar { width: 3px; }
+    .history-list::-webkit-scrollbar-track { background: transparent; }
+    .history-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: var(--bg-mid);
+      border-radius: 10px;
+      font-size: 13px;
+      animation: histSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      direction: rtl;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .history-item:hover { border-color: var(--card-border); }
+
+    @keyframes histSlide {
+      from { opacity: 0; transform: translateX(20px) scale(0.95); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    .history-dots { display: flex; gap: 4px; }
+
+    .history-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .history-num {
+      color: var(--muted);
+      font-weight: 700;
+      min-width: 28px;
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    .history-names {
+      color: var(--fg);
+      font-size: 12px;
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .history-empty {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 20px;
+      opacity: 0.4;
+      direction: rtl;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--card-light);
+      border: 1px solid var(--card-border);
+      color: var(--fg);
+      padding: 12px 28px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      font-family: 'Cairo', sans-serif;
+      backdrop-filter: blur(12px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .burst-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10;
+      animation: burstOut 0.7s ease-out forwards;
+    }
+
+    @keyframes burstOut {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
+    }
+
+    @media (max-width: 540px) {
+      .wrapper { padding: 28px 18px 24px; border-radius: 22px; }
+      .dropdown-container { gap: 8px; }
+      select { width: 155px; font-size: 13px; padding: 10px 32px 10px 34px; }
+      .color-block { width: 62px; height: 62px; border-radius: 14px; }
+      .dice-stage { gap: 10px; min-height: 100px; }
+      .roll-btn { font-size: 22px; padding: 14px 52px; border-radius: 14px; }
+      .filter-label { padding: 7px 12px; font-size: 11px; gap: 5px; }
+      .filter-check { width: 14px; height: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="text">صاحب الموقع تائب</div>
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+  <canvas id="bgCanvas"></canvas>
 
-<button onclick="playSound()">تشغيل الصوت </button>
+  <div class="wrapper">
+    <button class="sound-toggle" id="soundToggle" aria-label="تبديل الصوت" title="تبديل الصوت">
+      <i class="fas fa-volume-high"></i>
+    </button>
 
-<audio id="enterSound">
-    <source src="sound.mp3" type="audio/mpeg">
-</audio>
+    <div class="title-row">
+      <div class="title-icon"><i class="fas fa-dice-d20"></i></div>
+      <div class="title">مونيون دايس</div>
+    </div>
 
-<script>
-function playSound(){
-    document.getElementById("enterSound").play();
-}
-</script>
+    <div class="dropdown-container">
+      <div class="select-wrapper">
+        <i class="fas fa-dice"></i>
+        <select id="numDice" aria-label="عدد النرد">
+          <option value="1">نرد واحد</option>
+          <option value="2">نردين</option>
+          <option value="3">3 نرد</option>
+          <option value="4" selected>4 نرد</option>
+          <option value="5">5 نرد</option>
+          <option value="6">6 نرد</option>
+        </select>
+      </div>
+      <div class="select-wrapper">
+        <i class="fas fa-palette"></i>
+        <select id="colorDice" aria-label="نوع النرد">
+          <option value="color">نرد ملون</option>
+        </select>
+      </div>
+    </div>
 
+    <div class="dice-stage" id="result"></div>
+    <div class="result-text" id="resultText"></div>
+
+    <button class="roll-btn" id="rollButton">اضرب</button>
+
+    <div class="color-container">
+      <div class="color-info">
+        الألوان المتاحة:
+        <span class="color-tag" style="background:rgba(255,61,61,0.12);color:var(--dice-red);">أحمر</span>
+        <span class="color-tag" style="background:rgba(255,140,0,0.12);color:var(--dice-orange);">برتقالي</span>
+        <span class="color-tag" style="background:rgba(255,208,0,0.12);color:var(--dice-gold);">أصفر</span>
+        <span class="color-tag" style="background:rgba(0,230,118,0.12);color:var(--dice-green);">أخضر</span>
+        <span class="color-tag" style="background:rgba(41,121,255,0.12);color:var(--dice-blue);">أزرق</span>
+        <span class="color-tag" style="background:rgba(213,0,249,0.12);color:var(--dice-purple);">بنفسجي</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters" role="group" aria-label="فلاتر الألوان">
+    <label class="filter-label active" style="color:var(--dice-red);" data-color="red">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      أحمر
+    </label>
+    <label class="filter-label active" style="color:var(--dice-orange);" data-color="orange">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      برتقالي
+    </label>
+    <label class="filter-label active" style="color:var(--dice-gold);" data-color="gold">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      أصفر
+    </label>
+    <label class="filter-label active" style="color:var(--dice-green);" data-color="green">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      أخضر
+    </label>
+    <label class="filter-label active" style="color:var(--dice-blue);" data-color="blue">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      أزرق
+    </label>
+    <label class="filter-label active" style="color:var(--dice-purple);" data-color="purple">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      بنفسجي
+    </label>
+  </div>
+
+  <section class="history-section">
+    <div class="history-header">
+      <div class="history-title">
+        <i class="fas fa-clock-rotate-left"></i> سجل الرميات
+      </div>
+      <button class="history-clear" id="clearHistory">مسح الكل</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">لا توجد رميات بعد. اضغط على الزر!</div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const validColors = ["red", "orange", "gold", "green", "blue", "purple"];
+    const colorHex = {
+      red: "#ff3d3d",
+      orange: "#ff8c00",
+      gold: "#ffd000",
+      green: "#00e676",
+      blue: "#2979ff",
+      purple: "#d500f9"
+    };
+    const colorNames = {
+      red: "أحمر",
+      orange: "برتقالي",
+      gold: "أصفر",
+      green: "أخضر",
+      blue: "أزرق",
+      purple: "بنفسجي"
+    };
+    const colorBg = {
+      red: "rgba(255,61,61,0.15)",
+      orange: "rgba(255,140,0,0.15)",
+      gold: "rgba(255,208,0,0.15)",
+      green: "rgba(0,230,118,0.15)",
+      blue: "rgba(41,121,255,0.15)",
+      purple: "rgba(213,0,249,0.15)"
+    };
+
+    let excludedColors = [];
+    let isRolling = false;
+    let isMuted = false;
+    let rollCount = 0;
+    let history = [];
+
+    const resultDiv = document.getElementById("result");
+    const resultText = document.getElementById("resultText");
+    const rollButton = document.getElementById("rollButton");
+    const numDiceSelect = document.getElementById("numDice");
+    const historyList = document.getElementById("historyList");
+    const toastEl = document.getElementById("toast");
+    const soundToggle = document.getElementById("soundToggle");
+    const clearHistoryBtn = document.getElementById("clearHistory");
+
+    (function initBgCanvas() {
+      const canvas = document.getElementById("bgCanvas");
+      const ctx = canvas.getContext("2d");
+      let w, h, stars = [];
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+
+      function createStars() {
+        stars = [];
+        const count = Math.floor((w * h) / 8000);
+        for (let i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: Math.random() * 1.2 + 0.3,
+            a: Math.random() * 0.5 + 0.1,
+            speed: Math.random() * 0.3 + 0.05,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      function draw(t) {
+        ctx.clearRect(0, 0, w, h);
+        stars.forEach(s => {
+          const flicker = Math.sin(t * 0.001 * s.speed * 3 + s.phase) * 0.3 + 0.7;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(180, 210, 255, ${s.a * flicker})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      createStars();
+      requestAnimationFrame(draw);
+      window.addEventListener("resize", () => { resize(); createStars(); });
+    })();
+
+    let toastTimeout = null;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toastEl.classList.remove("show"), 2500);
+    }
+
+    let audioCtx = null;
+
+    function playRollSound() {
+      if (isMuted) return;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const clicks = 8 + Math.floor(Math.random() * 5);
+      for (let i = 0; i < clicks; i++) {
+        const delay = i * 50 + Math.random() * 30;
+        setTimeout(() => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const freq = 600 + Math.random() * 800;
+          osc.type = Math.random() > 0.5 ? "triangle" : "square";
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.06 + Math.random() * 0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.06);
+        }, delay);
+      }
+    }
+
+    function playLandSound() {
+      if (isMuted) return;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.18);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.25);
+    }
+
+    function spawnBurst(el, color) {
+      const rect = el.getBoundingClientRect();
+      const stageRect = resultDiv.getBoundingClientRect();
+      const cx = rect.left - stageRect.left + rect.width / 2;
+      const cy = rect.top - stageRect.top + rect.height / 2;
+      const count = 10;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement("div");
+        p.className = "burst-particle";
+        const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+        const dist = 30 + Math.random() * 40;
+        p.style.cssText = `
+          left: ${cx}px;
+          top: ${cy}px;
+          background: ${color};
+          box-shadow: 0 0 6px ${color};
+          --bx: ${Math.cos(angle) * dist}px;
+          --by: ${Math.sin(angle) * dist}px;
+        `;
+        resultDiv.appendChild(p);
+        setTimeout(() => p.remove(), 700);
+      }
+    }
+
+    soundToggle.addEventListener("click", () => {
+      isMuted = !isMuted;
+      soundToggle.innerHTML = isMuted
+        ? '<i class="fas fa-volume-xmark"></i>'
+        : '<i class="fas fa-volume-high"></i>';
+      showToast(isMuted ? "تم كتم الصوت" : "تم تفعيل الصوت");
+    });
+
+    document.querySelectorAll(".filter-label").forEach(label => {
+      label.addEventListener("click", () => {
+        const color = label.dataset.color;
+        const checkbox = label.querySelector("input");
+        checkbox.checked = !checkbox.checked;
+        const isActive = checkbox.checked;
+        label.classList.toggle("active", isActive);
+        label.classList.toggle("excluded", !isActive);
+        const idx = excludedColors.indexOf(color);
+        if (!isActive && idx === -1) {
+          excludedColors.push(color);
+        } else if (isActive && idx !== -1) {
+          excludedColors.splice(idx, 1);
+        }
+        if (excludedColors.length >= validColors.length) {
+          showToast("يجب تفعيل لون واحد على الأقل!");
+        }
+      });
+    });
+
+    clearHistoryBtn.addEventListener("click", () => {
+      history = [];
+      rollCount = 0;
+      historyList.innerHTML = '<div class="history-empty">لا توجد رميات بعد. اضغط على الزر!</div>';
+      showToast("تم مسح السجل");
+    });
+
+    function getRandomColor() {
+      const available = validColors.filter(c => !excludedColors.includes(c));
+      if (available.length === 0) return "gold";
+      return available[Math.floor(Math.random() * available.length)];
+    }
+
+    function createDiceBlock() {
+      const block = document.createElement("div");
+      block.className = "color-block rolling";
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      const glow = document.createElement("div");
+      glow.className = "glow-ring";
+      block.appendChild(dot);
+      block.appendChild(glow);
+      return block;
+    }
+
+    function updateHistory(colors) {
+      rollCount++;
+      history.unshift({ num: rollCount, colors: [...colors] });
+      if (history.length > 30) history.pop();
+      historyList.innerHTML = "";
+      history.forEach(entry => {
+        const item = document.createElement("div");
+        item.className = "history-item";
+        const names = document.createElement("span");
+        names.className = "history-names";
+        names.textContent = entry.colors.map(c => colorNames[c]).join(" + ");
+        const dots = document.createElement("div");
+        dots.className = "history-dots";
+        entry.colors.forEach(c => {
+          const d = document.createElement("div");
+          d.className = "history-dot";
+          d.style.backgroundColor = colorHex[c];
+          dots.appendChild(d);
+        });
+        const num = document.createElement("span");
+        num.className = "history-num";
+        num.textContent = "#" + entry.num;
+        item.appendChild(names);
+        item.appendChild(dots);
+        item.appendChild(num);
+        historyList.appendChild(item);
+      });
+    }
+
+    function rollDice() {
+      if (isRolling) return;
+      const available = validColors.filter(c => !excludedColors.includes(c));
+      if (available.length === 0) {
+        showToast("يرجى تفعيل لون واحد على الأقل!");
+        return;
+      }
+
+      isRolling = true;
+      rollButton.disabled = true;
+      resultText.classList.remove("show");
+
+      const count = parseInt(numDiceSelect.value);
+      const finalColors = [];
+      for (let i = 0; i < count; i++) {
+        finalColors.push(getRandomColor());
+      }
+
+      resultDiv.innerHTML = "";
+      const blocks = [];
+      for (let i = 0; i < count; i++) {
+        const block = createDiceBlock();
+        resultDiv.appendChild(block);
+        blocks.push(block);
+      }
+
+      playRollSound();
+
+      const rapidInterval = setInterval(() => {
+        blocks.forEach(block => {
+          block.style.backgroundColor = colorHex[getRandomColor()];
+        });
+      }, 70);
+
+      setTimeout(() => {
+        clearInterval(rapidInterval);
+        blocks.forEach((block, i) => {
+          block.classList.remove("rolling");
+          setTimeout(() => {
+            const c = finalColors[i];
+            const hex = colorHex[c];
+            block.style.backgroundColor = hex;
+            block.style.borderColor = hex + "60";
+            block.style.boxShadow = `
+              0 8px 24px rgba(0,0,0,0.5),
+              0 0 40px ${hex}30,
+              inset 0 1px 0 rgba(255,255,255,0.08)
+            `;
+            block.querySelector(".glow-ring").style.boxShadow = `0 0 30px ${hex}50`;
+            block.classList.add("landed");
+            spawnBurst(block, hex);
+            playLandSound();
+          }, i * 140);
+        });
+
+        const totalDelay = count * 140 + 500;
+        setTimeout(() => {
+          resultText.innerHTML = finalColors.map(c =>
+            `<span class="r-color" style="background:${colorBg[c]};color:${colorHex[c]};">${colorNames[c]}</span>`
+          ).join(" ");
+          resultText.classList.add("show");
+          updateHistory(finalColors);
+          isRolling = false;
+          rollButton.disabled = false;
+        }, totalDelay);
+
+      }, 900);
+    }
+
+    rollButton.addEventListener("click", rollDice);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" || e.code === "Enter") {
+        e.preventDefault();
+        rollDice();
+      }
+    });
+
+    function initDice() {
+      const count = parseInt(numDiceSelect.value);
+      resultDiv.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const block = document.createElement("div");
+        block.className = "color-block";
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        const glow = document.createElement("div");
+        glow.className = "glow-ring";
+        block.appendChild(dot);
+        block.appendChild(glow);
+        resultDiv.appendChild(block);
+      }
+    }
+
+    initDice();
+    numDiceSelect.addEventListener("change", () => {
+      if (!isRolling) initDice();
+    });
+  </script>
 </body>
 </html>
