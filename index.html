@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مونيون دايس</title>
+  <title>دايس العرب</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -24,6 +24,7 @@
       --dice-green: #00e676;
       --dice-blue: #2979ff;
       --dice-purple: #d500f9;
+      --dice-cyan: #00e5ff;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,7 +69,7 @@
 
     .ambient-orb:nth-child(2) {
       width: 400px; height: 400px;
-      background: var(--dice-blue);
+      background: var(--dice-cyan);
       bottom: -10%; left: -5%;
       animation-delay: -7s;
     }
@@ -274,6 +275,7 @@
     .color-block:nth-child(4) { animation-delay: -2.4s; }
     .color-block:nth-child(5) { animation-delay: -3.2s; }
     .color-block:nth-child(6) { animation-delay: -4s; }
+    .color-block:nth-child(7) { animation-delay: -4.8s; }
 
     @keyframes idleFloat {
       0%, 100% { transform: translateY(0) rotateX(0); }
@@ -686,6 +688,38 @@
       direction: rtl;
     }
 
+    .disclaimer {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 680px;
+      margin-top: 20px;
+      padding: 18px 24px;
+      background: linear-gradient(160deg, rgba(255,61,61,0.06), rgba(255,109,0,0.03));
+      border: 1px solid rgba(255,61,61,0.15);
+      border-radius: 14px;
+      text-align: center;
+      direction: rtl;
+    }
+
+    .disclaimer p {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #c07070;
+      line-height: 1.8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .disclaimer p i {
+      color: #ff6b6b;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
     .toast {
       position: fixed;
       bottom: 30px;
@@ -736,6 +770,7 @@
       .roll-btn { font-size: 22px; padding: 14px 52px; border-radius: 14px; }
       .filter-label { padding: 7px 12px; font-size: 11px; gap: 5px; }
       .filter-check { width: 14px; height: 14px; }
+      .disclaimer p { font-size: 11px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -761,7 +796,7 @@
 
     <div class="title-row">
       <div class="title-icon"><i class="fas fa-dice-d20"></i></div>
-      <div class="title">مونيون دايس</div>
+      <div class="title">دايس العرب</div>
     </div>
 
     <div class="dropdown-container">
@@ -798,6 +833,7 @@
         <span class="color-tag" style="background:rgba(0,230,118,0.12);color:var(--dice-green);">أخضر</span>
         <span class="color-tag" style="background:rgba(41,121,255,0.12);color:var(--dice-blue);">أزرق</span>
         <span class="color-tag" style="background:rgba(213,0,249,0.12);color:var(--dice-purple);">بنفسجي</span>
+        <span class="color-tag" style="background:rgba(0,229,255,0.12);color:var(--dice-cyan);">سيان</span>
       </div>
     </div>
   </div>
@@ -833,6 +869,11 @@
       <span class="filter-check"><i class="fas fa-check"></i></span>
       بنفسجي
     </label>
+    <label class="filter-label active" style="color:var(--dice-cyan);" data-color="cyan">
+      <input type="checkbox" checked>
+      <span class="filter-check"><i class="fas fa-check"></i></span>
+      سيان
+    </label>
   </div>
 
   <section class="history-section">
@@ -847,17 +888,25 @@
     </div>
   </section>
 
+  <div class="disclaimer">
+    <p>
+      <i class="fas fa-triangle-exclamation"></i>
+      نحن غير مسؤولين عن اي شخص يستخدم الموقع بشيء غير اخلاقي او ديني
+    </p>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
-    const validColors = ["red", "orange", "gold", "green", "blue", "purple"];
+    const validColors = ["red", "orange", "gold", "green", "blue", "purple", "cyan"];
     const colorHex = {
       red: "#ff3d3d",
       orange: "#ff8c00",
       gold: "#ffd000",
       green: "#00e676",
       blue: "#2979ff",
-      purple: "#d500f9"
+      purple: "#d500f9",
+      cyan: "#00e5ff"
     };
     const colorNames = {
       red: "أحمر",
@@ -865,7 +914,8 @@
       gold: "أصفر",
       green: "أخضر",
       blue: "أزرق",
-      purple: "بنفسجي"
+      purple: "بنفسجي",
+      cyan: "سيان"
     };
     const colorBg = {
       red: "rgba(255,61,61,0.15)",
@@ -873,7 +923,8 @@
       gold: "rgba(255,208,0,0.15)",
       green: "rgba(0,230,118,0.15)",
       blue: "rgba(41,121,255,0.15)",
-      purple: "rgba(213,0,249,0.15)"
+      purple: "rgba(213,0,249,0.15)",
+      cyan: "rgba(0,229,255,0.15)"
     };
 
     let excludedColors = [];
