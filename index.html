@@ -498,79 +498,6 @@
       box-shadow: 0 0 12px var(--accent-glow);
     }
 
-    .filters {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 680px;
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding: 16px 20px;
-      background: linear-gradient(160deg, var(--card-light), var(--card));
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-    }
-
-    .filter-label {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 16px;
-      background: var(--bg-mid);
-      border: 2px solid var(--card-border);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      user-select: none;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .filter-label:hover {
-      border-color: var(--muted);
-      transform: translateY(-2px);
-    }
-
-    .filter-label.active {
-      border-color: currentColor;
-      box-shadow: 0 0 16px currentColor, inset 0 0 12px rgba(255,255,255,0.03);
-    }
-
-    .filter-label.excluded {
-      opacity: 0.25;
-      transform: scale(0.95);
-      filter: grayscale(1);
-    }
-
-    .filter-label input { display: none; }
-
-    .filter-check {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      border: 2px solid currentColor;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-
-    .filter-label.active .filter-check { background: currentColor; }
-
-    .filter-check i {
-      font-size: 9px;
-      color: var(--bg);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .filter-label.active .filter-check i { opacity: 1; }
-
     .history-section {
       position: relative;
       z-index: 1;
@@ -768,8 +695,6 @@
       .color-block { width: 62px; height: 62px; border-radius: 14px; }
       .dice-stage { gap: 10px; min-height: 100px; }
       .roll-btn { font-size: 22px; padding: 14px 52px; border-radius: 14px; }
-      .filter-label { padding: 7px 12px; font-size: 11px; gap: 5px; }
-      .filter-check { width: 14px; height: 14px; }
       .disclaimer p { font-size: 11px; }
     }
 
@@ -838,44 +763,6 @@
     </div>
   </div>
 
-  <div class="filters" role="group" aria-label="فلاتر الألوان">
-    <label class="filter-label active" style="color:var(--dice-red);" data-color="red">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      أحمر
-    </label>
-    <label class="filter-label active" style="color:var(--dice-orange);" data-color="orange">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      برتقالي
-    </label>
-    <label class="filter-label active" style="color:var(--dice-gold);" data-color="gold">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      أصفر
-    </label>
-    <label class="filter-label active" style="color:var(--dice-green);" data-color="green">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      أخضر
-    </label>
-    <label class="filter-label active" style="color:var(--dice-blue);" data-color="blue">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      أزرق
-    </label>
-    <label class="filter-label active" style="color:var(--dice-purple);" data-color="purple">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      بنفسجي
-    </label>
-    <label class="filter-label active" style="color:var(--dice-cyan);" data-color="cyan">
-      <input type="checkbox" checked>
-      <span class="filter-check"><i class="fas fa-check"></i></span>
-      سيان
-    </label>
-  </div>
-
   <section class="history-section">
     <div class="history-header">
       <div class="history-title">
@@ -927,7 +814,6 @@
       cyan: "rgba(0,229,255,0.15)"
     };
 
-    let excludedColors = [];
     let isRolling = false;
     let isMuted = false;
     let rollCount = 0;
@@ -1066,26 +952,6 @@
       showToast(isMuted ? "تم كتم الصوت" : "تم تفعيل الصوت");
     });
 
-    document.querySelectorAll(".filter-label").forEach(label => {
-      label.addEventListener("click", () => {
-        const color = label.dataset.color;
-        const checkbox = label.querySelector("input");
-        checkbox.checked = !checkbox.checked;
-        const isActive = checkbox.checked;
-        label.classList.toggle("active", isActive);
-        label.classList.toggle("excluded", !isActive);
-        const idx = excludedColors.indexOf(color);
-        if (!isActive && idx === -1) {
-          excludedColors.push(color);
-        } else if (isActive && idx !== -1) {
-          excludedColors.splice(idx, 1);
-        }
-        if (excludedColors.length >= validColors.length) {
-          showToast("يجب تفعيل لون واحد على الأقل!");
-        }
-      });
-    });
-
     clearHistoryBtn.addEventListener("click", () => {
       history = [];
       rollCount = 0;
@@ -1094,9 +960,7 @@
     });
 
     function getRandomColor() {
-      const available = validColors.filter(c => !excludedColors.includes(c));
-      if (available.length === 0) return "gold";
-      return available[Math.floor(Math.random() * available.length)];
+      return validColors[Math.floor(Math.random() * validColors.length)];
     }
 
     function createDiceBlock() {
@@ -1142,11 +1006,6 @@
 
     function rollDice() {
       if (isRolling) return;
-      const available = validColors.filter(c => !excludedColors.includes(c));
-      if (available.length === 0) {
-        showToast("يرجى تفعيل لون واحد على الأقل!");
-        return;
-      }
 
       isRolling = true;
       rollButton.disabled = true;
