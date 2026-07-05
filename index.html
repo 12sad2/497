@@ -40,6 +40,15 @@
       padding: 20px;
       overflow-x: hidden;
       position: relative;
+      transition: direction 0s;
+    }
+
+    body[dir="ltr"] {
+      direction: ltr;
+    }
+
+    body[dir="rtl"] {
+      direction: rtl;
     }
 
     canvas#bgCanvas {
@@ -131,6 +140,73 @@
       border-radius: 28px;
     }
 
+    .top-controls {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 3;
+    }
+
+    .ctrl-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--bg-mid);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .ctrl-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* زر تغيير اللغة */
+    .lang-toggle {
+      position: relative;
+      width: auto;
+      padding: 0 4px;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    .lang-toggle .lang-opt {
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.25s;
+      letter-spacing: 0.5px;
+      border: none;
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lang-toggle .lang-opt.active {
+      color: #0a0a0a;
+      background: linear-gradient(135deg, #ffca28, #ff9100);
+      box-shadow: 0 2px 10px rgba(255,171,0,0.3);
+    }
+
+    .lang-toggle .lang-opt:not(.active):hover {
+      color: var(--fg);
+      background: rgba(255,255,255,0.05);
+    }
+
     .title-row {
       display: flex;
       align-items: center;
@@ -177,7 +253,6 @@
       100% { background-position: 200% center; }
     }
 
-    /* قائمة الدايس بماب سرقه */
     .dice-legend {
       position: relative;
       z-index: 2;
@@ -198,7 +273,10 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      direction: rtl;
+    }
+
+    [dir="ltr"] .dice-legend-title {
+      flex-direction: row-reverse;
     }
 
     .dice-legend-title i {
@@ -232,17 +310,17 @@
       height: 20px;
       border-radius: 6px;
       flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
 
     .legend-label {
       font-family: 'Cairo', sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--fg);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       direction: ltr;
       text-align: left;
+      line-height: 1.2;
     }
 
     .dropdown-container {
@@ -269,8 +347,13 @@
       pointer-events: none;
     }
 
+    [dir="ltr"] .select-wrapper i {
+      right: auto;
+      left: 14px;
+    }
+
     select {
-      font-family: 'Tajawal', sans-serif;
+      font-family: 'Tajawal', 'Cairo', sans-serif;
       font-weight: 700;
       font-size: 14px;
       padding: 11px 38px 11px 40px;
@@ -286,7 +369,14 @@
       background-repeat: no-repeat;
       background-position: left 14px center;
       transition: border-color 0.25s, box-shadow 0.25s;
-      direction: rtl;
+    }
+
+    [dir="rtl"] select { direction: rtl; }
+    [dir="ltr"] select { direction: ltr; }
+
+    [dir="ltr"] select {
+      padding: 11px 40px 11px 38px;
+      background-position: right 14px center;
     }
 
     select:focus {
@@ -418,10 +508,10 @@
       opacity: 0;
       transform: translateY(10px) scale(0.95);
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      direction: rtl;
       position: relative;
       z-index: 2;
       letter-spacing: 0.5px;
+      text-align: center;
     }
 
     .result-text.show {
@@ -539,31 +629,6 @@
       margin: 0 1px;
     }
 
-    .sound-toggle {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
-      background: var(--bg-mid);
-      color: var(--muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      transition: all 0.2s;
-      z-index: 3;
-    }
-
-    .sound-toggle:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 12px var(--accent-glow);
-    }
-
     .history-section {
       position: relative;
       z-index: 1;
@@ -592,11 +657,10 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      direction: rtl;
     }
 
     .history-clear {
-      font-family: 'Tajawal', sans-serif;
+      font-family: 'Tajawal', 'Cairo', sans-serif;
       font-size: 12px;
       font-weight: 700;
       color: var(--muted);
@@ -635,7 +699,6 @@
       border-radius: 10px;
       font-size: 13px;
       animation: histSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      direction: rtl;
       border: 1px solid transparent;
       transition: border-color 0.2s;
     }
@@ -644,6 +707,11 @@
 
     @keyframes histSlide {
       from { opacity: 0; transform: translateX(20px) scale(0.95); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    [dir="ltr"] @keyframes histSlide {
+      from { opacity: 0; transform: translateX(-20px) scale(0.95); }
       to { opacity: 1; transform: translateX(0) scale(1); }
     }
 
@@ -678,7 +746,6 @@
       text-align: center;
       padding: 20px;
       opacity: 0.4;
-      direction: rtl;
     }
 
     .disclaimer {
@@ -692,11 +759,10 @@
       border: 1px solid rgba(255,61,61,0.15);
       border-radius: 14px;
       text-align: center;
-      direction: rtl;
     }
 
     .disclaimer p {
-      font-family: 'Tajawal', sans-serif;
+      font-family: 'Tajawal', 'Cairo', sans-serif;
       font-size: 13px;
       font-weight: 700;
       color: #c07070;
@@ -711,6 +777,10 @@
       color: #ff6b6b;
       font-size: 14px;
       flex-shrink: 0;
+    }
+
+    [dir="ltr"] .disclaimer p {
+      flex-direction: row-reverse;
     }
 
     .toast {
@@ -764,6 +834,7 @@
       .disclaimer p { font-size: 11px; }
       .legend-grid { grid-template-columns: repeat(2, 1fr); }
       .dice-legend { padding: 12px 14px; }
+      .lang-toggle .lang-opt { padding: 5px 8px; font-size: 10px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -775,7 +846,7 @@
     }
   </style>
 </head>
-<body>
+<body dir="rtl">
 
   <div class="ambient-orb"></div>
   <div class="ambient-orb"></div>
@@ -783,20 +854,26 @@
   <canvas id="bgCanvas"></canvas>
 
   <div class="wrapper">
-    <button class="sound-toggle" id="soundToggle" aria-label="تبديل الصوت" title="تبديل الصوت">
-      <i class="fas fa-volume-high"></i>
-    </button>
+    <!-- أزرار التحكم العلوية -->
+    <div class="top-controls">
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-opt active" data-lang="ar">عربي</button>
+        <button class="lang-opt" data-lang="en">EN</button>
+      </div>
+      <button class="ctrl-btn" id="soundToggle" aria-label="تبديل الصوت" title="تبديل الصوت">
+        <i class="fas fa-volume-high"></i>
+      </button>
+    </div>
 
     <div class="title-row">
       <div class="title-icon"><i class="fas fa-dice-d20"></i></div>
-      <div class="title">دايس العرب</div>
+      <div class="title" data-i18n="title">دايس العرب</div>
     </div>
 
-    <!-- قائمة الدايس بماب سرقه -->
     <div class="dice-legend">
       <div class="dice-legend-title">
         <i class="fas fa-map"></i>
-        هاذي قائمه الدايس بماب سرقه
+        <span data-i18n="legendTitle">هاذي قائمه الدايس بماب سرقه</span>
       </div>
       <div class="legend-grid">
         <div class="legend-item">
@@ -830,18 +907,18 @@
       <div class="select-wrapper">
         <i class="fas fa-dice"></i>
         <select id="numDice" aria-label="عدد النرد">
-          <option value="1">نرد واحد</option>
-          <option value="2">نردين</option>
-          <option value="3">3 نرد</option>
-          <option value="4" selected>4 نرد</option>
-          <option value="5">5 نرد</option>
-          <option value="6">6 نرد</option>
+          <option value="1" data-i18n-opt="dice1">نرد واحد</option>
+          <option value="2" data-i18n-opt="dice2">نردين</option>
+          <option value="3" data-i18n-opt="dice3">3 نرد</option>
+          <option value="4" selected data-i18n-opt="dice4">4 نرد</option>
+          <option value="5" data-i18n-opt="dice5">5 نرد</option>
+          <option value="6" data-i18n-opt="dice6">6 نرد</option>
         </select>
       </div>
       <div class="select-wrapper">
         <i class="fas fa-palette"></i>
         <select id="colorDice" aria-label="نوع النرد">
-          <option value="color">نرد ملون</option>
+          <option value="color" data-i18n-opt="diceType">نرد ملون</option>
         </select>
       </div>
     </div>
@@ -849,17 +926,17 @@
     <div class="dice-stage" id="result"></div>
     <div class="result-text" id="resultText"></div>
 
-    <button class="roll-btn" id="rollButton">اضرب</button>
+    <button class="roll-btn" id="rollButton" data-i18n="rollBtn">اضرب</button>
 
     <div class="color-container">
       <div class="color-info">
-        الألوان المتاحة:
-        <span class="color-tag" style="background:rgba(255,61,61,0.12);color:var(--dice-red);">أحمر</span>
-        <span class="color-tag" style="background:rgba(255,140,0,0.12);color:var(--dice-orange);">برتقالي</span>
-        <span class="color-tag" style="background:rgba(255,208,0,0.12);color:var(--dice-gold);">أصفر</span>
-        <span class="color-tag" style="background:rgba(0,230,118,0.12);color:var(--dice-green);">أخضر</span>
-        <span class="color-tag" style="background:rgba(41,121,255,0.12);color:var(--dice-blue);">أزرق</span>
-        <span class="color-tag" style="background:rgba(213,0,249,0.12);color:var(--dice-purple);">بنفسجي</span>
+        <span data-i18n="availColors">الألوان المتاحة:</span>
+        <span class="color-tag" style="background:rgba(255,61,61,0.12);color:var(--dice-red);" data-i18n="cRed">أحمر</span>
+        <span class="color-tag" style="background:rgba(255,140,0,0.12);color:var(--dice-orange);" data-i18n="cOrange">برتقالي</span>
+        <span class="color-tag" style="background:rgba(255,208,0,0.12);color:var(--dice-gold);" data-i18n="cGold">أصفر</span>
+        <span class="color-tag" style="background:rgba(0,230,118,0.12);color:var(--dice-green);" data-i18n="cGreen">أخضر</span>
+        <span class="color-tag" style="background:rgba(41,121,255,0.12);color:var(--dice-blue);" data-i18n="cBlue">أزرق</span>
+        <span class="color-tag" style="background:rgba(213,0,249,0.12);color:var(--dice-purple);" data-i18n="cPurple">بنفسجي</span>
       </div>
     </div>
   </div>
@@ -867,26 +944,97 @@
   <section class="history-section">
     <div class="history-header">
       <div class="history-title">
-        <i class="fas fa-clock-rotate-left"></i> سجل الرميات
+        <i class="fas fa-clock-rotate-left"></i>
+        <span data-i18n="historyTitle">سجل الرميات</span>
       </div>
-      <button class="history-clear" id="clearHistory">مسح الكل</button>
+      <button class="history-clear" id="clearHistory" data-i18n="clearAll">مسح الكل</button>
     </div>
     <div class="history-list" id="historyList">
-      <div class="history-empty">لا توجد رميات بعد. اضغط على الزر!</div>
+      <div class="history-empty" data-i18n="historyEmpty">لا توجد رميات بعد. اضغط على الزر!</div>
     </div>
   </section>
 
   <div class="disclaimer">
     <p>
       <i class="fas fa-triangle-exclamation"></i>
-      نحن غير مسؤولين عن اي شخص يستخدم الموقع بشيء غير اخلاقي او ديني
+      <span data-i18n="disclaimer">نحن غير مسؤولين عن اي شخص يستخدم الموقع بشيء غير اخلاقي او ديني</span>
     </p>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
-    // الألوان بدون سيان
+    /* ===== ترجمات الموقع ===== */
+    const i18n = {
+      ar: {
+        title: "دايس العرب",
+        legendTitle: "هاذي قائمه الدايس بماب سرقه",
+        dice1: "نرد واحد",
+        dice2: "نردين",
+        dice3: "3 نرد",
+        dice4: "4 نرد",
+        dice5: "5 نرد",
+        dice6: "6 نرد",
+        diceType: "نرد ملون",
+        rollBtn: "اضرب",
+        availColors: "الألوان المتاحة:",
+        cRed: "أحمر",
+        cOrange: "برتقالي",
+        cGold: "أصفر",
+        cGreen: "أخضر",
+        cBlue: "أزرق",
+        cPurple: "بنفسجي",
+        historyTitle: "سجل الرميات",
+        clearAll: "مسح الكل",
+        historyEmpty: "لا توجد رميات بعد. اضغط على الزر!",
+        disclaimer: "نحن غير مسؤولين عن اي شخص يستخدم الموقع بشيء غير اخلاقي او ديني",
+        muted: "تم كتم الصوت",
+        unmuted: "تم تفعيل الصوت",
+        cleared: "تم مسح السجل",
+        colorRed: "أحمر",
+        colorOrange: "برتقالي",
+        colorGold: "أصفر",
+        colorGreen: "أخضر",
+        colorBlue: "أزرق",
+        colorPurple: "بنفسجي"
+      },
+      en: {
+        title: "Arab Dice",
+        legendTitle: "Dice list for Theft Map",
+        dice1: "1 Dice",
+        dice2: "2 Dice",
+        dice3: "3 Dice",
+        dice4: "4 Dice",
+        dice5: "5 Dice",
+        dice6: "6 Dice",
+        diceType: "Colored Dice",
+        rollBtn: "Roll",
+        availColors: "Available Colors:",
+        cRed: "Red",
+        cOrange: "Orange",
+        cGold: "Yellow",
+        cGreen: "Green",
+        cBlue: "Blue",
+        cPurple: "Purple",
+        historyTitle: "Roll History",
+        clearAll: "Clear All",
+        historyEmpty: "No rolls yet. Press the button!",
+        disclaimer: "We are not responsible for anyone using this site for unethical or religious purposes",
+        muted: "Sound muted",
+        unmuted: "Sound enabled",
+        cleared: "History cleared",
+        colorRed: "Red",
+        colorOrange: "Orange",
+        colorGold: "Yellow",
+        colorGreen: "Green",
+        colorBlue: "Blue",
+        colorPurple: "Purple"
+      }
+    };
+
+    let currentLang = "ar";
+
+    /* ===== بيانات الألوان ===== */
     const validColors = ["red", "orange", "gold", "green", "blue", "purple"];
     const colorHex = {
       red: "#ff3d3d",
@@ -896,14 +1044,6 @@
       blue: "#2979ff",
       purple: "#d500f9"
     };
-    const colorNames = {
-      red: "أحمر",
-      orange: "برتقالي",
-      gold: "أصفر",
-      green: "أخضر",
-      blue: "أزرق",
-      purple: "بنفسجي"
-    };
     const colorBg = {
       red: "rgba(255,61,61,0.15)",
       orange: "rgba(255,140,0,0.15)",
@@ -912,6 +1052,20 @@
       blue: "rgba(41,121,255,0.15)",
       purple: "rgba(213,0,249,0.15)"
     };
+
+    // مفتاح الترجمة لكل لون
+    const colorI18nKey = {
+      red: "colorRed",
+      orange: "colorOrange",
+      gold: "colorGold",
+      green: "colorGreen",
+      blue: "colorBlue",
+      purple: "colorPurple"
+    };
+
+    function getColorName(c) {
+      return i18n[currentLang][colorI18nKey[c]] || c;
+    }
 
     let isRolling = false;
     let isMuted = false;
@@ -926,7 +1080,58 @@
     const toastEl = document.getElementById("toast");
     const soundToggle = document.getElementById("soundToggle");
     const clearHistoryBtn = document.getElementById("clearHistory");
+    const langToggle = document.getElementById("langToggle");
 
+    /* ===== تبديل اللغة ===== */
+    function applyLanguage(lang) {
+      currentLang = lang;
+      const t = i18n[lang];
+      const dir = lang === "ar" ? "rtl" : "ltr";
+
+      document.body.setAttribute("dir", dir);
+      document.documentElement.lang = lang;
+      document.title = t.title;
+
+      // تحديث كل العناصر ذات data-i18n
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      // تحديث خيارات السيلكت
+      document.querySelectorAll("[data-i18n-opt]").forEach(opt => {
+        const key = opt.getAttribute("data-i18n-opt");
+        if (t[key] !== undefined) opt.textContent = t[key];
+      });
+
+      // تحديث أزرار اللغة
+      langToggle.querySelectorAll(".lang-opt").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
+
+      // تحديث aria-label
+      soundToggle.setAttribute("aria-label", lang === "ar" ? "تبديل الصوت" : "Toggle Sound");
+      soundToggle.setAttribute("title", lang === "ar" ? "تبديل الصوت" : "Toggle Sound");
+      numDiceSelect.setAttribute("aria-label", lang === "ar" ? "عدد النرد" : "Number of Dice");
+      document.getElementById("colorDice").setAttribute("aria-label", lang === "ar" ? "نوع النرد" : "Dice Type");
+
+      // إعادة بناء السجل بأسماء الألوان الجديدة
+      if (history.length > 0) {
+        rebuildHistory();
+      }
+    }
+
+    langToggle.querySelectorAll(".lang-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lang = btn.dataset.lang;
+        if (lang !== currentLang) {
+          applyLanguage(lang);
+          showToast(lang === "ar" ? "تم التبديل للعربية" : "Switched to English");
+        }
+      });
+    });
+
+    /* ===== خلفية النجوم ===== */
     (function initBgCanvas() {
       const canvas = document.getElementById("bgCanvas");
       const ctx = canvas.getContext("2d");
@@ -970,6 +1175,7 @@
       window.addEventListener("resize", () => { resize(); createStars(); });
     })();
 
+    /* ===== Toast ===== */
     let toastTimeout = null;
     function showToast(msg) {
       toastEl.textContent = msg;
@@ -978,6 +1184,7 @@
       toastTimeout = setTimeout(() => toastEl.classList.remove("show"), 2500);
     }
 
+    /* ===== أصوات ===== */
     let audioCtx = null;
 
     function playRollSound() {
@@ -1019,6 +1226,7 @@
       osc.stop(audioCtx.currentTime + 0.25);
     }
 
+    /* ===== جزيئات الانفجار ===== */
     function spawnBurst(el, color) {
       const rect = el.getBoundingClientRect();
       const stageRect = resultDiv.getBoundingClientRect();
@@ -1043,21 +1251,29 @@
       }
     }
 
+    /* ===== أزرار التحكم ===== */
     soundToggle.addEventListener("click", () => {
       isMuted = !isMuted;
       soundToggle.innerHTML = isMuted
         ? '<i class="fas fa-volume-xmark"></i>'
         : '<i class="fas fa-volume-high"></i>';
-      showToast(isMuted ? "تم كتم الصوت" : "تم تفعيل الصوت");
+      const t = i18n[currentLang];
+      showToast(isMuted ? t.muted : t.unmuted);
     });
 
     clearHistoryBtn.addEventListener("click", () => {
       history = [];
       rollCount = 0;
-      historyList.innerHTML = '<div class="history-empty">لا توجد رميات بعد. اضغط على الزر!</div>';
-      showToast("تم مسح السجل");
+      historyList.innerHTML = '';
+      const empty = document.createElement("div");
+      empty.className = "history-empty";
+      empty.setAttribute("data-i18n", "historyEmpty");
+      empty.textContent = i18n[currentLang].historyEmpty;
+      historyList.appendChild(empty);
+      showToast(i18n[currentLang].cleared);
     });
 
+    /* ===== منطق النرد ===== */
     function getRandomColor() {
       return validColors[Math.floor(Math.random() * validColors.length)];
     }
@@ -1074,17 +1290,21 @@
       return block;
     }
 
-    function updateHistory(colors) {
-      rollCount++;
-      history.unshift({ num: rollCount, colors: [...colors] });
-      if (history.length > 30) history.pop();
+    function rebuildHistory() {
       historyList.innerHTML = "";
+      if (history.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "history-empty";
+        empty.textContent = i18n[currentLang].historyEmpty;
+        historyList.appendChild(empty);
+        return;
+      }
       history.forEach(entry => {
         const item = document.createElement("div");
         item.className = "history-item";
         const names = document.createElement("span");
         names.className = "history-names";
-        names.textContent = entry.colors.map(c => colorNames[c]).join(" + ");
+        names.textContent = entry.colors.map(c => getColorName(c)).join(" + ");
         const dots = document.createElement("div");
         dots.className = "history-dots";
         entry.colors.forEach(c => {
@@ -1101,6 +1321,13 @@
         item.appendChild(num);
         historyList.appendChild(item);
       });
+    }
+
+    function updateHistory(colors) {
+      rollCount++;
+      history.unshift({ num: rollCount, colors: [...colors] });
+      if (history.length > 30) history.pop();
+      rebuildHistory();
     }
 
     function rollDice() {
@@ -1156,7 +1383,7 @@
         const totalDelay = count * 140 + 500;
         setTimeout(() => {
           resultText.innerHTML = finalColors.map(c =>
-            `<span class="r-color" style="background:${colorBg[c]};color:${colorHex[c]};">${colorNames[c]}</span>`
+            `<span class="r-color" style="background:${colorBg[c]};color:${colorHex[c]};">${getColorName(c)}</span>`
           ).join(" ");
           resultText.classList.add("show");
           updateHistory(finalColors);
