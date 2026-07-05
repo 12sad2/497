@@ -24,7 +24,6 @@
       --dice-green: #00e676;
       --dice-blue: #2979ff;
       --dice-purple: #d500f9;
-      --dice-cyan: #00e5ff;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -69,14 +68,14 @@
 
     .ambient-orb:nth-child(2) {
       width: 400px; height: 400px;
-      background: var(--dice-cyan);
+      background: var(--dice-purple);
       bottom: -10%; left: -5%;
       animation-delay: -7s;
     }
 
     .ambient-orb:nth-child(3) {
       width: 300px; height: 300px;
-      background: var(--dice-purple);
+      background: var(--dice-green);
       top: 40%; left: 50%;
       animation-delay: -13s;
       opacity: 0.06;
@@ -136,7 +135,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       position: relative;
       z-index: 2;
     }
@@ -178,10 +177,78 @@
       100% { background-position: 200% center; }
     }
 
+    /* قائمة الدايس بماب سرقه */
+    .dice-legend {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(255,171,0,0.04) 0%, rgba(213,0,249,0.03) 100%);
+      border: 1px solid rgba(255,171,0,0.12);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+
+    .dice-legend-title {
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      direction: rtl;
+    }
+
+    .dice-legend-title i {
+      font-size: 12px;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: border-color 0.25s, transform 0.2s;
+    }
+
+    .legend-item:hover {
+      border-color: rgba(255,255,255,0.1);
+      transform: translateY(-1px);
+    }
+
+    .legend-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .legend-label {
+      font-family: 'Cairo', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--fg);
+      letter-spacing: 0.5px;
+      direction: ltr;
+      text-align: left;
+    }
+
     .dropdown-container {
       display: flex;
       gap: 12px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
       justify-content: center;
       position: relative;
@@ -275,7 +342,6 @@
     .color-block:nth-child(4) { animation-delay: -2.4s; }
     .color-block:nth-child(5) { animation-delay: -3.2s; }
     .color-block:nth-child(6) { animation-delay: -4s; }
-    .color-block:nth-child(7) { animation-delay: -4.8s; }
 
     @keyframes idleFloat {
       0%, 100% { transform: translateY(0) rotateX(0); }
@@ -696,6 +762,8 @@
       .dice-stage { gap: 10px; min-height: 100px; }
       .roll-btn { font-size: 22px; padding: 14px 52px; border-radius: 14px; }
       .disclaimer p { font-size: 11px; }
+      .legend-grid { grid-template-columns: repeat(2, 1fr); }
+      .dice-legend { padding: 12px 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -722,6 +790,40 @@
     <div class="title-row">
       <div class="title-icon"><i class="fas fa-dice-d20"></i></div>
       <div class="title">دايس العرب</div>
+    </div>
+
+    <!-- قائمة الدايس بماب سرقه -->
+    <div class="dice-legend">
+      <div class="dice-legend-title">
+        <i class="fas fa-map"></i>
+        هاذي قائمه الدايس بماب سرقه
+      </div>
+      <div class="legend-grid">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ff3d3d; box-shadow: 0 0 10px rgba(255,61,61,0.4);"></div>
+          <span class="legend-label">L TRAE</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#00e676; box-shadow: 0 0 10px rgba(0,230,118,0.4);"></div>
+          <span class="legend-label">FAIE TRADE</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ffd000; box-shadow: 0 0 10px rgba(255,208,0,0.4);"></div>
+          <span class="legend-label">OEAL</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ff8c00; box-shadow: 0 0 10px rgba(255,140,0,0.4);"></div>
+          <span class="legend-label">NO THAHKS</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#d500f9; box-shadow: 0 0 10px rgba(213,0,249,0.4);"></div>
+          <span class="legend-label">LAST OFFER</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#2979ff; box-shadow: 0 0 10px rgba(41,121,255,0.4);"></div>
+          <span class="legend-label">MORE</span>
+        </div>
+      </div>
     </div>
 
     <div class="dropdown-container">
@@ -758,7 +860,6 @@
         <span class="color-tag" style="background:rgba(0,230,118,0.12);color:var(--dice-green);">أخضر</span>
         <span class="color-tag" style="background:rgba(41,121,255,0.12);color:var(--dice-blue);">أزرق</span>
         <span class="color-tag" style="background:rgba(213,0,249,0.12);color:var(--dice-purple);">بنفسجي</span>
-        <span class="color-tag" style="background:rgba(0,229,255,0.12);color:var(--dice-cyan);">سيان</span>
       </div>
     </div>
   </div>
@@ -785,15 +886,15 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const validColors = ["red", "orange", "gold", "green", "blue", "purple", "cyan"];
+    // الألوان بدون سيان
+    const validColors = ["red", "orange", "gold", "green", "blue", "purple"];
     const colorHex = {
       red: "#ff3d3d",
       orange: "#ff8c00",
       gold: "#ffd000",
       green: "#00e676",
       blue: "#2979ff",
-      purple: "#d500f9",
-      cyan: "#00e5ff"
+      purple: "#d500f9"
     };
     const colorNames = {
       red: "أحمر",
@@ -801,8 +902,7 @@
       gold: "أصفر",
       green: "أخضر",
       blue: "أزرق",
-      purple: "بنفسجي",
-      cyan: "سيان"
+      purple: "بنفسجي"
     };
     const colorBg = {
       red: "rgba(255,61,61,0.15)",
@@ -810,8 +910,7 @@
       gold: "rgba(255,208,0,0.15)",
       green: "rgba(0,230,118,0.15)",
       blue: "rgba(41,121,255,0.15)",
-      purple: "rgba(213,0,249,0.15)",
-      cyan: "rgba(0,229,255,0.15)"
+      purple: "rgba(213,0,249,0.15)"
     };
 
     let isRolling = false;
