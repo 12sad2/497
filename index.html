@@ -389,6 +389,221 @@
 
     select:hover { border-color: var(--muted); }
 
+    /* ===== قسم إضافة الحيوانات ===== */
+    .animals-section {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(0,230,118,0.04) 0%, rgba(255,171,0,0.03) 100%);
+      border: 1px solid rgba(0,230,118,0.15);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+
+    .animals-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .animals-title {
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dice-green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .animals-title i { font-size: 13px; }
+
+    .add-animal-btn {
+      font-family: 'Cairo', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--dice-green);
+      background: rgba(0,230,118,0.08);
+      border: 1px solid rgba(0,230,118,0.25);
+      border-radius: 8px;
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .add-animal-btn:hover {
+      background: rgba(0,230,118,0.15);
+      border-color: var(--dice-green);
+      box-shadow: 0 0 12px rgba(0,230,118,0.15);
+    }
+
+    .animals-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-left: 4px;
+    }
+
+    .animals-list::-webkit-scrollbar { width: 3px; }
+    .animals-list::-webkit-scrollbar-track { background: transparent; }
+    .animals-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+
+    .animal-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: border-color 0.25s, transform 0.2s;
+      animation: animalSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes animalSlideIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .animal-row:hover {
+      border-color: rgba(0,230,118,0.2);
+    }
+
+    .animal-name-input {
+      font-family: 'Tajawal', 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--fg);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      outline: none;
+      min-width: 80px;
+      flex: 1;
+      padding: 4px 2px;
+      transition: border-color 0.25s;
+    }
+
+    .animal-name-input:focus {
+      border-bottom-color: var(--accent);
+    }
+
+    .animal-name-input::placeholder {
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    .animal-counter {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      flex-shrink: 0;
+    }
+
+    .counter-btn {
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: var(--bg-mid);
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .counter-btn:hover {
+      background: var(--card-light);
+      color: var(--fg);
+    }
+
+    .counter-btn.minus:hover {
+      color: var(--dice-red);
+      background: rgba(255,61,61,0.1);
+    }
+
+    .counter-btn.plus:hover {
+      color: var(--dice-green);
+      background: rgba(0,230,118,0.1);
+    }
+
+    .counter-btn:active {
+      transform: scale(0.9);
+    }
+
+    .counter-value {
+      width: 44px;
+      height: 34px;
+      background: rgba(0,0,0,0.3);
+      border: none;
+      border-left: 1px solid var(--card-border);
+      border-right: 1px solid var(--card-border);
+      color: var(--accent);
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      text-align: center;
+      outline: none;
+      -moz-appearance: textfield;
+    }
+
+    .counter-value::-webkit-outer-spin-button,
+    .counter-value::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .animal-delete-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      opacity: 0;
+    }
+
+    .animal-row:hover .animal-delete-btn {
+      opacity: 1;
+    }
+
+    .animal-delete-btn:hover {
+      border-color: var(--dice-red);
+      color: var(--dice-red);
+      background: rgba(255,61,61,0.08);
+    }
+
+    .animals-empty {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 16px;
+      opacity: 0.4;
+    }
+
+    /* ===== نهاية قسم الحيوانات ===== */
+
     .dice-stage {
       position: relative;
       width: 100%;
@@ -814,6 +1029,17 @@
       100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
     }
 
+    /* تأثير النبضة عند تغيير العدد */
+    .counter-pulse {
+      animation: numPulse 0.3s ease;
+    }
+
+    @keyframes numPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
     @media (max-width: 540px) {
       .wrapper { padding: 28px 18px 24px; border-radius: 22px; }
       .dropdown-container { gap: 8px; }
@@ -825,6 +1051,11 @@
       .legend-grid { grid-template-columns: repeat(2, 1fr); }
       .dice-legend { padding: 12px 14px; }
       .lang-toggle .lang-opt { padding: 5px 8px; font-size: 10px; }
+      .animals-section { padding: 14px 14px; }
+      .animal-name-input { font-size: 13px; min-width: 60px; }
+      .counter-btn { width: 30px; height: 30px; font-size: 14px; }
+      .counter-value { width: 38px; height: 30px; font-size: 14px; }
+      .animal-delete-btn { opacity: 0.6; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -889,6 +1120,23 @@
           <div class="legend-dot" style="background:#2979ff; box-shadow: 0 0 10px rgba(41,121,255,0.4);"></div>
           <span class="legend-label">MORE</span>
         </div>
+      </div>
+    </div>
+
+    <!-- قسم إضافة الحيوانات -->
+    <div class="animals-section">
+      <div class="animals-header">
+        <div class="animals-title">
+          <i class="fas fa-paw"></i>
+          <span data-i18n="animalsTitle">قائمة الحيوانات</span>
+        </div>
+        <button class="add-animal-btn" id="addAnimalBtn">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="addAnimal">إضافة حيوان</span>
+        </button>
+      </div>
+      <div class="animals-list" id="animalsList">
+        <div class="animals-empty" data-i18n="animalsEmpty">اضغط إضافة حيوان لبدء العد</div>
       </div>
     </div>
 
@@ -984,7 +1232,13 @@
         colorGold: "أصفر",
         colorGreen: "أخضر",
         colorBlue: "أزرق",
-        colorPurple: "بنفسجي"
+        colorPurple: "بنفسجي",
+        animalsTitle: "قائمة الحيوانات",
+        addAnimal: "إضافة حيوان",
+        animalsEmpty: "اضغط إضافة حيوان لبدء العد",
+        animalPlaceholder: "اسم الحيوان",
+        animalAdded: "تم إضافة حيوان جديد",
+        animalDeleted: "تم حذف الحيوان"
       },
       en: {
         title: "Arab Dice",
@@ -1016,7 +1270,13 @@
         colorGold: "Yellow",
         colorGreen: "Green",
         colorBlue: "Blue",
-        colorPurple: "Purple"
+        colorPurple: "Purple",
+        animalsTitle: "Animals List",
+        addAnimal: "Add Animal",
+        animalsEmpty: "Click Add Animal to start counting",
+        animalPlaceholder: "Animal name",
+        animalAdded: "New animal added",
+        animalDeleted: "Animal deleted"
       }
     };
 
@@ -1067,6 +1327,235 @@
     const soundToggle = document.getElementById("soundToggle");
     const clearHistoryBtn = document.getElementById("clearHistory");
     const langToggle = document.getElementById("langToggle");
+    const animalsList = document.getElementById("animalsList");
+    const addAnimalBtn = document.getElementById("addAnimalBtn");
+
+    /* ===== نظام الحيوانات ===== */
+    const ANIMALS_STORAGE_KEY = "diceApp_animals";
+    let animals = [];
+
+    // تحميل الحيوانات من التخزين المحلي
+    function loadAnimals() {
+      try {
+        const saved = localStorage.getItem(ANIMALS_STORAGE_KEY);
+        if (saved) {
+          animals = JSON.parse(saved);
+        } else {
+          animals = [];
+        }
+      } catch (e) {
+        animals = [];
+      }
+    }
+
+    // حفظ الحيوانات في التخزين المحلي
+    function saveAnimals() {
+      localStorage.setItem(ANIMALS_STORAGE_KEY, JSON.stringify(animals));
+    }
+
+    // إنشاء معرف فريد
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    // بناء صف حيوان واحد
+    function createAnimalRow(animal) {
+      const row = document.createElement("div");
+      row.className = "animal-row";
+      row.dataset.id = animal.id;
+
+      // حقل اسم الحيوان (قابل للتعديل)
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.className = "animal-name-input";
+      nameInput.value = animal.name;
+      nameInput.placeholder = i18n[currentLang].animalPlaceholder;
+      nameInput.setAttribute("dir", "auto");
+
+      // عند تغيير الاسم نحدث البيانات ونحفظ
+      nameInput.addEventListener("input", function() {
+        const id = row.dataset.id;
+        const found = animals.find(a => a.id === id);
+        if (found) {
+          found.name = this.value;
+          saveAnimals();
+        }
+      });
+
+      // عداد الأرقام
+      const counter = document.createElement("div");
+      counter.className = "animal-counter";
+
+      const minusBtn = document.createElement("button");
+      minusBtn.className = "counter-btn minus";
+      minusBtn.textContent = "−";
+      minusBtn.setAttribute("aria-label", "-1");
+
+      const valueInput = document.createElement("input");
+      valueInput.type = "text";
+      valueInput.className = "counter-value";
+      valueInput.value = animal.count;
+      valueInput.setAttribute("inputmode", "numeric");
+      valueInput.setAttribute("pattern", "[0-9]*");
+      valueInput.setAttribute("aria-label", "العدد");
+
+      // منع إدخال أي شيء غير الأرقام
+      valueInput.addEventListener("input", function() {
+        // نزيل كل شيء غير الأرقام
+        this.value = this.value.replace(/[^0-9]/g, "");
+        const id = row.dataset.id;
+        const found = animals.find(a => a.id === id);
+        if (found) {
+          found.count = this.value === "" ? 0 : parseInt(this.value, 10) || 0;
+          saveAnimals();
+        }
+      });
+
+      // منع لصق نص يحتوي على أحرف
+      valueInput.addEventListener("paste", function(e) {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData).getData("text");
+        const cleaned = pasted.replace(/[^0-9]/g, "");
+        this.value = cleaned;
+        const id = row.dataset.id;
+        const found = animals.find(a => a.id === id);
+        if (found) {
+          found.count = cleaned === "" ? 0 : parseInt(cleaned, 10) || 0;
+          saveAnimals();
+        }
+      });
+
+      // عند مغادرة الحقل نتأكد إن القيمة صحيحة
+      valueInput.addEventListener("blur", function() {
+        if (this.value === "" || isNaN(parseInt(this.value, 10))) {
+          this.value = "0";
+          const id = row.dataset.id;
+          const found = animals.find(a => a.id === id);
+          if (found) {
+            found.count = 0;
+            saveAnimals();
+          }
+        }
+      });
+
+      const plusBtn = document.createElement("button");
+      plusBtn.className = "counter-btn plus";
+      plusBtn.textContent = "+";
+      plusBtn.setAttribute("aria-label", "+1");
+
+      // زر إنقاص 1
+      minusBtn.addEventListener("click", function() {
+        const id = row.dataset.id;
+        const found = animals.find(a => a.id === id);
+        if (found) {
+          found.count = Math.max(0, found.count - 1);
+          valueInput.value = found.count;
+          saveAnimals();
+          // تأثير بصري
+          valueInput.classList.remove("counter-pulse");
+          void valueInput.offsetWidth; // إعادة تشغيل الأنيميشن
+          valueInput.classList.add("counter-pulse");
+        }
+      });
+
+      // زر زيادة 1
+      plusBtn.addEventListener("click", function() {
+        const id = row.dataset.id;
+        const found = animals.find(a => a.id === id);
+        if (found) {
+          found.count = found.count + 1;
+          valueInput.value = found.count;
+          saveAnimals();
+          // تأثير بصري
+          valueInput.classList.remove("counter-pulse");
+          void valueInput.offsetWidth;
+          valueInput.classList.add("counter-pulse");
+        }
+      });
+
+      // زر حذف الحيوان
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "animal-delete-btn";
+      deleteBtn.innerHTML = '<i class="fas fa-trash-can"></i>';
+      deleteBtn.setAttribute("aria-label", "حذف");
+
+      deleteBtn.addEventListener("click", function() {
+        const id = row.dataset.id;
+        animals = animals.filter(a => a.id !== id);
+        saveAnimals();
+        row.style.transition = "all 0.3s ease";
+        row.style.opacity = "0";
+        row.style.transform = "translateX(30px) scale(0.9)";
+        setTimeout(() => {
+          row.remove();
+          renderAnimalsEmpty();
+          showToast(i18n[currentLang].animalDeleted);
+        }, 300);
+      });
+
+      counter.appendChild(minusBtn);
+      counter.appendChild(valueInput);
+      counter.appendChild(plusBtn);
+
+      row.appendChild(nameInput);
+      row.appendChild(counter);
+      row.appendChild(deleteBtn);
+
+      return row;
+    }
+
+    // عرض رسالة الفارغ إذا مافي حيوانات
+    function renderAnimalsEmpty() {
+      if (animalsList.children.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "animals-empty";
+        empty.textContent = i18n[currentLang].animalsEmpty;
+        animalsList.appendChild(empty);
+      }
+    }
+
+    // بناء كل الحيوانات من البيانات
+    function renderAllAnimals() {
+      animalsList.innerHTML = "";
+      if (animals.length === 0) {
+        renderAnimalsEmpty();
+        return;
+      }
+      animals.forEach(animal => {
+        animalsList.appendChild(createAnimalRow(animal));
+      });
+    }
+
+    // إضافة حيوان جديد
+    function addAnimal() {
+      const newAnimal = {
+        id: generateId(),
+        name: "",
+        count: 0
+      };
+      animals.push(newAnimal);
+      saveAnimals();
+
+      // نزيل رسالة الفارغ إن موجودة
+      const emptyMsg = animalsList.querySelector(".animals-empty");
+      if (emptyMsg) emptyMsg.remove();
+
+      const row = createAnimalRow(newAnimal);
+      animalsList.appendChild(row);
+
+      // نركّز على حقل الاسم مباشرة
+      const nameInput = row.querySelector(".animal-name-input");
+      nameInput.focus();
+
+      // ننزل القائمة لأخر عنصر
+      animalsList.scrollTop = animalsList.scrollHeight;
+
+      showToast(i18n[currentLang].animalAdded);
+    }
+
+    addAnimalBtn.addEventListener("click", addAnimal);
+
+    /* ===== نهاية نظام الحيوانات ===== */
 
     function applyLanguage(lang) {
       currentLang = lang;
@@ -1095,6 +1584,11 @@
       soundToggle.setAttribute("title", lang === "ar" ? "تبديل الصوت" : "Toggle Sound");
       numDiceSelect.setAttribute("aria-label", lang === "ar" ? "عدد النرد" : "Number of Dice");
       document.getElementById("colorDice").setAttribute("aria-label", lang === "ar" ? "نوع النرد" : "Dice Type");
+
+      // تحديث placeholder حقول الحيوانات
+      document.querySelectorAll(".animal-name-input").forEach(inp => {
+        inp.placeholder = t.animalPlaceholder;
+      });
 
       if (history.length > 0) {
         rebuildHistory();
@@ -1372,6 +1866,8 @@
 
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space" || e.code === "Enter") {
+        // نتأكد إن التركيز ليس على حقل إدخال
+        if (document.activeElement.tagName === "INPUT") return;
         e.preventDefault();
         rollDice();
       }
@@ -1393,7 +1889,11 @@
       }
     }
 
+    // تهيئة الصفحة
     initDice();
+    loadAnimals();
+    renderAllAnimals();
+
     numDiceSelect.addEventListener("change", () => {
       if (!isRolling) initDice();
     });
