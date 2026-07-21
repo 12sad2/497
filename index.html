@@ -56,13 +56,8 @@
     body[dir="rtl"] { direction: rtl; }
     canvas#bgCanvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
     .ambient-orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.12;
-      pointer-events: none;
-      z-index: 1;
-      animation: orbDrift 20s ease-in-out infinite alternate;
+      position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.12;
+      pointer-events: none; z-index: 1; animation: orbDrift 20s ease-in-out infinite alternate;
     }
     .ambient-orb:nth-child(1) { width: 500px; height: 500px; background: var(--accent); top: -10%; right: -5%; }
     .ambient-orb:nth-child(2) { width: 400px; height: 400px; background: var(--dice-purple); bottom: -10%; left: -5%; animation-delay: -7s; }
@@ -74,21 +69,12 @@
       100% { transform: translate(20px, -10px) scale(1.05); }
     }
     .wrapper {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 680px;
+      position: relative; z-index: 2; width: 100%; max-width: 680px;
       background: linear-gradient(160deg, rgba(22,42,74,0.92) 0%, rgba(15,31,58,0.95) 40%, rgba(10,22,40,0.97) 100%);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
-      border-radius: 28px;
-      padding: 44px 36px 36px;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border); border-radius: 28px; padding: 44px 36px 36px;
       box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 30px 80px -10px rgba(0,0,0,0.7), 0 0 160px -40px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.04);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow: hidden;
+      display: flex; flex-direction: column; align-items: center; overflow: hidden;
     }
     .wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,171,0,0.4), transparent); }
     .wrapper::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.003) 2px, rgba(255,255,255,0.003) 4px); pointer-events: none; border-radius: 28px; }
@@ -123,160 +109,38 @@
     select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
     select:hover { border-color: var(--muted); }
 
-    .score-section {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      border-radius: 16px;
-      padding: 0;
-      margin-bottom: 24px;
-      overflow: hidden;
-    }
-    .score-section-inner {
-      background: linear-gradient(135deg, rgba(255,109,0,0.06) 0%, rgba(255,61,61,0.04) 100%);
-      border: 1px solid rgba(255,109,0,0.18);
-      border-radius: 16px;
-      padding: 18px 20px 14px;
-    }
-    .score-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .score-title {
-      font-family: 'Cairo', sans-serif;
-      font-size: 14px;
-      font-weight: 900;
-      color: var(--accent-hot);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .score-section { position: relative; z-index: 2; width: 100%; margin-bottom: 24px; overflow: hidden; }
+    .score-section-inner { background: linear-gradient(135deg, rgba(255,109,0,0.06) 0%, rgba(255,61,61,0.04) 100%); border: 1px solid rgba(255,109,0,0.18); border-radius: 16px; padding: 18px 20px 14px; }
+    .score-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .score-title { font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 900; color: var(--accent-hot); display: flex; align-items: center; gap: 8px; }
     .score-title i { font-size: 13px; }
-    .add-score-btn {
-      font-family: 'Cairo', sans-serif;
-      font-size: 12px;
-      font-weight: 900;
-      color: var(--bg);
-      background: linear-gradient(135deg, #ffca28, #ff9100);
-      border: none;
-      border-radius: 8px;
-      padding: 7px 18px;
-      cursor: pointer;
-      transition: all 0.25s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 12px rgba(255,109,0,0.25);
-    }
+    .add-score-btn { font-family: 'Cairo', sans-serif; font-size: 12px; font-weight: 900; color: var(--bg); background: linear-gradient(135deg, #ffca28, #ff9100); border: none; border-radius: 8px; padding: 7px 18px; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 12px rgba(255,109,0,0.25); }
     .add-score-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(255,109,0,0.4); }
     .add-score-btn:active { transform: scale(0.96); }
     .score-list { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; padding-left: 4px; }
     .score-list::-webkit-scrollbar { width: 3px; }
     .score-list::-webkit-scrollbar-track { background: transparent; }
     .score-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
-    .score-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      background: rgba(0,0,0,0.35);
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.04);
-      transition: border-color 0.25s, transform 0.2s;
-      animation: scoreSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+    .score-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: rgba(0,0,0,0.35); border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); transition: border-color 0.25s, transform 0.2s; animation: scoreSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
     @keyframes scoreSlideIn { from { opacity: 0; transform: translateY(12px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
     .score-row:hover { border-color: rgba(255,109,0,0.2); }
-    .score-name-input {
-      font-family: 'Tajawal', 'Cairo', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--fg);
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      outline: none;
-      min-width: 80px;
-      flex: 1;
-      padding: 4px 2px;
-      transition: border-color 0.25s;
-    }
+    .score-name-input { font-family: 'Tajawal', 'Cairo', sans-serif; font-weight: 700; font-size: 14px; color: var(--fg); background: transparent; border: none; border-bottom: 2px solid transparent; outline: none; min-width: 80px; flex: 1; padding: 4px 2px; transition: border-color 0.25s; }
     .score-name-input:focus { border-bottom-color: var(--accent); }
     .score-name-input::placeholder { color: var(--muted); opacity: 0.5; }
     .score-counter { display: flex; align-items: center; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); flex-shrink: 0; }
-    .sc-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: var(--bg-mid);
-      color: var(--muted);
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      font-family: 'Cairo', sans-serif;
-      line-height: 1;
-    }
+    .sc-btn { width: 36px; height: 36px; border: none; background: var(--bg-mid); color: var(--muted); font-size: 18px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-family: 'Cairo', sans-serif; line-height: 1; }
     .sc-btn:hover { background: var(--card-light); color: var(--fg); }
     .sc-btn.minus:hover { color: var(--dice-red); background: rgba(255,61,61,0.1); }
     .sc-btn.plus:hover { color: var(--dice-green); background: rgba(0,230,118,0.1); }
     .sc-btn:active { transform: scale(0.88); }
-    .sc-val {
-      width: 48px;
-      height: 36px;
-      background: rgba(0,0,0,0.3);
-      border: none;
-      border-left: 1px solid var(--card-border);
-      border-right: 1px solid var(--card-border);
-      color: var(--accent);
-      font-family: 'Cairo', sans-serif;
-      font-size: 16px;
-      font-weight: 900;
-      text-align: center;
-      outline: none;
-      -moz-appearance: textfield;
-      transition: color 0.2s;
-    }
+    .sc-val { width: 48px; height: 36px; background: rgba(0,0,0,0.3); border: none; border-left: 1px solid var(--card-border); border-right: 1px solid var(--card-border); color: var(--accent); font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 900; text-align: center; outline: none; -moz-appearance: textfield; transition: color 0.2s; }
     .sc-val.negative { color: var(--dice-red); }
-    .sc-val::-webkit-outer-spin-button,
-    .sc-val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    .score-del-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-      opacity: 0;
-    }
+    .sc-val::-webkit-outer-spin-button, .sc-val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .score-del-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--muted); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; opacity: 0; }
     .score-row:hover .score-del-btn { opacity: 1; }
     .score-del-btn:hover { border-color: var(--dice-red); color: var(--dice-red); background: rgba(255,61,61,0.08); }
     .score-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 16px; opacity: 0.4; }
-    .score-note {
-      margin-top: 10px;
-      text-align: center;
-      font-family: 'Cairo', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      opacity: 0.55;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
+    .score-note { margin-top: 10px; text-align: center; font-family: 'Cairo', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); opacity: 0.55; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .score-note i { font-size: 10px; }
     .counter-pulse { animation: numPulse 0.25s ease; }
     @keyframes numPulse { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
@@ -503,13 +367,12 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    const i18n = {
+    var i18n = {
       ar: {
         title: "دايس العرب",
         legendTitle: "هاذي قائمه الدايس بماب سرقه",
         dice1: "نرد واحد", dice2: "نردين", dice3: "3 نرد", dice4: "4 نرد", dice5: "5 نرد", dice6: "6 نرد",
-        diceType: "نرد ملون",
-        rollBtn: "اضرب",
+        diceType: "نرد ملون", rollBtn: "اضرب",
         availColors: "الألوان المتاحة:",
         cRed: "أحمر", cOrange: "برتقالي", cGold: "أصفر", cGreen: "أخضر", cBlue: "أزرق", cPurple: "بنفسجي",
         historyTitle: "سجل الرميات", clearAll: "مسح الكل",
@@ -529,8 +392,7 @@
         title: "Arab Dice",
         legendTitle: "Dice list for Theft Map",
         dice1: "1 Dice", dice2: "2 Dice", dice3: "3 Dice", dice4: "4 Dice", dice5: "5 Dice", dice6: "6 Dice",
-        diceType: "Colored Dice",
-        rollBtn: "Roll",
+        diceType: "Colored Dice", rollBtn: "Roll",
         availColors: "Available Colors:",
         cRed: "Red", cOrange: "Orange", cGold: "Yellow", cGreen: "Green", cBlue: "Blue", cPurple: "Purple",
         historyTitle: "Roll History", clearAll: "Clear All",
@@ -548,114 +410,150 @@
       }
     };
 
-    let currentLang = "ar";
-    const validColors = ["red", "orange", "gold", "green", "blue", "purple"];
-    const colorHex = { red: "#ff3d3d", orange: "#ff8c00", gold: "#ffd000", green: "#00e676", blue: "#2979ff", purple: "#d500f9" };
-    const colorBg = { red: "rgba(255,61,61,0.15)", orange: "rgba(255,140,0,0.15)", gold: "rgba(255,208,0,0.15)", green: "rgba(0,230,118,0.15)", blue: "rgba(41,121,255,0.15)", purple: "rgba(213,0,249,0.15)" };
-    const colorI18nKey = { red: "colorRed", orange: "colorOrange", gold: "colorGold", green: "colorGreen", blue: "colorBlue", purple: "colorPurple" };
+    var currentLang = "ar";
+    var validColors = ["red", "orange", "gold", "green", "blue", "purple"];
+    var colorHex = { red: "#ff3d3d", orange: "#ff8c00", gold: "#ffd000", green: "#00e676", blue: "#2979ff", purple: "#d500f9" };
+    var colorBg = { red: "rgba(255,61,61,0.15)", orange: "rgba(255,140,0,0.15)", gold: "rgba(255,208,0,0.15)", green: "rgba(0,230,118,0.15)", blue: "rgba(41,121,255,0.15)", purple: "rgba(213,0,249,0.15)" };
+    var colorI18nKey = { red: "colorRed", orange: "colorOrange", gold: "colorGold", green: "colorGreen", blue: "colorBlue", purple: "colorPurple" };
 
     function getColorName(c) { return i18n[currentLang][colorI18nKey[c]] || c; }
 
-    let isRolling = false, isMuted = false, rollCount = 0, history = [];
-    const resultDiv = document.getElementById("result");
-    const resultText = document.getElementById("resultText");
-    const rollButton = document.getElementById("rollButton");
-    const numDiceSelect = document.getElementById("numDice");
-    const historyList = document.getElementById("historyList");
-    const toastEl = document.getElementById("toast");
-    const soundToggle = document.getElementById("soundToggle");
-    const clearHistoryBtn = document.getElementById("clearHistory");
-    const langToggle = document.getElementById("langToggle");
-    const scoreList = document.getElementById("scoreList");
-    const addScoreBtn = document.getElementById("addScoreBtn");
+    var isRolling = false, isMuted = false, rollCount = 0, history = [];
+    var resultDiv = document.getElementById("result");
+    var resultText = document.getElementById("resultText");
+    var rollButton = document.getElementById("rollButton");
+    var numDiceSelect = document.getElementById("numDice");
+    var historyList = document.getElementById("historyList");
+    var toastEl = document.getElementById("toast");
+    var soundToggle = document.getElementById("soundToggle");
+    var clearHistoryBtn = document.getElementById("clearHistory");
+    var langToggle = document.getElementById("langToggle");
+    var scoreList = document.getElementById("scoreList");
+    var addScoreBtn = document.getElementById("addScoreBtn");
 
-    const SCORE_KEY = "diceApp_scores";
-    let scores = [];
+    var SCORE_KEY = "diceApp_scores_v2";
+    var scores = [];
 
     function loadScores() {
-      try { const s = localStorage.getItem(SCORE_KEY); scores = s ? JSON.parse(s) : []; } catch(e) { scores = []; }
+      try {
+        var s = localStorage.getItem(SCORE_KEY);
+        scores = s ? JSON.parse(s) : [];
+      } catch(e) { scores = []; }
     }
-    function saveScores() { localStorage.setItem(SCORE_KEY, JSON.stringify(scores)); }
-    function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
 
-    function updateValColor(inp, val) {
-      if (val < 0) { inp.classList.add("negative"); } else { inp.classList.remove("negative"); }
+    function saveScores() {
+      localStorage.setItem(SCORE_KEY, JSON.stringify(scores));
+    }
+
+    function genId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    function parseNum(str) {
+      if (str === "" || str === "-") return 0;
+      var n = Number(str);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function updateValStyle(inp, val) {
+      if (val < 0) {
+        inp.classList.add("negative");
+      } else {
+        inp.classList.remove("negative");
+      }
     }
 
     function createScoreRow(item) {
-      const row = document.createElement("div");
+      var row = document.createElement("div");
       row.className = "score-row";
       row.dataset.id = item.id;
 
-      const nameInput = document.createElement("input");
+      var nameInput = document.createElement("input");
       nameInput.type = "text";
       nameInput.className = "score-name-input";
       nameInput.value = item.name;
       nameInput.placeholder = i18n[currentLang].namePlaceholder;
       nameInput.setAttribute("dir", "auto");
+
       nameInput.addEventListener("input", function() {
-        const f = scores.find(a => a.id === row.dataset.id);
+        var f = scores.find(function(a) { return a.id === row.dataset.id; });
         if (f) { f.name = this.value; saveScores(); }
       });
 
-      const counter = document.createElement("div");
+      var counter = document.createElement("div");
       counter.className = "score-counter";
 
-      const minusBtn = document.createElement("button");
+      var minusBtn = document.createElement("button");
       minusBtn.className = "sc-btn minus";
-      minusBtn.textContent = "−";
+      minusBtn.textContent = "\u2212";
 
-      const valInput = document.createElement("input");
+      var valInput = document.createElement("input");
       valInput.type = "text";
       valInput.className = "sc-val";
       valInput.value = item.count;
       valInput.setAttribute("inputmode", "numeric");
-      valInput.setAttribute("pattern", "[0-9\\-]*");
-      updateValColor(valInput, item.count);
+      updateValStyle(valInput, item.count);
+
+      valInput.addEventListener("keydown", function(e) {
+        var allowed = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"];
+        if (allowed.indexOf(e.key) !== -1) return;
+        if (e.ctrlKey || e.metaKey) return;
+        if (e.key === "-" && this.value.indexOf("-") === -1 && this.selectionStart === 0) return;
+        if (e.key >= "0" && e.key <= "9") return;
+        e.preventDefault();
+      });
 
       valInput.addEventListener("input", function() {
-        this.value = this.value.replace(/[^0-9\-]/g, "");
-        const f = scores.find(a => a.id === row.dataset.id);
+        var f = scores.find(function(a) { return a.id === row.dataset.id; });
         if (f) {
-          const v = this.value === "" || this.value === "-" ? 0 : parseInt(this.value, 10) || 0;
+          var v = parseNum(this.value);
           f.count = v;
-          updateValColor(this, v);
+          updateValStyle(this, v);
           saveScores();
         }
       });
 
       valInput.addEventListener("paste", function(e) {
         e.preventDefault();
-        const p = (e.clipboardData || window.clipboardData).getData("text").replace(/[^0-9\-]/g, "");
-        this.value = p;
-        const f = scores.find(a => a.id === row.dataset.id);
+        var p = (e.clipboardData || window.clipboardData).getData("text");
+        var cleaned = "";
+        var hasMinus = false;
+        for (var i = 0; i < p.length; i++) {
+          var ch = p[i];
+          if (ch === "-" && !hasMinus && cleaned.length === 0) {
+            cleaned += ch;
+            hasMinus = true;
+          } else if (ch >= "0" && ch <= "9") {
+            cleaned += ch;
+          }
+        }
+        this.value = cleaned;
+        var f = scores.find(function(a) { return a.id === row.dataset.id; });
         if (f) {
-          const v = p === "" || p === "-" ? 0 : parseInt(p, 10) || 0;
+          var v = parseNum(cleaned);
           f.count = v;
-          updateValColor(this, v);
+          updateValStyle(this, v);
           saveScores();
         }
       });
 
       valInput.addEventListener("blur", function() {
-        const raw = this.value.replace(/[^0-9\-]/g, "");
-        let v = parseInt(raw, 10);
-        if (isNaN(v)) v = 0;
+        var v = parseNum(this.value);
         this.value = v;
-        const f = scores.find(a => a.id === row.dataset.id);
-        if (f) { f.count = v; updateValColor(this, v); saveScores(); }
+        var f = scores.find(function(a) { return a.id === row.dataset.id; });
+        if (f) { f.count = v; updateValStyle(this, v); saveScores(); }
       });
 
-      const plusBtn = document.createElement("button");
+      var plusBtn = document.createElement("button");
       plusBtn.className = "sc-btn plus";
       plusBtn.textContent = "+";
 
       minusBtn.addEventListener("click", function() {
-        const f = scores.find(a => a.id === row.dataset.id);
+        var f = scores.find(function(a) { return a.id === row.dataset.id; });
         if (f) {
           f.count = f.count - 1;
           valInput.value = f.count;
-          updateValColor(valInput, f.count);
+          updateValStyle(valInput, f.count);
           saveScores();
           valInput.classList.remove("counter-pulse");
           void valInput.offsetWidth;
@@ -664,11 +562,11 @@
       });
 
       plusBtn.addEventListener("click", function() {
-        const f = scores.find(a => a.id === row.dataset.id);
+        var f = scores.find(function(a) { return a.id === row.dataset.id; });
         if (f) {
           f.count = f.count + 1;
           valInput.value = f.count;
-          updateValColor(valInput, f.count);
+          updateValStyle(valInput, f.count);
           saveScores();
           valInput.classList.remove("counter-pulse");
           void valInput.offsetWidth;
@@ -676,16 +574,20 @@
         }
       });
 
-      const delBtn = document.createElement("button");
+      var delBtn = document.createElement("button");
       delBtn.className = "score-del-btn";
       delBtn.innerHTML = '<i class="fas fa-trash-can"></i>';
       delBtn.addEventListener("click", function() {
-        scores = scores.filter(a => a.id !== row.dataset.id);
+        scores = scores.filter(function(a) { return a.id !== row.dataset.id; });
         saveScores();
         row.style.transition = "all 0.3s ease";
         row.style.opacity = "0";
         row.style.transform = "translateX(30px) scale(0.9)";
-        setTimeout(() => { row.remove(); renderScoreEmpty(); showToast(i18n[currentLang].rowDeleted); }, 300);
+        setTimeout(function() {
+          row.remove();
+          renderScoreEmpty();
+          showToast(i18n[currentLang].rowDeleted);
+        }, 300);
       });
 
       counter.appendChild(minusBtn);
@@ -699,7 +601,7 @@
 
     function renderScoreEmpty() {
       if (scoreList.children.length === 0) {
-        const e = document.createElement("div");
+        var e = document.createElement("div");
         e.className = "score-empty";
         e.textContent = i18n[currentLang].scoreEmpty;
         scoreList.appendChild(e);
@@ -709,17 +611,17 @@
     function renderAllScores() {
       scoreList.innerHTML = "";
       if (scores.length === 0) { renderScoreEmpty(); return; }
-      scores.forEach(s => scoreList.appendChild(createScoreRow(s)));
+      scores.forEach(function(s) { scoreList.appendChild(createScoreRow(s)); });
     }
 
     addScoreBtn.addEventListener("click", function() {
-      const n = { id: genId(), name: "", count: 0 };
+      var n = { id: genId(), name: "", count: 0 };
       scores.push(n);
       saveScores();
-      const em = scoreList.querySelector(".score-empty");
+      var em = scoreList.querySelector(".score-empty");
       if (em) em.remove();
       scoreList.appendChild(createScoreRow(n));
-      const inp = scoreList.lastChild.querySelector(".score-name-input");
+      var inp = scoreList.lastChild.querySelector(".score-name-input");
       inp.focus();
       scoreList.scrollTop = scoreList.scrollHeight;
       showToast(i18n[currentLang].rowAdded);
@@ -727,112 +629,277 @@
 
     function applyLanguage(lang) {
       currentLang = lang;
-      const t = i18n[lang];
-      const dir = lang === "ar" ? "rtl" : "ltr";
+      var t = i18n[lang];
+      var dir = lang === "ar" ? "rtl" : "ltr";
       document.body.setAttribute("dir", dir);
       document.documentElement.lang = lang;
       document.title = t.title;
-      document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.getAttribute("data-i18n"); if (t[k] !== undefined) el.textContent = t[k]; });
-      document.querySelectorAll("[data-i18n-opt]").forEach(opt => { const k = opt.getAttribute("data-i18n-opt"); if (t[k] !== undefined) opt.textContent = t[k]; });
-      langToggle.querySelectorAll(".lang-opt").forEach(btn => { btn.classList.toggle("active", btn.dataset.lang === lang); });
+      document.querySelectorAll("[data-i18n]").forEach(function(el) {
+        var k = el.getAttribute("data-i18n");
+        if (t[k] !== undefined) el.textContent = t[k];
+      });
+      document.querySelectorAll("[data-i18n-opt]").forEach(function(opt) {
+        var k = opt.getAttribute("data-i18n-opt");
+        if (t[k] !== undefined) opt.textContent = t[k];
+      });
+      langToggle.querySelectorAll(".lang-opt").forEach(function(btn) {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
       soundToggle.setAttribute("aria-label", lang === "ar" ? "تبديل الصوت" : "Toggle Sound");
       soundToggle.setAttribute("title", lang === "ar" ? "تبديل الصوت" : "Toggle Sound");
       numDiceSelect.setAttribute("aria-label", lang === "ar" ? "عدد النرد" : "Number of Dice");
       document.getElementById("colorDice").setAttribute("aria-label", lang === "ar" ? "نوع النرد" : "Dice Type");
-      document.querySelectorAll(".score-name-input").forEach(inp => { inp.placeholder = t.namePlaceholder; });
+      document.querySelectorAll(".score-name-input").forEach(function(inp) {
+        inp.placeholder = t.namePlaceholder;
+      });
       if (history.length > 0) rebuildHistory();
     }
 
-    langToggle.querySelectorAll(".lang-opt").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const lang = btn.dataset.lang;
-        if (lang !== currentLang) { applyLanguage(lang); showToast(lang === "ar" ? "تم التبديل للعربية" : "Switched to English"); }
+    langToggle.querySelectorAll(".lang-opt").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var lang = btn.dataset.lang;
+        if (lang !== currentLang) {
+          applyLanguage(lang);
+          showToast(lang === "ar" ? "تم التبديل للعربية" : "Switched to English");
+        }
       });
     });
 
     (function() {
-      const canvas = document.getElementById("bgCanvas");
-      const ctx = canvas.getContext("2d");
-      let w, h, stars = [];
+      var canvas = document.getElementById("bgCanvas");
+      var ctx = canvas.getContext("2d");
+      var w, h, stars = [];
       function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-      function createStars() { stars = []; const c = Math.floor((w * h) / 8000); for (let i = 0; i < c; i++) stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.2 + 0.3, a: Math.random() * 0.5 + 0.1, speed: Math.random() * 0.3 + 0.05, phase: Math.random() * Math.PI * 2 }); }
-      function draw(t) { ctx.clearRect(0, 0, w, h); stars.forEach(s => { const f = Math.sin(t * 0.001 * s.speed * 3 + s.phase) * 0.3 + 0.7; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(180, 210, 255, ${s.a * f})`; ctx.fill(); }); requestAnimationFrame(draw); }
-      resize(); createStars(); requestAnimationFrame(draw);
-      window.addEventListener("resize", () => { resize(); createStars(); });
+      function createStars() {
+        stars = [];
+        var c = Math.floor((w * h) / 8000);
+        for (var i = 0; i < c; i++) {
+          stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.2 + 0.3, a: Math.random() * 0.5 + 0.1, speed: Math.random() * 0.3 + 0.05, phase: Math.random() * Math.PI * 2 });
+        }
+      }
+      function draw(t) {
+        ctx.clearRect(0, 0, w, h);
+        stars.forEach(function(s) {
+          var f = Math.sin(t * 0.001 * s.speed * 3 + s.phase) * 0.3 + 0.7;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(180, 210, 255, " + (s.a * f) + ")";
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      resize();
+      createStars();
+      requestAnimationFrame(draw);
+      window.addEventListener("resize", function() { resize(); createStars(); });
     })();
 
-    let toastTimeout = null;
-    function showToast(msg) { toastEl.textContent = msg; toastEl.classList.add("show"); if (toastTimeout) clearTimeout(toastTimeout); toastTimeout = setTimeout(() => toastEl.classList.remove("show"), 2500); }
+    var toastTimeout = null;
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(function() { toastEl.classList.remove("show"); }, 2500);
+    }
 
-    let audioCtx = null;
+    var audioCtx = null;
     function playRollSound() {
       if (isMuted) return;
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const clicks = 8 + Math.floor(Math.random() * 5);
-      for (let i = 0; i < clicks; i++) { const delay = i * 50 + Math.random() * 30; setTimeout(() => { const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); const freq = 600 + Math.random() * 800; osc.type = Math.random() > 0.5 ? "triangle" : "square"; osc.frequency.setValueAtTime(freq, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04); gain.gain.setValueAtTime(0.06 + Math.random() * 0.04, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.06); }, delay); }
+      var clicks = 8 + Math.floor(Math.random() * 5);
+      for (var i = 0; i < clicks; i++) {
+        (function(i) {
+          var delay = i * 50 + Math.random() * 30;
+          setTimeout(function() {
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            var freq = 600 + Math.random() * 800;
+            osc.type = Math.random() > 0.5 ? "triangle" : "square";
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.06 + Math.random() * 0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.06);
+          }, delay);
+        })(i);
+      }
     }
+
     function playLandSound() {
       if (isMuted) return;
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = "sine"; osc.frequency.setValueAtTime(400, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.18); gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.18);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.25);
     }
 
     function spawnBurst(el, color) {
-      const rect = el.getBoundingClientRect(); const sr = resultDiv.getBoundingClientRect();
-      const cx = rect.left - sr.left + rect.width / 2; const cy = rect.top - sr.top + rect.height / 2;
-      for (let i = 0; i < 10; i++) { const p = document.createElement("div"); p.className = "burst-particle"; const a = (Math.PI * 2 / 10) * i + Math.random() * 0.5; const d = 30 + Math.random() * 40; p.style.cssText = `left:${cx}px;top:${cy}px;background:${color};box-shadow:0 0 6px ${color};--bx:${Math.cos(a)*d}px;--by:${Math.sin(a)*d}px;`; resultDiv.appendChild(p); setTimeout(() => p.remove(), 700); }
+      var rect = el.getBoundingClientRect();
+      var sr = resultDiv.getBoundingClientRect();
+      var cx = rect.left - sr.left + rect.width / 2;
+      var cy = rect.top - sr.top + rect.height / 2;
+      for (var i = 0; i < 10; i++) {
+        var p = document.createElement("div");
+        p.className = "burst-particle";
+        var a = (Math.PI * 2 / 10) * i + Math.random() * 0.5;
+        var d = 30 + Math.random() * 40;
+        p.style.cssText = "left:" + cx + "px;top:" + cy + "px;background:" + color + ";box-shadow:0 0 6px " + color + ";--bx:" + (Math.cos(a) * d) + "px;--by:" + (Math.sin(a) * d) + "px;";
+        resultDiv.appendChild(p);
+        (function(p) { setTimeout(function() { p.remove(); }, 700); })(p);
+      }
     }
 
-    soundToggle.addEventListener("click", () => { isMuted = !isMuted; soundToggle.innerHTML = isMuted ? '<i class="fas fa-volume-xmark"></i>' : '<i class="fas fa-volume-high"></i>'; showToast(isMuted ? i18n[currentLang].muted : i18n[currentLang].unmuted); });
+    soundToggle.addEventListener("click", function() {
+      isMuted = !isMuted;
+      soundToggle.innerHTML = isMuted ? '<i class="fas fa-volume-xmark"></i>' : '<i class="fas fa-volume-high"></i>';
+      showToast(isMuted ? i18n[currentLang].muted : i18n[currentLang].unmuted);
+    });
 
-    clearHistoryBtn.addEventListener("click", () => { history = []; rollCount = 0; historyList.innerHTML = ''; const e = document.createElement("div"); e.className = "history-empty"; e.textContent = i18n[currentLang].historyEmpty; historyList.appendChild(e); showToast(i18n[currentLang].cleared); });
+    clearHistoryBtn.addEventListener("click", function() {
+      history = [];
+      rollCount = 0;
+      historyList.innerHTML = "";
+      var e = document.createElement("div");
+      e.className = "history-empty";
+      e.textContent = i18n[currentLang].historyEmpty;
+      historyList.appendChild(e);
+      showToast(i18n[currentLang].cleared);
+    });
 
     function getRandomColor() { return validColors[Math.floor(Math.random() * validColors.length)]; }
 
-    function createDiceBlock() { const b = document.createElement("div"); b.className = "color-block rolling"; const d = document.createElement("div"); d.className = "dot"; const g = document.createElement("div"); g.className = "glow-ring"; b.appendChild(d); b.appendChild(g); return b; }
+    function createDiceBlock() {
+      var b = document.createElement("div");
+      b.className = "color-block rolling";
+      var d = document.createElement("div");
+      d.className = "dot";
+      var g = document.createElement("div");
+      g.className = "glow-ring";
+      b.appendChild(d);
+      b.appendChild(g);
+      return b;
+    }
 
     function rebuildHistory() {
       historyList.innerHTML = "";
-      if (history.length === 0) { const e = document.createElement("div"); e.className = "history-empty"; e.textContent = i18n[currentLang].historyEmpty; historyList.appendChild(e); return; }
-      history.forEach(entry => {
-        const item = document.createElement("div"); item.className = "history-item";
-        const names = document.createElement("span"); names.className = "history-names"; names.textContent = entry.colors.map(c => getColorName(c)).join(" + ");
-        const dots = document.createElement("div"); dots.className = "history-dots"; entry.colors.forEach(c => { const d = document.createElement("div"); d.className = "history-dot"; d.style.backgroundColor = colorHex[c]; dots.appendChild(d); });
-        const num = document.createElement("span"); num.className = "history-num"; num.textContent = "#" + entry.num;
-        item.appendChild(names); item.appendChild(dots); item.appendChild(num); historyList.appendChild(item);
+      if (history.length === 0) {
+        var e = document.createElement("div");
+        e.className = "history-empty";
+        e.textContent = i18n[currentLang].historyEmpty;
+        historyList.appendChild(e);
+        return;
+      }
+      history.forEach(function(entry) {
+        var item = document.createElement("div");
+        item.className = "history-item";
+        var names = document.createElement("span");
+        names.className = "history-names";
+        names.textContent = entry.colors.map(function(c) { return getColorName(c); }).join(" + ");
+        var dots = document.createElement("div");
+        dots.className = "history-dots";
+        entry.colors.forEach(function(c) {
+          var d = document.createElement("div");
+          d.className = "history-dot";
+          d.style.backgroundColor = colorHex[c];
+          dots.appendChild(d);
+        });
+        var num = document.createElement("span");
+        num.className = "history-num";
+        num.textContent = "#" + entry.num;
+        item.appendChild(names);
+        item.appendChild(dots);
+        item.appendChild(num);
+        historyList.appendChild(item);
       });
     }
 
-    function updateHistory(colors) { rollCount++; history.unshift({ num: rollCount, colors: [...colors] }); if (history.length > 30) history.pop(); rebuildHistory(); }
+    function updateHistory(colors) {
+      rollCount++;
+      history.unshift({ num: rollCount, colors: colors.slice() });
+      if (history.length > 30) history.pop();
+      rebuildHistory();
+    }
 
     function rollDice() {
       if (isRolling) return;
-      isRolling = true; rollButton.disabled = true; resultText.classList.remove("show");
-      const count = parseInt(numDiceSelect.value);
-      const finalColors = []; for (let i = 0; i < count; i++) finalColors.push(getRandomColor());
-      resultDiv.innerHTML = ""; const blocks = [];
-      for (let i = 0; i < count; i++) { const b = createDiceBlock(); resultDiv.appendChild(b); blocks.push(b); }
+      isRolling = true;
+      rollButton.disabled = true;
+      resultText.classList.remove("show");
+      var count = parseInt(numDiceSelect.value);
+      var finalColors = [];
+      for (var i = 0; i < count; i++) finalColors.push(getRandomColor());
+      resultDiv.innerHTML = "";
+      var blocks = [];
+      for (var i = 0; i < count; i++) { var b = createDiceBlock(); resultDiv.appendChild(b); blocks.push(b); }
       playRollSound();
-      const ri = setInterval(() => { blocks.forEach(b => { b.style.backgroundColor = colorHex[getRandomColor()]; }); }, 70);
-      setTimeout(() => {
+      var ri = setInterval(function() { blocks.forEach(function(b) { b.style.backgroundColor = colorHex[getRandomColor()]; }); }, 70);
+      setTimeout(function() {
         clearInterval(ri);
-        blocks.forEach((b, i) => {
+        blocks.forEach(function(b, i) {
           b.classList.remove("rolling");
-          setTimeout(() => { const c = finalColors[i]; const h = colorHex[c]; b.style.backgroundColor = h; b.style.borderColor = h + "60"; b.style.boxShadow = `0 8px 24px rgba(0,0,0,0.5),0 0 40px ${h}30,inset 0 1px 0 rgba(255,255,255,0.08)`; b.querySelector(".glow-ring").style.boxShadow = `0 0 30px ${h}50`; b.classList.add("landed"); spawnBurst(b, h); playLandSound(); }, i * 140);
+          setTimeout(function() {
+            var c = finalColors[i];
+            var h = colorHex[c];
+            b.style.backgroundColor = h;
+            b.style.borderColor = h + "60";
+            b.style.boxShadow = "0 8px 24px rgba(0,0,0,0.5),0 0 40px " + h + "30,inset 0 1px 0 rgba(255,255,255,0.08)";
+            b.querySelector(".glow-ring").style.boxShadow = "0 0 30px " + h + "50";
+            b.classList.add("landed");
+            spawnBurst(b, h);
+            playLandSound();
+          }, i * 140);
         });
-        setTimeout(() => { resultText.innerHTML = finalColors.map(c => `<span class="r-color" style="background:${colorBg[c]};color:${colorHex[c]};">${getColorName(c)}</span>`).join(" "); resultText.classList.add("show"); updateHistory(finalColors); isRolling = false; rollButton.disabled = false; }, count * 140 + 500);
+        setTimeout(function() {
+          resultText.innerHTML = finalColors.map(function(c) {
+            return '<span class="r-color" style="background:' + colorBg[c] + ";color:" + colorHex[c] + ';">' + getColorName(c) + '</span>';
+          }).join(" ");
+          resultText.classList.add("show");
+          updateHistory(finalColors);
+          isRolling = false;
+          rollButton.disabled = false;
+        }, count * 140 + 500);
       }, 900);
     }
 
     rollButton.addEventListener("click", rollDice);
-    document.addEventListener("keydown", (e) => { if ((e.code === "Space" || e.code === "Enter") && document.activeElement.tagName !== "INPUT") { e.preventDefault(); rollDice(); } });
+    document.addEventListener("keydown", function(e) {
+      if ((e.code === "Space" || e.code === "Enter") && document.activeElement.tagName !== "INPUT") {
+        e.preventDefault();
+        rollDice();
+      }
+    });
 
-    function initDice() { const c = parseInt(numDiceSelect.value); resultDiv.innerHTML = ""; for (let i = 0; i < c; i++) { const b = document.createElement("div"); b.className = "color-block"; const d = document.createElement("div"); d.className = "dot"; const g = document.createElement("div"); g.className = "glow-ring"; b.appendChild(d); b.appendChild(g); resultDiv.appendChild(b); } }
+    function initDice() {
+      var c = parseInt(numDiceSelect.value);
+      resultDiv.innerHTML = "";
+      for (var i = 0; i < c; i++) {
+        var b = document.createElement("div");
+        b.className = "color-block";
+        var d = document.createElement("div");
+        d.className = "dot";
+        var g = document.createElement("div");
+        g.className = "glow-ring";
+        b.appendChild(d);
+        b.appendChild(g);
+        resultDiv.appendChild(b);
+      }
+    }
 
     initDice();
     loadScores();
     renderAllScores();
-    numDiceSelect.addEventListener("change", () => { if (!isRolling) initDice(); });
+    numDiceSelect.addEventListener("change", function() { if (!isRolling) initDice(); });
   </script>
 </body>
 </html>
